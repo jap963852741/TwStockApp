@@ -11,12 +11,11 @@ data class TwStock(
     @ColumnInfo(name = "Price") val Price: Float?,
     @ColumnInfo(name = "UpAndDown") val UpAndDown: Float?,
     @ColumnInfo(name = "UpAndDownPercent") val UpAndDownPercent: Float?,
-    @ColumnInfo(name = "Name") val Name: Float?,
-    @ColumnInfo(name = "Name") val Name: Float?,
-    @ColumnInfo(name = "Name") val Name: Float?,
-    @ColumnInfo(name = "Name") val Name: Float?,
-    @ColumnInfo(name = "Name") val Name: Float?,
-    @ColumnInfo(name = "Name") val Name: Float?
+    @ColumnInfo(name = "WeekUpAndDownPercent") val WeekUpAndDownPercent: Float?,
+    @ColumnInfo(name = "HighestAndLowestPercent") val HighestAndLowestPercent: Float?,
+    @ColumnInfo(name = "Open") val Open: Float?,
+    @ColumnInfo(name = "High") val High: Float?,
+    @ColumnInfo(name = "Low") val Low: Float?,
 ){
     constructor(Name: String?,Price: Float?) : this(null,Name,Price)
 }
@@ -30,7 +29,7 @@ data class TwStock(
  * UpAndDown - 漲跌
  * UpAndDownPercent - 漲跌現價比
  * WeekUpAndDownPercent - 周漲跌現價比
- *  - 最高最低振福
+ * HighestAndLowestPercent - 最高最低振福
  * Open - 開盤價
  * High - 最高價
  * Low - 最低價

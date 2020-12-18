@@ -31,7 +31,16 @@ android {
         jvmTarget = '1.8'
     }
 }
-
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == "androidx.appcompat") {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion "1.+"
+            }
+        }
+    }
+}
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -44,7 +53,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.2'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.2'
-    implementation 'com.github.jap963852741:TwStockInformation:v1.0.5'
+    implementation 'com.github.jap963852741:TwStockInformation:v1.0.11'
 
     def room_version = "2.2.5"
     implementation "androidx.room:room-runtime:$room_version"

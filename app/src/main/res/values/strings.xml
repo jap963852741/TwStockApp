@@ -1,5 +1,12 @@
 <resources>
     <string name="app_name">TwStockApp</string>
+    <string name="search">搜尋</string>
+    <string name="type_number">請輸入代號</string>
+    <string name="update_db">更新資料庫</string>
+    <string name="type_condition">請輸入條件</string>
+
+
+
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>

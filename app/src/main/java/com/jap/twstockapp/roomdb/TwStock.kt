@@ -1,24 +1,37 @@
 package com.jap.twstockapp.roomdb
-
+import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
 data class TwStock(
-    @PrimaryKey(autoGenerate = true) val StockNo: String?,
+    @PrimaryKey val StockNo: String,
     @ColumnInfo(name = "Name") val Name: String?,
-    @ColumnInfo(name = "Price") val Price: Float?,
-    @ColumnInfo(name = "UpAndDown") val UpAndDown: Float?,
-    @ColumnInfo(name = "UpAndDownPercent") val UpAndDownPercent: Float?,
-    @ColumnInfo(name = "WeekUpAndDownPercent") val WeekUpAndDownPercent: Float?,
-    @ColumnInfo(name = "HighestAndLowestPercent") val HighestAndLowestPercent: Float?,
-    @ColumnInfo(name = "Open") val Open: Float?,
-    @ColumnInfo(name = "High") val High: Float?,
-    @ColumnInfo(name = "Low") val Low: Float?,
-){
-    constructor(Name: String?,Price: Float?) : this(null,Name,Price)
-}
+    @ColumnInfo(name = "Price") val Price: Double?,
+    @ColumnInfo(name = "UpAndDown") val UpAndDown: String?,
+    @ColumnInfo(name = "UpAndDownPercent") val UpAndDownPercent: String?,
+    @ColumnInfo(name = "WeekUpAndDownPercent") val WeekUpAndDownPercent: String?,
+    @ColumnInfo(name = "HighestAndLowestPercent") val HighestAndLowestPercent: String?,
+    @ColumnInfo(name = "Open") val Open: Double?,
+    @ColumnInfo(name = "High") val High: Double?,
+    @ColumnInfo(name = "Low") val Low: Double?,
+    @ColumnInfo(name = "DealVolume") val DealVolume: Int?,
+    @ColumnInfo(name = "DealTotalValue") val DealTotalValue: Int?,
+    @ColumnInfo(name = "DividendYield") val DividendYield: Double?,
+    @ColumnInfo(name = "PriceToEarningRatio") val PriceToEarningRatio: Double?,
+    @ColumnInfo(name = "PriceBookRatio") val PriceBookRatio: Double?,
+    @ColumnInfo(name = "OperatingRevenue") val OperatingRevenue: Long?,
+    @ColumnInfo(name = "MoM") val MoM: Double?,
+    @ColumnInfo(name = "YoY") val YoY: Double?,
+    @ColumnInfo(name = "DirectorsSupervisorsRatio") val DirectorsSupervisorsRatio: Double?,
+    @ColumnInfo(name = "ForeignInvestmentRatio") val ForeignInvestmentRatio: Double?,
+    @ColumnInfo(name = "InvestmentRation") val InvestmentRation: Double?,
+    @ColumnInfo(name = "ThreeBigRation") val ThreeBigRation: Double?
+    )
+//{
+//    constructor(Name: String?,Price: Double?) : this(null,Name,Price)
+//}
 
 /**
  * key : 代號
@@ -46,3 +59,21 @@ data class TwStock(
  * InvestmentRation - 投信持股比例
  * ThreeBigRation - 三大法人持股比例
  * */
+/**
+ * 2474=
+{DealTotalValue=2.103
+, Low=200.5
+, PriceBookRatio=1.07
+, Price=202
+, HighestAndLowestPercent=1.24%
+, Open=202
+, DividendYield=4.96
+, UpAndDownPercent=+0.25%
+, UpAndDown=▲0.50
+, DealVolume=1,041
+, WeekUpAndDownPercent=3.06%
+, High=203
+, PriceToEarningRatio=14.33
+, Name=可成}
+ *
+ */

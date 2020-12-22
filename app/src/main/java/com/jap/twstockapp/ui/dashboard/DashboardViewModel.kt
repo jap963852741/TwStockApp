@@ -13,10 +13,10 @@ import com.jap.twstockapp.ui.home.HomeFragment
 
 class DashboardViewModel(app: Application) : AndroidViewModel(app){
 
-    private val _text = MutableLiveData<ArrayList<String>>().apply {
+    private val _text = MutableLiveData<ArrayList<String?>>().apply {
         value = arrayListOf("")
     }
-    val text: LiveData<ArrayList<String>> = _text
+    val text: LiveData<ArrayList<String?>> = _text
 
     companion object {
         lateinit var twstocks: List<TwStock>
@@ -326,5 +326,20 @@ class DashboardViewModel(app: Application) : AndroidViewModel(app){
             return result_string.toDouble()
         }
     }
+
+    fun update_dashboard_livedata(){
+        var temp_array : ArrayList<String?>
+        if (twstocks.size > 0) {
+            temp_array = arrayListOf(twstocks[0].StockNo + " " + twstocks[0].Name)
+            for (i in 1..twstocks.size - 1) {
+                temp_array.add(twstocks[i].StockNo + " " + twstocks[i].Name)
+            }
+            _text.postValue(temp_array)
+        }else{
+            _text.postValue(arrayListOf(""))
+
+        }
+    }
+
 
 }

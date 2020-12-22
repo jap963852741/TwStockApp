@@ -68,11 +68,156 @@
 
     </LinearLayout>
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/condition_2"
+        android:layout_below="@+id/condition_1"
+        android:orientation="horizontal">
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textSize="20sp"
+            android:id="@+id/condition_2_name"
+
+            />
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:id="@+id/condition_2_symbol"
+            />
+
+        <EditText
+            android:layout_width="0dp"
+            android:importantForAutofill="no"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:id="@+id/text_dashboard_2"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:completionThreshold="1"
+            android:textSize="20sp"
+            android:hint="@string/type_condition"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/condition_3"
+        android:layout_below="@+id/condition_2"
+        android:orientation="horizontal">
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textSize="20sp"
+            android:id="@+id/condition_3_name"
+
+            />
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:id="@+id/condition_3_symbol"
+            />
+
+        <EditText
+            android:layout_width="0dp"
+            android:importantForAutofill="no"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:id="@+id/text_dashboard_3"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:completionThreshold="1"
+            android:textSize="20sp"
+            android:hint="@string/type_condition"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/condition_4"
+        android:layout_below="@+id/condition_3"
+        android:orientation="horizontal">
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textSize="20sp"
+            android:id="@+id/condition_4_name"
+
+            />
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:id="@+id/condition_4_symbol"
+            />
+
+        <EditText
+            android:layout_width="0dp"
+            android:importantForAutofill="no"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:id="@+id/text_dashboard_4"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:completionThreshold="1"
+            android:textSize="20sp"
+            android:hint="@string/type_condition"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/condition_5"
+        android:layout_below="@+id/condition_4"
+        android:orientation="horizontal">
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textSize="20sp"
+            android:id="@+id/condition_5_name"
+
+            />
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:id="@+id/condition_5_symbol"
+            />
+
+        <EditText
+            android:layout_width="0dp"
+            android:importantForAutofill="no"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:id="@+id/text_dashboard_5"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:completionThreshold="1"
+            android:textSize="20sp"
+            android:hint="@string/type_condition"/>
+
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/search_text"
-        android:layout_below="@+id/condition_1"
+        android:layout_below="@+id/condition_5"
         android:orientation="horizontal">
         <Button android:id="@+id/condition_search"
             android:layout_width="0dp"
@@ -84,7 +229,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/search_text"
         android:orientation="vertical">
@@ -93,11 +238,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="80sp"
-            android:text="111"
-            app:layout_constraintTop_toBottomOf="@id/toolBar"
+            app:layout_constraintTop_toBottomOf="@id/toolBar_dashboard"
             app:layout_constraintEnd_toEndOf="@+id/nav_view"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_below="@id/search_text"
             />
     </LinearLayout>
+
+
 </RelativeLayout>

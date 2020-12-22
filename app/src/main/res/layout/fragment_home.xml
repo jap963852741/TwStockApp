@@ -76,13 +76,11 @@
             android:layout_height="wrap_content"
             android:textSize="80sp"
             android:text="111"
-            app:layout_constraintTop_toBottomOf="@id/toolBar"
+            app:layout_constraintTop_toBottomOf="@id/toolBar_home"
             app:layout_constraintEnd_toEndOf="@+id/nav_view"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_below="@id/search_text"
             />
     </LinearLayout>
-
-
 
 </RelativeLayout>

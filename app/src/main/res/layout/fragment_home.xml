@@ -8,7 +8,8 @@
     tools:context=".ui.home.HomeFragment"
     android:id="@+id/homefragment"
     app:layout_constraintBottom_toTopOf="@id/nav_view"
-
+    android:background="@color/colorWhite"
+    android:clickable="true"
     >
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar_home"

@@ -7,6 +7,7 @@ import androidx.room.Room
 import com.jap.twstockapp.ui.dashboard.DashboardFragment
 import com.jap.twstockapp.ui.dashboard.DashboardViewModel
 import com.jap.twstockapp.ui.home.HomeFragment
+import com.jap.twstockinformation.MainActivity
 import com.jap.twstockinformation.StockUtil
 
 class MyStockUtil(applicationContext : Context){

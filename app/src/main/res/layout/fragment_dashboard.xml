@@ -8,6 +8,8 @@
         tools:context=".ui.dashboard.DashboardFragment"
         android:id="@+id/dashboardfragment"
         app:layout_constraintBottom_toTopOf="@id/nav_view"
+        android:background="@color/colorWhite"
+        android:clickable="true"
         >
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar_dashboard"

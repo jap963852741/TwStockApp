@@ -1,6 +1,9 @@
 package com.jap.twstockapp.ui.home
 
+import android.app.Application
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -13,6 +16,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.jap.twstockapp.MainActivity
 import com.jap.twstockapp.R
 import com.jap.twstockapp.dialog.LoadingDialog
 import com.jap.twstockapp.roomdb.MyStockUtil
@@ -28,17 +32,14 @@ class HomeFragment : Fragment() , View.OnClickListener{
     private lateinit var homeAdapter: HomeAdapter
     lateinit var StockNo : String
     lateinit var stocktext: AutoCompleteTextView
-//    lateinit var loadingdialog: LoadingDialog
+
     companion object {
         lateinit var loadingdialog: LoadingDialog
     }
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
-        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
+    override fun onCreateView(inflater: LayoutInflater,container: ViewGroup?,savedInstanceState: Bundle?): View? {
+        Log.i("HomeFragment","onCreateView savedInstanceState"+savedInstanceState.toString())
         val root = inflater.inflate(R.layout.fragment_home, container, false)
+        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
         loadingdialog =  LoadingDialog(container!!.context,"正在更新...")
         //仅点击外部不可取消
         loadingdialog.setCanceledOnTouchOutside(false)
@@ -52,13 +53,12 @@ class HomeFragment : Fragment() , View.OnClickListener{
         stocktext = root.findViewById(R.id.auto_complete_text)
         StockNo = stocktext.text.toString()
 
-        var vocabulary : ArrayList<String> = arrayListOf("")
         homeViewModel.StockNoArrayList.observe(viewLifecycleOwner, Observer {
-            vocabulary = it
-            val adapter = ArrayAdapter(container!!.context, android.R.layout.simple_list_item_1, vocabulary)
+            val adapter = ArrayAdapter(container!!.context, android.R.layout.simple_list_item_1, it)
             auto_complete_text.threshold = 1
             auto_complete_text.setAdapter(adapter)
         })
+
         homeViewModel.text.observe(viewLifecycleOwner, Observer {
             homeAdapter = HomeAdapter(it, container!!)
             recyclerView.setAdapter(homeAdapter)
@@ -87,10 +87,6 @@ class HomeFragment : Fragment() , View.OnClickListener{
             event != null && event.keyCode === KeyEvent.KEYCODE_ENTER
         })
 
-//        MyStockUtil(container!!.context).UpdateAllInformation()
-
-
-
         return root
     }
 
@@ -99,20 +95,14 @@ class HomeFragment : Fragment() , View.OnClickListener{
     }
 
    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater!!)
-        menu.add(Menu.NONE,ActionBar_Menu_Num.update_db,Menu.NONE,R.string.update_db)
-    }
-
-    interface ActionBar_Menu_Num {
-        companion object {
-            const val update_db = 1
-        }
+        inflater.inflate(R.menu.home_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            1 -> {
-                context?.let { MyStockUtil(it).UpdateAllInformation() }
+            R.id.updateDB -> {
+                context.let {MyStockUtil(it!!).UpdateAllInformation()}
                 loadingdialog.show()
             }
 

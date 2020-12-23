@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -92,6 +93,8 @@ class DashboardFragment : Fragment() , View.OnClickListener{
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
+        Log.i("DashboardFragment","onCreateView savedInstanceState"+savedInstanceState.toString())
+
         dashboardViewModel =
                 ViewModelProviders.of(this).get(DashboardViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_dashboard, container, false)

@@ -44,8 +44,9 @@
         <androidx.appcompat.widget.AppCompatSpinner
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="2.5"
             android:textSize="20sp"
+            android:padding="0dp"
             android:id="@+id/condition_1_name"
             />
         <androidx.appcompat.widget.AppCompatSpinner
@@ -53,6 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="20sp"
+            android:padding="0dp"
             android:id="@+id/condition_1_symbol"
             />
 
@@ -80,8 +82,9 @@
         <androidx.appcompat.widget.AppCompatSpinner
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="2.5"
             android:textSize="20sp"
+            android:padding="0dp"
             android:id="@+id/condition_2_name"
 
             />
@@ -90,6 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="20sp"
+            android:padding="0dp"
             android:id="@+id/condition_2_symbol"
             />
 
@@ -117,8 +121,9 @@
         <androidx.appcompat.widget.AppCompatSpinner
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="2.5"
             android:textSize="20sp"
+            android:padding="0dp"
             android:id="@+id/condition_3_name"
 
             />
@@ -127,6 +132,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="20sp"
+            android:padding="0dp"
             android:id="@+id/condition_3_symbol"
             />
 
@@ -153,8 +159,9 @@
         <androidx.appcompat.widget.AppCompatSpinner
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="2.5"
             android:textSize="20sp"
+            android:padding="0dp"
             android:id="@+id/condition_4_name"
 
             />
@@ -163,6 +170,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="20sp"
+            android:padding="0dp"
             android:id="@+id/condition_4_symbol"
             />
 
@@ -188,8 +196,9 @@
         <androidx.appcompat.widget.AppCompatSpinner
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="2.5"
             android:textSize="20sp"
+            android:padding="0dp"
             android:id="@+id/condition_5_name"
 
             />
@@ -198,6 +207,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="20sp"
+            android:padding="0dp"
             android:id="@+id/condition_5_symbol"
             />
 

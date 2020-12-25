@@ -101,7 +101,7 @@ class MyStockUtil(applicationContext : Context){
             val temp_arraylist = db.TwStockDao().getAllStockNo()
             System.out.println(vocabulary)
             for (i in 0..temp_arraylist!!.size-1) {
-                System.out.println(temp_arraylist?.get(i))
+//                System.out.println(temp_arraylist?.get(i))
                 vocabulary?.add(temp_arraylist?.get(i).toString())
             }
             db.close()

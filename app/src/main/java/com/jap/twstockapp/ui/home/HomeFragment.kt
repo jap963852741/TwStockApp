@@ -1,10 +1,11 @@
 package com.jap.twstockapp.ui.home
 
-import android.app.Application
 import android.content.Context
 import android.os.Bundle
+import android.os.IBinder
 import android.util.Log
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
@@ -16,13 +17,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.jap.twstockapp.MainActivity
 import com.jap.twstockapp.R
 import com.jap.twstockapp.dialog.LoadingDialog
 import com.jap.twstockapp.roomdb.MyStockUtil
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
-import java.util.*
 
 
 class HomeFragment : Fragment() , View.OnClickListener{
@@ -91,6 +89,8 @@ class HomeFragment : Fragment() , View.OnClickListener{
     }
 
     override fun onClick(v: View?) {
+        val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(v?.windowToken, 0)
         homeViewModel.update_text(stocktext.text.toString())
     }
 
@@ -109,5 +109,6 @@ class HomeFragment : Fragment() , View.OnClickListener{
         }
         return super.onOptionsItemSelected(item)
     }
+
 
 }

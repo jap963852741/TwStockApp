@@ -57,6 +57,7 @@ class MyStockUtil(applicationContext : Context){
                     value_map.get("DirectorsSupervisorsRatio")?.toDouble()
                 val ForeignInvestmentRatio = value_map.get("ForeignInvestmentRatio")?.toDouble()
                 val InvestmentRation = value_map.get("InvestmentRation")?.toDouble()
+                val SelfEmployedRation = value_map.get("SelfEmployedRation")?.toDouble()
                 val ThreeBigRation = value_map.get("ThreeBigRation")?.toDouble()
 
 
@@ -82,6 +83,7 @@ class MyStockUtil(applicationContext : Context){
                     DirectorsSupervisorsRatio = DirectorsSupervisorsRatio,
                     ForeignInvestmentRatio = ForeignInvestmentRatio,
                     InvestmentRation = InvestmentRation,
+                    SelfEmployedRation = SelfEmployedRation,
                     ThreeBigRation = ThreeBigRation
                 )
                 val HaveStock: TwStock? = db.TwStockDao().getStockNoInformation(key_number)
@@ -124,15 +126,19 @@ class MyStockUtil(applicationContext : Context){
                 AddInfoToAarray("最低價 : ", twstock.Low.toString(), temp_array)
                 AddInfoToAarray("交易量 : ", twstock.DealVolume.toString(), temp_array)
                 AddInfoToAarray("交易總值 : ", twstock.DealTotalValue.toString(), temp_array)
+                AddInfoToAarray("--", "基本面--", temp_array)
                 AddInfoToAarray("殖利率 : ", twstock.DividendYield.toString(), temp_array)
                 AddInfoToAarray("本益比 : ", twstock.PriceToEarningRatio.toString(), temp_array)
                 AddInfoToAarray("股價淨值比 : ", twstock.PriceBookRatio.toString(), temp_array)
+                AddInfoToAarray("--", "營收成長--", temp_array)
                 AddInfoToAarray("營業收入 : ", twstock.OperatingRevenue.toString(), temp_array)
                 AddInfoToAarray("月增率 : ", twstock.MoM.toString(), temp_array)
                 AddInfoToAarray("年增率 : ", twstock.YoY.toString(), temp_array)
+                AddInfoToAarray("--", "籌碼--", temp_array)
                 AddInfoToAarray("董監持股比例 : ",twstock.DirectorsSupervisorsRatio.toString(),temp_array)
                 AddInfoToAarray("外商持股比例 : ", twstock.ForeignInvestmentRatio.toString(), temp_array)
                 AddInfoToAarray("投信持股比例 : ", twstock.InvestmentRation.toString(), temp_array)
+                AddInfoToAarray("自營商持股 : ", twstock.SelfEmployedRation.toString(), temp_array)
                 AddInfoToAarray("三大法人持股比例 : ", twstock.ThreeBigRation.toString(), temp_array)
                 result.postValue(temp_array)
             }else{

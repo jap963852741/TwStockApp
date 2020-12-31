@@ -296,6 +296,20 @@ class DashboardViewModel(app: Application) : AndroidViewModel(app){
                 }
             }
         }
+        if (Name == "自營商持股" && Symbol == ">"){
+            for (twstock in twstocks){
+                if (twstock.SelfEmployedRation != null && twstock.SelfEmployedRation > value) {
+                    temp_twstocks.add(twstock)
+                }
+            }
+        }
+        if (Name == "自營商持股" && Symbol == "<"){
+            for (twstock in twstocks){
+                if (twstock.SelfEmployedRation != null && twstock.SelfEmployedRation < value) {
+                    temp_twstocks.add(twstock)
+                }
+            }
+        }
         if (Name == "三大法人持股比例" && Symbol == ">"){
             for (twstock in twstocks){
                 if (twstock.ThreeBigRation != null && twstock.ThreeBigRation > value) {

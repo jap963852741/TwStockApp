@@ -17,9 +17,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.jap.twstockapp.MainActivity
 import com.jap.twstockapp.R
 import com.jap.twstockapp.dialog.LoadingDialog
 import com.jap.twstockapp.roomdb.MyStockUtil
+import com.jap.twstockapp.util.FragmentSwitchUtil
 import kotlinx.android.synthetic.main.fragment_home.*
 
 
@@ -28,11 +30,12 @@ class HomeFragment : Fragment() , View.OnClickListener{
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var choose_button: Button
     private lateinit var homeAdapter: HomeAdapter
-    lateinit var StockNo : String
     lateinit var stocktext: AutoCompleteTextView
+    lateinit var StockNo : String
 
     companion object {
         lateinit var loadingdialog: LoadingDialog
+
     }
     override fun onCreateView(inflater: LayoutInflater,container: ViewGroup?,savedInstanceState: Bundle?): View? {
         Log.i("HomeFragment","onCreateView savedInstanceState"+savedInstanceState.toString())
@@ -84,6 +87,16 @@ class HomeFragment : Fragment() , View.OnClickListener{
             onClick(v)
             event != null && event.keyCode === KeyEvent.KEYCODE_ENTER
         })
+        val fragments =
+            requireFragmentManager().fragments
+        for (fragment in fragments) {
+            if (fragment != null && MainActivity.fragmentutil.mStacks!![FragmentSwitchUtil.TAB_HOME]!!.size == 0) {
+//                MainActivity.fragmentutil.mStacks!![FragmentSwitchUtil.TAB_HOME]!!.push(fragment)
+                MainActivity.fragmentutil.replaceCateFragment(1,fragment, FragmentSwitchUtil.TAB_HOME)
+
+//                Log.i("HomeFragment","onCreateView mStacks"+ MainActivity.fragmentutil.mStacks.toString())
+            }
+        }
 
         return root
     }

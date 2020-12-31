@@ -120,7 +120,7 @@ class DashboardFragment : Fragment() , View.OnClickListener{
 
         val condition =arrayOf<String?>("現價","漲跌","漲跌現價比","周漲跌現價比"
             ,"最高最低振福","開盤價","最高價","最低價","交易量","交易總值","殖利率","本益比"
-            ,"股價淨值比","營業收入","月增率","年增率","董監持股比例","外商持股比例","投信持股比例","三大法人持股比例")
+            ,"股價淨值比","營業收入","月增率","年增率","董監持股比例","外商持股比例","投信持股比例","自營商持股","三大法人持股比例")
         val conditionList: ArrayAdapter<String?> = ArrayAdapter(container!!.context,android.R.layout.simple_spinner_dropdown_item,condition)
         spinner_name_1.setAdapter(conditionList)
         spinner_name_2.setAdapter(conditionList)

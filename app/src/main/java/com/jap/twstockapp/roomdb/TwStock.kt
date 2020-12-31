@@ -27,6 +27,7 @@ data class TwStock(
     @ColumnInfo(name = "DirectorsSupervisorsRatio") val DirectorsSupervisorsRatio: Double?,
     @ColumnInfo(name = "ForeignInvestmentRatio") val ForeignInvestmentRatio: Double?,
     @ColumnInfo(name = "InvestmentRation") val InvestmentRation: Double?,
+    @ColumnInfo(name = "SelfEmployedRation") val SelfEmployedRation: Double?,
     @ColumnInfo(name = "ThreeBigRation") val ThreeBigRation: Double?
     )
 //{
@@ -57,6 +58,7 @@ data class TwStock(
  * DirectorsSupervisorsRatio - 董監持股比例
  * ForeignInvestmentRatio - 外商持股比例
  * InvestmentRation - 投信持股比例
+ * SelfEmployedRation - 自營商持股
  * ThreeBigRation - 三大法人持股比例
  * */
 /**

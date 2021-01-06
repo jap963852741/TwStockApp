@@ -11,16 +11,21 @@ import com.jap.twstockapp.ui.dashboard.DashboardFragment
 import com.jap.twstockapp.ui.notifications.NotificationsFragment
 import java.util.*
 
-class FragmentSwitchUtil(private val context : FragmentActivity) {
+class FragmentSwitchUtil() {
     var mStacks: HashMap<String, Stack<Fragment>>? = null
     var mCurrentTab: String? = null
+
+    constructor(context : FragmentActivity) : this() {
+        manager = context.supportFragmentManager
+    }
+
 
     companion object{
         //        lateinit var navController : NavController
         val TAB_HOME = "tab_home"
         val TAB_DASHBOARD = "tab_dashboard"
         val TAB_NOTIFICATIONS = "tab_notifications"
-
+        lateinit var manager: FragmentManager
     }
 
     fun selectedTab(tabId: String) {
@@ -52,13 +57,9 @@ class FragmentSwitchUtil(private val context : FragmentActivity) {
         tag :String?,
         init : Boolean
     ) {
-        Log.i("FragmentSwitchUtil","from : " + from.toString() + " to : "+to.toString())
-        Log.i("FragmentSwitchUtil"," to : "+to.toString())
 
         if (init) mStacks!![tag]!!.push(to)
-
         if (from !== to) {
-            val manager: FragmentManager = context.supportFragmentManager
             val transaction: FragmentTransaction = manager.beginTransaction()
             //此处必须要进行判断，因为同一个fragment只能被add一次，否则会发生异常
             if (!to.isAdded) {
@@ -74,8 +75,7 @@ class FragmentSwitchUtil(private val context : FragmentActivity) {
     }
 
     fun getNowFragment() : Fragment?{
-        val mFragmentManager: FragmentManager = context.supportFragmentManager
-        val fragments: List<Fragment> = mFragmentManager.getFragments()
+        val fragments: List<Fragment> = manager.getFragments()
 //        Log.i("FragmentSwitchUtil","getNowFragments : " + fragments.toString() )
 
         if (fragments != null) {
@@ -96,17 +96,16 @@ class FragmentSwitchUtil(private val context : FragmentActivity) {
 
     fun replaceCateFragment(
         animType: Int,
-        frag: Fragment?,
-        name: String?
+        frag: Fragment?
     ) {
-        val transaction: FragmentTransaction =  context.supportFragmentManager.beginTransaction()
+        val transaction: FragmentTransaction = manager.beginTransaction()
         if (animType == 1) {
             transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
         }
         mStacks!![TAB_HOME]!!.push(frag)
-        transaction.replace(R.id.nav_host_fragment, frag!!, name)
-        transaction.commit()
 
+        transaction.replace(R.id.nav_host_fragment, frag!!)
+        transaction.commit()
     }
 
 }

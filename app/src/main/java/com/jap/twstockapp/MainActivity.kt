@@ -36,19 +36,12 @@ class MainActivity : AppCompatActivity() {
         fragmentutil.mStacks!!.put(TAB_DASHBOARD, Stack<Fragment>())
         fragmentutil.mStacks!!.put(TAB_NOTIFICATIONS, Stack<Fragment>())
 
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR //Statusbar 轉為深色
-//    window.statusBarColor =  View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
         val navigation = findViewById<View>(R.id.nav_view) as BottomNavigationView
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-
-
-
-
-
 
     }
     private val mOnNavigationItemSelectedListener: BottomNavigationView.OnNavigationItemSelectedListener =

@@ -46,10 +46,12 @@ class HomeFragment : Fragment() , View.OnClickListener{
         loadingdialog.setCanceledOnTouchOutside(false)
         //点击返回键和外部都不可取消
         loadingdialog.setCancelable(false)
+
         val toolbar: Toolbar = root.findViewById(R.id.toolBar_home)
         toolbar.overflowIcon = resources.getDrawable(R.drawable.ic_refresh_black) //把三個小點換掉
         (activity as AppCompatActivity?)!!.setSupportActionBar(toolbar)
         setHasOptionsMenu(true)
+
         val recyclerView: RecyclerView = root.findViewById(R.id.re_view)
         stocktext = root.findViewById(R.id.auto_complete_text)
         StockNo = stocktext.text.toString()
@@ -87,16 +89,15 @@ class HomeFragment : Fragment() , View.OnClickListener{
             onClick(v)
             event != null && event.keyCode === KeyEvent.KEYCODE_ENTER
         })
-        val fragments =
-            requireFragmentManager().fragments
+        val fragments = FragmentSwitchUtil.manager.fragments
+
+
         for (fragment in fragments) {
             if (fragment != null && MainActivity.fragmentutil.mStacks!![FragmentSwitchUtil.TAB_HOME]!!.size == 0) {
-//                MainActivity.fragmentutil.mStacks!![FragmentSwitchUtil.TAB_HOME]!!.push(fragment)
-                MainActivity.fragmentutil.replaceCateFragment(1,fragment, FragmentSwitchUtil.TAB_HOME)
-
-//                Log.i("HomeFragment","onCreateView mStacks"+ MainActivity.fragmentutil.mStacks.toString())
+                MainActivity.fragmentutil.replaceCateFragment(1,fragment)
             }
         }
+
 
         return root
     }
@@ -108,9 +109,12 @@ class HomeFragment : Fragment() , View.OnClickListener{
     }
 
    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.home_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
+//       menu.clear();
+       inflater.inflate(R.menu.home_menu, menu)
+       Log.i("onCreateOptionsMenu ","創建菜單")
+       super.onCreateOptionsMenu(menu, inflater)
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {

@@ -13,28 +13,25 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.jap.twstockapp.ui.home.HomeFragment
 import com.jap.twstockapp.util.FragmentSwitchUtil
-import com.jap.twstockapp.util.FragmentSwitchUtil.Companion.TAB_DASHBOARD
-import com.jap.twstockapp.util.FragmentSwitchUtil.Companion.TAB_HOME
-import com.jap.twstockapp.util.FragmentSwitchUtil.Companion.TAB_NOTIFICATIONS
 import java.util.*
 import kotlin.collections.HashMap
 
 
 class MainActivity : AppCompatActivity() {
 
+//    var fragmentutil : FragmentSwitchUtil
 
-//
     companion object{
         lateinit var fragmentutil : FragmentSwitchUtil
     }
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.i("MainActivity","onCreateView savedInstanceState"+savedInstanceState.toString())
-        fragmentutil = FragmentSwitchUtil(this)
+        fragmentutil = FragmentSwitchUtil.getInstance(this)
         fragmentutil.mStacks = HashMap<String, Stack<Fragment>>()
-        fragmentutil.mStacks!!.put(TAB_HOME, Stack<Fragment>())
-        fragmentutil.mStacks!!.put(TAB_DASHBOARD, Stack<Fragment>())
-        fragmentutil.mStacks!!.put(TAB_NOTIFICATIONS, Stack<Fragment>())
+        fragmentutil.mStacks!!.put(fragmentutil.TAB_HOME, Stack<Fragment>())
+        fragmentutil.mStacks!!.put(fragmentutil.TAB_DASHBOARD, Stack<Fragment>())
+        fragmentutil.mStacks!!.put(fragmentutil.TAB_NOTIFICATIONS, Stack<Fragment>())
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -50,15 +47,15 @@ class MainActivity : AppCompatActivity() {
 //                Log.i("MainActivity","onCreateView mStacks"+fragmentutil.mStacks.toString())
                 when (item.getItemId()) {
                     R.id.navigation_home -> {
-                        fragmentutil.selectedTab(TAB_HOME)
+                        fragmentutil.selectedTab(fragmentutil.TAB_HOME)
                         return true
                     }
                     R.id.navigation_dashboard -> {
-                        fragmentutil.selectedTab(TAB_DASHBOARD)
+                        fragmentutil.selectedTab(fragmentutil.TAB_DASHBOARD)
                         return true
                     }
                     R.id.navigation_notifications -> {
-                        fragmentutil.selectedTab(TAB_NOTIFICATIONS)
+                        fragmentutil.selectedTab(fragmentutil.TAB_NOTIFICATIONS)
                         return true
                     }
                 }
@@ -67,8 +64,8 @@ class MainActivity : AppCompatActivity() {
         }
 
     fun GoHome(c :String){
-        fragmentutil.selectedTab(TAB_HOME)
-        (fragmentutil.mStacks!![TAB_HOME]!!.lastElement() as HomeFragment).stocktext.setText(c)
+        fragmentutil.selectedTab(fragmentutil.TAB_HOME)
+//        (fragmentutil.mStacks!![fragmentutil.TAB_HOME]!!.lastElement() as HomeFragment).stocktext.setText(c)
     }
 
 }

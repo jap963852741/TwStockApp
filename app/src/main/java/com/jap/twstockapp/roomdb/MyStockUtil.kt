@@ -49,7 +49,12 @@ class MyStockUtil(applicationContext : Context){
                     PriceToEarningRatio = value_map.get("PriceToEarningRatio")?.toDouble()
                 }
 
-                val PriceBookRatio = value_map.get("PriceBookRatio")?.toDouble()
+                var PriceBookRatio: Double? = null
+                if (value_map.get("PriceBookRatio") != "-") {
+                    val PriceBookRatio = value_map.get("PriceBookRatio")?.toDouble()
+                }
+
+
                 val OperatingRevenue = value_map.get("OperatingRevenue")?.toLong()
                 val MoM = value_map.get("MoM")?.toDouble()
                 val YoY = value_map.get("YoY")?.toDouble()

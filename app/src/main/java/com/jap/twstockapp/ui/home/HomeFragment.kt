@@ -89,12 +89,14 @@ class HomeFragment : Fragment() , View.OnClickListener{
             onClick(v)
             event != null && event.keyCode === KeyEvent.KEYCODE_ENTER
         })
-        val fragments = FragmentSwitchUtil.manager.fragments
+        val fragmentutil = FragmentSwitchUtil.getInstance(this.requireActivity())
+        val fragments = fragmentutil.manager.fragments
 
 
         for (fragment in fragments) {
-            if (fragment != null && MainActivity.fragmentutil.mStacks!![FragmentSwitchUtil.TAB_HOME]!!.size == 0) {
-                MainActivity.fragmentutil.replaceCateFragment(1,fragment)
+            if (fragment != null && fragmentutil.mStacks!![fragmentutil.TAB_HOME]!!.size == 0) {
+                Log.i("HomeFragment","onCreateView fragment :   "+fragment.toString())
+                fragmentutil.replaceCateFragment(1,fragment)
             }
         }
 

@@ -1,5 +1,6 @@
 package com.jap.twstockapp.util
 
+import android.content.Context
 import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -11,22 +12,36 @@ import com.jap.twstockapp.ui.dashboard.DashboardFragment
 import com.jap.twstockapp.ui.notifications.NotificationsFragment
 import java.util.*
 
-class FragmentSwitchUtil() {
+class FragmentSwitchUtil constructor(context: FragmentActivity){
+
     var mStacks: HashMap<String, Stack<Fragment>>? = null
     var mCurrentTab: String? = null
+    val TAB_HOME = "tab_home"
+    val TAB_DASHBOARD = "tab_dashboard"
+    val TAB_NOTIFICATIONS = "tab_notifications"
+    var manager: FragmentManager
 
-    constructor(context : FragmentActivity) : this() {
+
+    init{
         manager = context.supportFragmentManager
     }
 
 
-    companion object{
-        //        lateinit var navController : NavController
-        val TAB_HOME = "tab_home"
-        val TAB_DASHBOARD = "tab_dashboard"
-        val TAB_NOTIFICATIONS = "tab_notifications"
-        lateinit var manager: FragmentManager
-    }
+    companion object : SingletonHolder<FragmentSwitchUtil, FragmentActivity>(::FragmentSwitchUtil)
+
+//    constructor(context : FragmentActivity) : this() {
+//        manager = context.supportFragmentManager
+//        var instance = FragmentSwitchUtil(context)     //companion object itself is a language-level singleton.
+//    }
+
+
+//    companion object{
+//        //        lateinit var navController : NavController
+//        val TAB_HOME = "tab_home"
+//        val TAB_DASHBOARD = "tab_dashboard"
+//        val TAB_NOTIFICATIONS = "tab_notifications"
+//        lateinit var manager: FragmentManager
+//    }
 
     fun selectedTab(tabId: String) {
         mCurrentTab = tabId

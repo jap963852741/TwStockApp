@@ -27,14 +27,14 @@ import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment() , View.OnClickListener{
 
-    private lateinit var homeViewModel: HomeViewModel
     private lateinit var choose_button: Button
     private lateinit var homeAdapter: HomeAdapter
-    lateinit var stocktext: AutoCompleteTextView
     lateinit var StockNo : String
 
     companion object {
         lateinit var loadingdialog: LoadingDialog
+        lateinit var stocktext: AutoCompleteTextView
+        lateinit var homeViewModel: HomeViewModel
 
     }
     override fun onCreateView(inflater: LayoutInflater,container: ViewGroup?,savedInstanceState: Bundle?): View? {
@@ -77,7 +77,6 @@ class HomeFragment : Fragment() , View.OnClickListener{
         choose_button =root.findViewById<View>(R.id.search) as Button
         choose_button.setOnClickListener(this)
 
-
         stocktext.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
             /**
              *
@@ -92,15 +91,11 @@ class HomeFragment : Fragment() , View.OnClickListener{
         val fragmentutil = FragmentSwitchUtil.getInstance(this.requireActivity())
         val fragments = fragmentutil.manager.fragments
 
-
         for (fragment in fragments) {
             if (fragment != null && fragmentutil.mStacks!![fragmentutil.TAB_HOME]!!.size == 0) {
-                Log.i("HomeFragment","onCreateView fragment :   "+fragment.toString())
                 fragmentutil.replaceCateFragment(1,fragment)
             }
         }
-
-
         return root
     }
 
@@ -111,7 +106,7 @@ class HomeFragment : Fragment() , View.OnClickListener{
     }
 
    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-//       menu.clear();
+       menu.clear();
        inflater.inflate(R.menu.home_menu, menu)
        Log.i("onCreateOptionsMenu ","創建菜單")
        super.onCreateOptionsMenu(menu, inflater)

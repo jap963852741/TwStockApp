@@ -19,10 +19,9 @@ import kotlin.collections.HashMap
 
 class MainActivity : AppCompatActivity() {
 
-//    var fragmentutil : FragmentSwitchUtil
-
     companion object{
         lateinit var fragmentutil : FragmentSwitchUtil
+        lateinit var navigation : BottomNavigationView
     }
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,16 +34,18 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR //Statusbar 轉為深色
 
-        val navigation = findViewById<View>(R.id.nav_view) as BottomNavigationView
+        navigation = findViewById<View>(R.id.nav_view) as BottomNavigationView
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+
+//        fragmentutil.replaceCateFragment(0,HomeFragment())
 
     }
     private val mOnNavigationItemSelectedListener: BottomNavigationView.OnNavigationItemSelectedListener =
         object : BottomNavigationView.OnNavigationItemSelectedListener {
             override fun onNavigationItemSelected(item: MenuItem): Boolean {
-//                Log.i("MainActivity","onCreateView mStacks"+fragmentutil.mStacks.toString())
                 when (item.getItemId()) {
                     R.id.navigation_home -> {
                         fragmentutil.selectedTab(fragmentutil.TAB_HOME)
@@ -62,10 +63,4 @@ class MainActivity : AppCompatActivity() {
                 return false
             }
         }
-
-    fun GoHome(c :String){
-        fragmentutil.selectedTab(fragmentutil.TAB_HOME)
-//        (fragmentutil.mStacks!![fragmentutil.TAB_HOME]!!.lastElement() as HomeFragment).stocktext.setText(c)
-    }
-
 }

@@ -1,19 +1,16 @@
 package com.jap.twstockapp.util
 
-import android.content.Context
 import android.util.Log
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.jap.twstockapp.MainActivity
 import com.jap.twstockapp.R
 import com.jap.twstockapp.ui.dashboard.DashboardFragment
 import com.jap.twstockapp.ui.home.HomeFragment
 import com.jap.twstockapp.ui.notifications.NotificationsFragment
 import java.util.*
 
-class FragmentSwitchUtil constructor(context: FragmentActivity){
+class FragmentSwitchUtil constructor(context: Fragment){
 
     var mStacks: HashMap<String, Stack<Fragment>>? = null
     var mCurrentTab: String? = null
@@ -23,10 +20,17 @@ class FragmentSwitchUtil constructor(context: FragmentActivity){
     var manager: FragmentManager
 
     init{
-        manager = context.supportFragmentManager
+        manager = context.parentFragmentManager
     }
-
-    companion object : SingletonHolder<FragmentSwitchUtil, FragmentActivity>(::FragmentSwitchUtil)
+    companion object {
+        private var INSTANCE: FragmentSwitchUtil? = null
+        fun getInstance(context: Fragment): FragmentSwitchUtil {
+            if (INSTANCE == null) {
+                INSTANCE = FragmentSwitchUtil(context)
+            }
+            return INSTANCE!!
+        }
+    }
 
 
     fun selectedTab(tabId: String) {
@@ -77,9 +81,7 @@ class FragmentSwitchUtil constructor(context: FragmentActivity){
 
     fun getNowFragment() : Fragment?{
         val fragments: List<Fragment> = manager.getFragments()
-//        Log.i("FragmentSwitchUtil","getNowFragments : " + fragments.toString() )
         if (fragments != null) {
-//            for (fragment in fragments) {
             val i = fragments.size-1
             for (i in 0..fragments.size-1) {
                 val j = fragments.size - 1 - i

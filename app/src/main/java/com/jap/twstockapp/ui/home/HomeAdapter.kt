@@ -6,14 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.color.MaterialColors.getColor
 import com.jap.twstockapp.R
-import kotlin.coroutines.coroutineContext
 
 class HomeAdapter(
     private val dataList: ArrayList<String?>,
     private val parentview: ViewGroup
 ) :
+
     RecyclerView.Adapter<VH>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         return VH(
@@ -26,9 +25,6 @@ class HomeAdapter(
     override fun onBindViewHolder(holder: VH, position: Int) {
         val c = dataList.get(position)
         holder.tv1.text = c
-//        if (position == 0) {
-//            holder.tv1.setBackgroundColor(parentview.resources.getColor(R.color.colorLightGray))
-//        }
         when {
             position == 0 -> holder.tv1.setBackgroundColor(parentview.resources.getColor(R.color.colorLightGray))
             position == 11 -> holder.tv1.setBackgroundColor(parentview.resources.getColor(R.color.colorLightGray))

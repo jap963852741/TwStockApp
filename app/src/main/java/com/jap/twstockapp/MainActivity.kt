@@ -26,11 +26,7 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.i("MainActivity","onCreateView savedInstanceState"+savedInstanceState.toString())
-        fragmentutil = FragmentSwitchUtil.getInstance(this)
-        fragmentutil.mStacks = HashMap<String, Stack<Fragment>>()
-        fragmentutil.mStacks!!.put(fragmentutil.TAB_HOME, Stack<Fragment>())
-        fragmentutil.mStacks!!.put(fragmentutil.TAB_DASHBOARD, Stack<Fragment>())
-        fragmentutil.mStacks!!.put(fragmentutil.TAB_NOTIFICATIONS, Stack<Fragment>())
+
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

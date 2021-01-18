@@ -51,7 +51,7 @@ class MyStockUtil(applicationContext : Context){
 
                 var PriceBookRatio: Double? = null
                 if (value_map.get("PriceBookRatio") != "-") {
-                    val PriceBookRatio = value_map.get("PriceBookRatio")?.toDouble()
+                    PriceBookRatio = value_map.get("PriceBookRatio")?.toDouble()
                 }
 
 

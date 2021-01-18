@@ -2,7 +2,6 @@ package com.jap.twstockapp.ui.home
 
 import android.content.Context
 import android.os.Bundle
-import android.os.IBinder
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
@@ -17,12 +16,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.jap.twstockapp.MainActivity
+import com.jap.twstockapp.MainActivity.Companion.fragmentutil
 import com.jap.twstockapp.R
 import com.jap.twstockapp.dialog.LoadingDialog
 import com.jap.twstockapp.roomdb.MyStockUtil
 import com.jap.twstockapp.util.FragmentSwitchUtil
 import kotlinx.android.synthetic.main.fragment_home.*
+import java.util.*
+import kotlin.collections.HashMap
 
 
 class HomeFragment : Fragment() , View.OnClickListener{
@@ -37,22 +38,22 @@ class HomeFragment : Fragment() , View.OnClickListener{
         lateinit var homeViewModel: HomeViewModel
 
     }
+
     override fun onCreateView(inflater: LayoutInflater,container: ViewGroup?,savedInstanceState: Bundle?): View? {
         Log.i("HomeFragment","onCreateView savedInstanceState"+savedInstanceState.toString())
         val root = inflater.inflate(R.layout.fragment_home, container, false)
+        val toolbar: Toolbar = root.findViewById(R.id.toolBar_home)
+        val recyclerView: RecyclerView = root.findViewById(R.id.re_view)
+
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
         loadingdialog =  LoadingDialog(container!!.context,"正在更新...")
         //仅点击外部不可取消
         loadingdialog.setCanceledOnTouchOutside(false)
         //点击返回键和外部都不可取消
         loadingdialog.setCancelable(false)
-
-        val toolbar: Toolbar = root.findViewById(R.id.toolBar_home)
         toolbar.overflowIcon = resources.getDrawable(R.drawable.ic_refresh_black) //把三個小點換掉
         (activity as AppCompatActivity?)!!.setSupportActionBar(toolbar)
         setHasOptionsMenu(true)
-
-        val recyclerView: RecyclerView = root.findViewById(R.id.re_view)
         stocktext = root.findViewById(R.id.auto_complete_text)
         StockNo = stocktext.text.toString()
 
@@ -88,9 +89,13 @@ class HomeFragment : Fragment() , View.OnClickListener{
             onClick(v)
             event != null && event.keyCode === KeyEvent.KEYCODE_ENTER
         })
-        val fragmentutil = FragmentSwitchUtil.getInstance(this.requireActivity())
-        val fragments = fragmentutil.manager.fragments
 
+        fragmentutil = FragmentSwitchUtil.getInstance(this)
+        fragmentutil.mStacks = HashMap<String, Stack<Fragment>>()
+        fragmentutil.mStacks!!.put(fragmentutil.TAB_HOME, Stack<Fragment>())
+        fragmentutil.mStacks!!.put(fragmentutil.TAB_DASHBOARD, Stack<Fragment>())
+        fragmentutil.mStacks!!.put(fragmentutil.TAB_NOTIFICATIONS, Stack<Fragment>())
+        val fragments = fragmentutil.manager.fragments
         for (fragment in fragments) {
             if (fragment != null && fragmentutil.mStacks!![fragmentutil.TAB_HOME]!!.size == 0) {
                 fragmentutil.replaceCateFragment(1,fragment)
@@ -108,7 +113,6 @@ class HomeFragment : Fragment() , View.OnClickListener{
    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
        menu.clear();
        inflater.inflate(R.menu.home_menu, menu)
-       Log.i("onCreateOptionsMenu ","創建菜單")
        super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -119,7 +123,6 @@ class HomeFragment : Fragment() , View.OnClickListener{
                 context.let {MyStockUtil(it!!).UpdateAllInformation()}
                 loadingdialog.show()
             }
-
         }
         return super.onOptionsItemSelected(item)
     }

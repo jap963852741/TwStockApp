@@ -26,7 +26,6 @@ class DashboardViewModel(app: Application) : AndroidViewModel(app){
         MyStockUtil(getApplication<Application>().applicationContext).get_all_twstock()
     }
 
-
     fun filter_list(Name: String, Symbol: String, value: Double){
         val temp_twstocks : ArrayList<TwStock> = arrayListOf()
         if (Name == "現價" && Symbol == ">"){
@@ -351,9 +350,7 @@ class DashboardViewModel(app: Application) : AndroidViewModel(app){
             _text.postValue(temp_array)
         }else{
             _text.postValue(arrayListOf(""))
-
         }
     }
-
 
 }

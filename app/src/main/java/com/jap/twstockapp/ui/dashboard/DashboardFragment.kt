@@ -65,6 +65,7 @@ class DashboardFragment : Fragment() , View.OnClickListener{
                                 textView.text.toString().toDouble()
                             )
                         }
+
                         if( textView_2.text.toString() != null && textView_2.text.toString() != ""){
                             System.out.println("----第二個條件開始篩選-----")
                             dashboardViewModel.filter_list(spinner_name_2.getSelectedItem().toString(),spinner_symbol_2.getSelectedItem().toString(),textView_2.text.toString().toDouble())
@@ -93,8 +94,6 @@ class DashboardFragment : Fragment() , View.OnClickListener{
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        Log.i("DashboardFragment","onCreateView savedInstanceState"+savedInstanceState.toString())
-
         dashboardViewModel =
                 ViewModelProviders.of(this).get(DashboardViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
@@ -136,7 +135,6 @@ class DashboardFragment : Fragment() , View.OnClickListener{
         spinner_symbol_4.setAdapter(symbolList)
         spinner_symbol_5.setAdapter(symbolList)
 
-
         search_button =root.findViewById<View>(R.id.condition_search) as Button
         search_button.setOnClickListener(this)
 
@@ -153,16 +151,10 @@ class DashboardFragment : Fragment() , View.OnClickListener{
             )
         })
 
-
-
-
-
         return root
     }
 
-
     override fun onClick(v: View?) {
-//        spinner_name_1.getSelectedItem().toString(),spinner_symbol_1.getSelectedItem().toString(),textView.text.toString().toInt()
         dashboardViewModel.get_aLL_list()
         loadingdialog.show()
     }

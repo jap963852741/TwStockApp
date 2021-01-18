@@ -31,10 +31,7 @@ class DashboardAdapter (
             HomeFragment.homeViewModel.update_text(StockNo)
 
         }
-
         return holder
-
-//        return VH(LayoutInflater.from(parent.context).inflate(R.layout.item_home, parent, false),parentview)
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
@@ -45,15 +42,6 @@ class DashboardAdapter (
     override fun getItemCount(): Int {
         return dataList.size
     }
-
-
-//    @SuppressLint("RestrictedApi")
-//    override fun onClick(v: View?) {
-////        (getActivity(parentview.context) as MainActivity).Condition_ToHome(StockNo)
-//        MainActivity.fragmentutil.selectedTab(MainActivity.fragmentutil.TAB_HOME)
-//        Log.i("onClick",StockNo)
-//        HomeFragment.stocktext.setText(StockNo)
-//    }
 
 }
 

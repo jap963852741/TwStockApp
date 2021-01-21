@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.jap.twstockapp.databinding.ActivityMainBinding
 import com.jap.twstockapp.ui.home.HomeFragment
 import com.jap.twstockapp.util.FragmentSwitchUtil
 import java.util.*
@@ -18,6 +19,7 @@ import kotlin.collections.HashMap
 
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var viewbinding: ActivityMainBinding
 
     companion object{
         lateinit var fragmentutil : FragmentSwitchUtil
@@ -26,18 +28,12 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.i("MainActivity","onCreateView savedInstanceState"+savedInstanceState.toString())
-
-
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
+        viewbinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(viewbinding.root)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR //Statusbar 轉為深色
-
-        navigation = findViewById<View>(R.id.nav_view) as BottomNavigationView
+        navigation = viewbinding.navView
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-
-//        fragmentutil.replaceCateFragment(0,HomeFragment())
-
     }
     private val mOnNavigationItemSelectedListener: BottomNavigationView.OnNavigationItemSelectedListener =
         object : BottomNavigationView.OnNavigationItemSelectedListener {

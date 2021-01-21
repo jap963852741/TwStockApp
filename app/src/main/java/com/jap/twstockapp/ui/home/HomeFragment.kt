@@ -18,8 +18,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jap.twstockapp.MainActivity.Companion.fragmentutil
 import com.jap.twstockapp.R
+import com.jap.twstockapp.databinding.FragmentHomeBinding
 import com.jap.twstockapp.dialog.LoadingDialog
-import com.jap.twstockapp.roomdb.MyStockUtil
+import com.jap.twstockapp.util.MyStockUtil
 import com.jap.twstockapp.util.FragmentSwitchUtil
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.util.*
@@ -28,7 +29,7 @@ import kotlin.collections.HashMap
 
 class HomeFragment : Fragment() , View.OnClickListener{
 
-    private lateinit var choose_button: Button
+    private lateinit var homeviewbinding: FragmentHomeBinding
     private lateinit var homeAdapter: HomeAdapter
     lateinit var StockNo : String
 
@@ -36,25 +37,23 @@ class HomeFragment : Fragment() , View.OnClickListener{
         lateinit var loadingdialog: LoadingDialog
         lateinit var stocktext: AutoCompleteTextView
         lateinit var homeViewModel: HomeViewModel
-
     }
 
     override fun onCreateView(inflater: LayoutInflater,container: ViewGroup?,savedInstanceState: Bundle?): View? {
-        Log.i("HomeFragment","onCreateView savedInstanceState"+savedInstanceState.toString())
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
-        val toolbar: Toolbar = root.findViewById(R.id.toolBar_home)
-        val recyclerView: RecyclerView = root.findViewById(R.id.re_view)
+        homeviewbinding = FragmentHomeBinding.inflate(inflater, container, false);
+//        val root = inflater.inflate(R.layout.fragment_home, container, false)
+        val toolbar: Toolbar = homeviewbinding.toolBarHome
+        val recyclerView: RecyclerView = homeviewbinding.reView
 
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
-        loadingdialog =  LoadingDialog(container!!.context,"正在更新...")
-        //仅点击外部不可取消
-        loadingdialog.setCanceledOnTouchOutside(false)
-        //点击返回键和外部都不可取消
+        loadingdialog =  LoadingDialog(container!!.context,"正在更新...")//仅点击外部不可取消
+        loadingdialog.setCanceledOnTouchOutside(false)//点击返回键和外部都不可取消
         loadingdialog.setCancelable(false)
         toolbar.overflowIcon = resources.getDrawable(R.drawable.ic_refresh_black) //把三個小點換掉
         (activity as AppCompatActivity?)!!.setSupportActionBar(toolbar)
         setHasOptionsMenu(true)
-        stocktext = root.findViewById(R.id.auto_complete_text)
+
+        stocktext = homeviewbinding.autoCompleteText
         StockNo = stocktext.text.toString()
 
         homeViewModel.StockNoArrayList.observe(viewLifecycleOwner, Observer {
@@ -75,8 +74,7 @@ class HomeFragment : Fragment() , View.OnClickListener{
             )
         })
 
-        choose_button =root.findViewById<View>(R.id.search) as Button
-        choose_button.setOnClickListener(this)
+        homeviewbinding.search.setOnClickListener(this)
 
         stocktext.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
             /**
@@ -101,7 +99,7 @@ class HomeFragment : Fragment() , View.OnClickListener{
                 fragmentutil.replaceCateFragment(1,fragment)
             }
         }
-        return root
+        return homeviewbinding.root
     }
 
     override fun onClick(v: View?) {
@@ -111,7 +109,6 @@ class HomeFragment : Fragment() , View.OnClickListener{
     }
 
    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-       menu.clear();
        inflater.inflate(R.menu.home_menu, menu)
        super.onCreateOptionsMenu(menu, inflater)
     }
@@ -120,7 +117,7 @@ class HomeFragment : Fragment() , View.OnClickListener{
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.updateDB -> {
-                context.let {MyStockUtil(it!!).UpdateAllInformation()}
+                context.let { MyStockUtil(it!!).UpdateAllInformation()}
                 loadingdialog.show()
             }
         }

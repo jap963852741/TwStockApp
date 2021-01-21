@@ -4,8 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.jap.twstockapp.MainActivity
-import com.jap.twstockapp.roomdb.MyStockUtil
+import com.jap.twstockapp.util.MyStockUtil
 
 class HomeViewModel(app: Application) : AndroidViewModel(app){
 
@@ -14,13 +13,15 @@ class HomeViewModel(app: Application) : AndroidViewModel(app){
     }
     val _StockNoArrayList = MutableLiveData<ArrayList<String>>().apply {
         value = arrayListOf("")
-        MyStockUtil(getApplication<Application>().applicationContext).getAdapter(value)
+        MyStockUtil(getApplication<Application>().applicationContext)
+            .getAdapter(value)
     }
     val text: LiveData<ArrayList<String?>> = _text
     val StockNoArrayList: LiveData<ArrayList<String>> = _StockNoArrayList
 
     fun update_text(StockNo : String){
-        MyStockUtil(getApplication<Application>().applicationContext).get_stock_information(_text,StockNo)
+        MyStockUtil(getApplication<Application>().applicationContext)
+            .get_stock_information(_text,StockNo)
     }
 
 }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+
+    >
+
+
+    <com.github.zagum.switchicon.SwitchIconView
+        android:id="@+id/favorite_button"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        app:si_animation_duration="500"
+        app:si_disabled_alpha=".3"
+        app:si_disabled_color="#b7b7b7"
+        app:si_tint_color="#ff3c00"
+        app:si_enabled="false"
+        app:si_no_dash="true"
+        app:srcCompat="@drawable/ic_heart_inactive_black"/>
+
+    <TextView
+        android:id="@+id/tv_dashboard"
+        android:layout_width="0dp"
+        android:layout_weight="3"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:padding="10dp"
+        android:gravity="left"
+        android:textSize="24sp"
+         />
+
+</LinearLayout>

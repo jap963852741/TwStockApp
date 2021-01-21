@@ -1,21 +1,18 @@
-package com.jap.twstockapp.roomdb
+package com.jap.twstockapp.util
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.room.Room
+import com.jap.twstockapp.roomdb.AppDatabase
+import com.jap.twstockapp.roomdb.AppDatabase.Companion.destroyInstance
+import com.jap.twstockapp.roomdb.TwStock
 import com.jap.twstockapp.ui.dashboard.DashboardFragment
 import com.jap.twstockapp.ui.dashboard.DashboardViewModel
 import com.jap.twstockapp.ui.home.HomeFragment
-import com.jap.twstockinformation.MainActivity
 import com.jap.twstockinformation.StockUtil
 
 class MyStockUtil(applicationContext : Context){
     val st = StockUtil(applicationContext)
-    val db = Room.databaseBuilder(
-        applicationContext,
-        AppDatabase::class.java, "database-name"
-    ).build()
+    val db = AppDatabase.getInstance(applicationContext)
 
     fun UpdateAllInformation() = Thread {
             val TotalInformation:HashMap<String,HashMap<String,String>> = st.Get_HashMap_Num_MapTotalInformation()
@@ -99,7 +96,7 @@ class MyStockUtil(applicationContext : Context){
 
                 }
             }
-                db.close()
+                destroyInstance()
                 HomeFragment.loadingdialog.dismiss();
         }.start()
 
@@ -111,7 +108,7 @@ class MyStockUtil(applicationContext : Context){
 //                System.out.println(temp_arraylist?.get(i))
                 vocabulary?.add(temp_arraylist?.get(i).toString())
             }
-            db.close()
+            destroyInstance()
         }.start()
 
     }
@@ -149,8 +146,7 @@ class MyStockUtil(applicationContext : Context){
             }else{
                 result.postValue(arrayListOf(""))
             }
-            db.close()
-
+            destroyInstance()
         }.start()
     }
     fun AddInfoToAarray(s : String? , s2 :String? ,temp_array: ArrayList<String?>?){
@@ -162,7 +158,7 @@ class MyStockUtil(applicationContext : Context){
     fun get_all_twstock(){
         Thread {
             DashboardViewModel.twstocks = db.TwStockDao().getAll()
-            db.close()
+            destroyInstance()
             DashboardFragment.loadingdialog.dismiss()
             DashboardFragment.mUI_Handler.sendEmptyMessage(DashboardFragment.MSG_TWSTOCK_OK)
         }.start()

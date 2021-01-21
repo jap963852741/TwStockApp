@@ -1,29 +1,33 @@
 package com.jap.twstockapp.ui.dashboard
 
 import android.app.Application
-import android.text.Editable
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.jap.twstockapp.dialog.LoadingDialog
-import com.jap.twstockapp.roomdb.MyStockUtil
+import com.jap.twstockapp.roomdb.Favorite
+import com.jap.twstockapp.util.MyStockUtil
 import com.jap.twstockapp.roomdb.TwStock
-import com.jap.twstockapp.ui.home.HomeFragment
+import com.jap.twstockapp.util.FavoriteUtil
 
 class DashboardViewModel(app: Application) : AndroidViewModel(app){
-
+    val context = getApplication<Application>().applicationContext
     private val _text = MutableLiveData<ArrayList<String?>>().apply {
-        value = arrayListOf("")
+        value = arrayListOf()
     }
-    val text: LiveData<ArrayList<String?>> = _text
+    val _favorite = MutableLiveData<ArrayList<Favorite>>().apply {
+        value = arrayListOf()
+    }
 
+    val text: LiveData<ArrayList<String?>> = _text
+    val favorite :  LiveData<ArrayList<Favorite>> = _favorite
     companion object {
         lateinit var twstocks: List<TwStock>
+        lateinit var favorites: ArrayList<Favorite>
     }
 
+
     fun get_aLL_list(){
-        MyStockUtil(getApplication<Application>().applicationContext).get_all_twstock()
+        MyStockUtil(context).get_all_twstock()
     }
 
     fun filter_list(Name: String, Symbol: String, value: Double){
@@ -353,4 +357,7 @@ class DashboardViewModel(app: Application) : AndroidViewModel(app){
         }
     }
 
+    fun get_favorite(){
+        FavoriteUtil(context).get_all_favorite(this)
+    }
 }

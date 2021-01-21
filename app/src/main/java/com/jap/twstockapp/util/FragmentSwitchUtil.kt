@@ -7,7 +7,7 @@ import androidx.fragment.app.FragmentTransaction
 import com.jap.twstockapp.R
 import com.jap.twstockapp.ui.dashboard.DashboardFragment
 import com.jap.twstockapp.ui.home.HomeFragment
-import com.jap.twstockapp.ui.notifications.NotificationsFragment
+import com.jap.twstockapp.ui.favorites.FavoritesFragment
 import java.util.*
 
 class FragmentSwitchUtil constructor(context: Fragment){
@@ -44,7 +44,7 @@ class FragmentSwitchUtil constructor(context: Fragment){
             if (tabId == TAB_DASHBOARD) {
                 switchContent(getNowFragment(), DashboardFragment() , tabId ,true)
             } else if (tabId == TAB_NOTIFICATIONS) {
-                switchContent(getNowFragment(), NotificationsFragment() , tabId ,true)
+                switchContent(getNowFragment(), FavoritesFragment() , tabId ,true)
             }
         } else {
             switchContent(getNowFragment(),mStacks!![tabId]!!.lastElement() , tabId ,false)

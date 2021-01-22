@@ -28,6 +28,7 @@ class DashboardViewModel(app: Application) : AndroidViewModel(app){
 
     fun get_aLL_list(){
 //        MyStockUtil(context).get_all_twstock()
+        get_favorite()
         GetAllStockRespository().loadInfo(context,object : AllTwStockTaskFinish {
                 override fun onFinish(data: List<TwStock>) {
                     twstocks = data

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.zagum.switchicon.SwitchIconView
 import com.jap.twstockapp.MainActivity
 import com.jap.twstockapp.databinding.ItemDetailBinding
+import com.jap.twstockapp.roomdb.Favorite
 import com.jap.twstockapp.ui.dashboard.DashboardFragment.Companion.dashboardViewModel
 import com.jap.twstockapp.ui.dashboard.DashboardViewModel.Companion.favorites
 import com.jap.twstockapp.ui.home.HomeFragment
@@ -57,12 +58,13 @@ class DashboardAdapter(
         holder.favorite_button.setOnClickListener {
 
             if (holder.favorite_button.isIconEnabled) {
+                favorites.remove(Favorite(stockno,name))
                 FavoriteUtil(parentview.context).remove_favorite(stockno,name)
                 holder.favorite_button.setIconEnabled(false)
             } else {
+                favorites.add(Favorite(stockno,name))
                 FavoriteUtil(parentview.context).add_favorite(stockno,name)
                 holder.favorite_button.setIconEnabled(true)
-                dashboardViewModel.get_favorite()
             }
 
         }

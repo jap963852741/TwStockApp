@@ -14,36 +14,12 @@ import com.jap.twstockapp.ui.favorites.FavoritesViewModel
 class FavoriteUtil(applicationContext : Context){
     val db = AppDatabase.getInstance(applicationContext)
 
-    fun get_all_favorite(dashboardViewModel: DashboardViewModel){
-        Thread {
-            val list_favorites = db.FavoriteDao().getAll()
-            var temp_array = arrayListOf<Favorite>()
-            for(i in list_favorites){
-                temp_array.add(i)
-            }
-            dashboardViewModel._favorite.postValue(temp_array)
-            AppDatabase.destroyInstance()
-        }.start()
-    }
-
-    fun get_all_favorite(favoritesViewModel: FavoritesViewModel){
-        Thread {
-            val list_favorites = db.FavoriteDao().getAll()
-            var temp_array = arrayListOf<Favorite>()
-            for(i in list_favorites){
-                temp_array.add(i)
-            }
-            favoritesViewModel._favorite.postValue(temp_array)
-            AppDatabase.destroyInstance()
-        }.start()
-    }
-
     fun add_favorite(StockNo : String,Name : String){
         Thread {
             Log.e("add_favorite",StockNo)
             db.FavoriteDao().insertAll(Favorite(StockNo,Name))
             AppDatabase.destroyInstance()
-            DashboardFragment.dashboardViewModel.get_favorite()//更新
+//            DashboardFragment.dashboardViewModel.get_favorite()//更新
         }.start()
     }
 
@@ -51,7 +27,7 @@ class FavoriteUtil(applicationContext : Context){
         Thread {
             db.FavoriteDao().delete(Favorite(StockNo,Name))
             AppDatabase.destroyInstance()
-            DashboardFragment.dashboardViewModel.get_favorite()//更新
+//            DashboardFragment.dashboardViewModel.get_favorite()//更新
         }.start()
     }
 

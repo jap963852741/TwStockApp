@@ -100,61 +100,7 @@ class MyStockUtil(applicationContext : Context){
                 HomeFragment.loadingdialog.dismiss();
         }.start()
 
-    fun getAdapter(vocabulary: ArrayList<String>?){
-        Thread{
-            val temp_arraylist = db.TwStockDao().getAllStockNo()
-            System.out.println(vocabulary)
-            for (i in 0..temp_arraylist!!.size-1) {
-//                System.out.println(temp_arraylist?.get(i))
-                vocabulary?.add(temp_arraylist?.get(i).toString())
-            }
-            destroyInstance()
-        }.start()
 
-    }
-
-    fun get_stock_information(result: MutableLiveData<ArrayList<String?>>, StockNo : String){
-        Thread{
-            val twstock = db.TwStockDao().getStockNoInformation(StockNo)
-            if (twstock != null) {
-                var temp_array: ArrayList<String?> = arrayListOf("公司名稱 : " + twstock.Name)
-                AddInfoToAarray("現價 : ", twstock.Price.toString(), temp_array)
-                AddInfoToAarray("漲跌 : ", twstock.UpAndDown.toString(), temp_array)
-                AddInfoToAarray("漲跌現價比 : ", twstock.UpAndDownPercent.toString(), temp_array)
-                AddInfoToAarray("周漲跌現價比 : ", twstock.WeekUpAndDownPercent.toString(), temp_array)
-                AddInfoToAarray("最高最低振福 : ", twstock.HighestAndLowestPercent.toString(), temp_array)
-                AddInfoToAarray("開盤價 : ", twstock.Open.toString(), temp_array)
-                AddInfoToAarray("最高價 : ", twstock.High.toString(), temp_array)
-                AddInfoToAarray("最低價 : ", twstock.Low.toString(), temp_array)
-                AddInfoToAarray("交易量 : ", twstock.DealVolume.toString(), temp_array)
-                AddInfoToAarray("交易總值 : ", twstock.DealTotalValue.toString(), temp_array)
-                AddInfoToAarray("--", "基本面--", temp_array)
-                AddInfoToAarray("殖利率 : ", twstock.DividendYield.toString(), temp_array)
-                AddInfoToAarray("本益比 : ", twstock.PriceToEarningRatio.toString(), temp_array)
-                AddInfoToAarray("股價淨值比 : ", twstock.PriceBookRatio.toString(), temp_array)
-                AddInfoToAarray("--", "營收成長--", temp_array)
-                AddInfoToAarray("營業收入 : ", twstock.OperatingRevenue.toString(), temp_array)
-                AddInfoToAarray("月增率 : ", twstock.MoM.toString(), temp_array)
-                AddInfoToAarray("年增率 : ", twstock.YoY.toString(), temp_array)
-                AddInfoToAarray("--", "籌碼--", temp_array)
-                AddInfoToAarray("董監持股比例 : ",twstock.DirectorsSupervisorsRatio.toString(),temp_array)
-                AddInfoToAarray("外商持股比例 : ", twstock.ForeignInvestmentRatio.toString(), temp_array)
-                AddInfoToAarray("投信持股比例 : ", twstock.InvestmentRation.toString(), temp_array)
-                AddInfoToAarray("自營商持股 : ", twstock.SelfEmployedRation.toString(), temp_array)
-                AddInfoToAarray("三大法人持股比例 : ", twstock.ThreeBigRation.toString(), temp_array)
-                result.postValue(temp_array)
-            }else{
-                result.postValue(arrayListOf(""))
-            }
-            destroyInstance()
-        }.start()
-    }
-
-    fun AddInfoToAarray(s : String? , s2 :String? ,temp_array: ArrayList<String?>?){
-        if (s2 != null){
-            temp_array?.add(s + s2)
-        }
-    }
 
     fun get_all_twstock(){
         Thread {
@@ -164,7 +110,5 @@ class MyStockUtil(applicationContext : Context){
             DashboardFragment.mUI_Handler.sendEmptyMessage(DashboardFragment.MSG_TWSTOCK_OK)
         }.start()
     }
-
-
 
 }

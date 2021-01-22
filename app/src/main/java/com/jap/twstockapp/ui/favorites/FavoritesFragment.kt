@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jap.twstockapp.R
 import com.jap.twstockapp.databinding.FragmentFavoritesBinding
 import com.jap.twstockapp.databinding.FragmentHomeBinding
+import com.jap.twstockapp.ui.dashboard.DashboardViewModel
+import com.jap.twstockapp.ui.favorites.FavoritesViewModel.Companion.favorites
 import com.jap.twstockapp.ui.home.HomeAdapter
 import com.jap.twstockapp.ui.home.HomeFragment
 import com.jap.twstockapp.util.FavoriteUtil
@@ -32,6 +34,7 @@ class FavoritesFragment : Fragment() {
         binding = FragmentFavoritesBinding.inflate(inflater, container, false);
         favoritesViewModel = ViewModelProvider(this).get(FavoritesViewModel::class.java)
         favoritesViewModel.favorite.observe(viewLifecycleOwner, Observer {
+            favorites = it
             favoritesAdapter = FavoritesAdapter(it, container!!)
             binding.reViewFavorites.setAdapter(favoritesAdapter)
             binding.reViewFavorites.setLayoutManager(
@@ -43,7 +46,7 @@ class FavoritesFragment : Fragment() {
             )
         })
 
-        FavoriteUtil(requireContext()).get_all_favorite(favoritesViewModel)
+        favoritesViewModel.get_favorite()
 
         return binding.getRoot()
     }

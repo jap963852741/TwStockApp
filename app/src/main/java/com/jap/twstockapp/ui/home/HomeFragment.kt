@@ -58,11 +58,12 @@ class HomeFragment : Fragment() , View.OnClickListener{
 
         homeViewModel.StockNoArrayList.observe(viewLifecycleOwner, Observer {
             val adapter = ArrayAdapter(container!!.context, android.R.layout.simple_list_item_1, it)
+            Log.e("homeViewModel",it.toString())
             auto_complete_text.threshold = 1
             auto_complete_text.setAdapter(adapter)
         })
 
-        homeViewModel.text.observe(viewLifecycleOwner, Observer {
+        homeViewModel.StockInformation.observe(viewLifecycleOwner, Observer {
             homeAdapter = HomeAdapter(it, container!!)
             recyclerView.setAdapter(homeAdapter)
             recyclerView.setLayoutManager(

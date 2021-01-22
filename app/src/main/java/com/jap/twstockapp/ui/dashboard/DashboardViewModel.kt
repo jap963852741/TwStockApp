@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.jap.twstockapp.Repository.*
 import com.jap.twstockapp.roomdb.Favorite
 import com.jap.twstockapp.util.MyStockUtil
 import com.jap.twstockapp.roomdb.TwStock
@@ -26,7 +27,15 @@ class DashboardViewModel(app: Application) : AndroidViewModel(app){
     }
 
     fun get_aLL_list(){
-        MyStockUtil(context).get_all_twstock()
+//        MyStockUtil(context).get_all_twstock()
+        GetAllStockRespository().loadInfo(context,object : AllTwStockTaskFinish {
+                override fun onFinish(data: List<TwStock>) {
+                    twstocks = data
+                    DashboardFragment.loadingdialog.dismiss()
+                    DashboardFragment.mUI_Handler.sendEmptyMessage(DashboardFragment.MSG_TWSTOCK_OK)
+                }
+        })
+
     }
 
     fun filter_list(Name: String, Symbol: String, value: Double){
@@ -357,6 +366,10 @@ class DashboardViewModel(app: Application) : AndroidViewModel(app){
     }
 
     fun get_favorite(){
-        FavoriteUtil(context).get_all_favorite(this)
+        FavoritesRespository().loadInfo(context,object : FavoriteTaskFinish{
+            override fun onFinish(data: ArrayList<Favorite>) {
+                _favorite.postValue(data)
+            }
+        })
     }
 }

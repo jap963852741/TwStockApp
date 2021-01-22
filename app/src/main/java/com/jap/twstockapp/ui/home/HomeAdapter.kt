@@ -9,15 +9,12 @@ import com.jap.twstockapp.R
 import com.jap.twstockapp.databinding.ItemHomeBinding
 
 class HomeAdapter(
-    private val dataList: ArrayList<String?>,
+    private val dataList: ArrayList<String>,
     private val parentview: ViewGroup
 ) :
 
     RecyclerView.Adapter<VH>() {
-
     private lateinit var binding : ItemHomeBinding
-
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         binding = ItemHomeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -26,7 +23,6 @@ class HomeAdapter(
 
     @SuppressLint("ResourceType")
     override fun onBindViewHolder(holder: VH, position: Int) {
-
         val c = dataList.get(position)
         holder.itemInformation.text = c
         when {
@@ -47,7 +43,6 @@ class HomeAdapter(
     }
 
 }
-
 
 class VH(binding: ItemHomeBinding) :
     RecyclerView.ViewHolder(binding.root) {

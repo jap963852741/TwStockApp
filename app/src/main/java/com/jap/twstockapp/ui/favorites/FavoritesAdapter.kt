@@ -12,6 +12,7 @@ import com.jap.twstockapp.databinding.ItemHomeBinding
 import com.jap.twstockapp.roomdb.Favorite
 import com.jap.twstockapp.ui.dashboard.DashboardFragment
 import com.jap.twstockapp.ui.dashboard.DashboardViewModel
+import com.jap.twstockapp.ui.favorites.FavoritesViewModel.Companion.favorites
 import com.jap.twstockapp.util.FavoriteUtil
 
 class FavoritesAdapter(
@@ -39,7 +40,7 @@ class FavoritesAdapter(
         holder.itemFavorite.text = favorite.StockNo + " " + favorite.Name
 
         var favorite_tag = false
-        for(i in DashboardViewModel.favorites){
+        for(i in favorites){
             if(stockno == i.StockNo && name  == i.Name){
                 favorite_tag = true
                 break

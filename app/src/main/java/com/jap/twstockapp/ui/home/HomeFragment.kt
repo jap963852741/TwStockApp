@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -41,11 +42,10 @@ class HomeFragment : Fragment() , View.OnClickListener{
 
     override fun onCreateView(inflater: LayoutInflater,container: ViewGroup?,savedInstanceState: Bundle?): View? {
         homeviewbinding = FragmentHomeBinding.inflate(inflater, container, false);
-//        val root = inflater.inflate(R.layout.fragment_home, container, false)
         val toolbar: Toolbar = homeviewbinding.toolBarHome
         val recyclerView: RecyclerView = homeviewbinding.reView
 
-        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
+        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         loadingdialog =  LoadingDialog(container!!.context,"正在更新...")//仅点击外部不可取消
         loadingdialog.setCanceledOnTouchOutside(false)//点击返回键和外部都不可取消
         loadingdialog.setCancelable(false)

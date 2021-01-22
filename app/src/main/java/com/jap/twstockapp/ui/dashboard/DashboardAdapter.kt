@@ -1,13 +1,11 @@
 package com.jap.twstockapp.ui.dashboard
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.github.zagum.switchicon.SwitchIconView
 import com.jap.twstockapp.MainActivity
-import com.jap.twstockapp.R
 import com.jap.twstockapp.databinding.ItemDetailBinding
 import com.jap.twstockapp.ui.dashboard.DashboardFragment.Companion.dashboardViewModel
 import com.jap.twstockapp.ui.dashboard.DashboardViewModel.Companion.favorites
@@ -15,7 +13,7 @@ import com.jap.twstockapp.ui.home.HomeFragment
 import com.jap.twstockapp.util.FavoriteUtil
 
 
-class DashboardAdapter (
+class DashboardAdapter(
     private val dataList: ArrayList<String?>,
     private val parentview: ViewGroup
 ) :

@@ -4,25 +4,19 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.EditText
-import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.jap.twstockapp.R
 import com.jap.twstockapp.databinding.FragmentDashboardBinding
-import com.jap.twstockapp.databinding.FragmentHomeBinding
 import com.jap.twstockapp.dialog.LoadingDialog
 import com.jap.twstockapp.ui.dashboard.DashboardViewModel.Companion.favorites
-import com.jap.twstockapp.ui.home.HomeAdapter
 
 
 class DashboardFragment : Fragment() , View.OnClickListener{
@@ -89,7 +83,7 @@ class DashboardFragment : Fragment() , View.OnClickListener{
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        dashboardViewModel =ViewModelProviders.of(this).get(DashboardViewModel::class.java)
+        dashboardViewModel = ViewModelProvider(this).get(DashboardViewModel::class.java)
         dashboardBinding = FragmentDashboardBinding.inflate(inflater, container, false)
 
         loadingdialog =  LoadingDialog(container!!.context,"正在對比...")
@@ -129,6 +123,14 @@ class DashboardFragment : Fragment() , View.OnClickListener{
         })
         dashboardViewModel.favorite.observe(viewLifecycleOwner, Observer {
             favorites = it
+            dashboardBinding.reViewDashboard.setAdapter(dashboardAdapter)
+            dashboardBinding.reViewDashboard.setLayoutManager(
+                LinearLayoutManager(
+                    context,
+                    RecyclerView.VERTICAL,
+                    false
+                )
+            )
         })
 
         dashboardViewModel.get_favorite()

@@ -3,11 +3,14 @@ package com.jap.twstockapp.ui.favorites
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.jap.twstockapp.roomdb.Favorite
 
 class FavoritesViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is favorites Fragment"
+    val _favorite = MutableLiveData<ArrayList<Favorite>>().apply {
+        value = arrayListOf()
     }
-    val text: LiveData<String> = _text
+    val favorite: LiveData<ArrayList<Favorite>> = _favorite
+
+
 }

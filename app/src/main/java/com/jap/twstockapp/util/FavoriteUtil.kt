@@ -2,15 +2,17 @@ package com.jap.twstockapp.util
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.jap.twstockapp.roomdb.AppDatabase
 import com.jap.twstockapp.roomdb.Favorite
 import com.jap.twstockapp.ui.dashboard.DashboardFragment
 import com.jap.twstockapp.ui.dashboard.DashboardViewModel
+import com.jap.twstockapp.ui.favorites.FavoritesViewModel
 
 
 class FavoriteUtil(applicationContext : Context){
     val db = AppDatabase.getInstance(applicationContext)
-
 
     fun get_all_favorite(dashboardViewModel: DashboardViewModel){
         Thread {
@@ -20,6 +22,18 @@ class FavoriteUtil(applicationContext : Context){
                 temp_array.add(i)
             }
             dashboardViewModel._favorite.postValue(temp_array)
+            AppDatabase.destroyInstance()
+        }.start()
+    }
+
+    fun get_all_favorite(favoritesViewModel: FavoritesViewModel){
+        Thread {
+            val list_favorites = db.FavoriteDao().getAll()
+            var temp_array = arrayListOf<Favorite>()
+            for(i in list_favorites){
+                temp_array.add(i)
+            }
+            favoritesViewModel._favorite.postValue(temp_array)
             AppDatabase.destroyInstance()
         }.start()
     }

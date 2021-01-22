@@ -44,7 +44,7 @@ class FragmentSwitchUtil constructor(context: Fragment){
             if (tabId == TAB_DASHBOARD) {
                 switchContent(getNowFragment(), DashboardFragment() , tabId ,true)
             } else if (tabId == TAB_NOTIFICATIONS) {
-                switchContent(getNowFragment(), FavoritesFragment() , tabId ,true)
+                switchContent(getNowFragment(), FavoritesFragment() , tabId ,false)
             }
         } else {
             switchContent(getNowFragment(),mStacks!![tabId]!!.lastElement() , tabId ,false)

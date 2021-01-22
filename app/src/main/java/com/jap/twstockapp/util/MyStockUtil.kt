@@ -149,6 +149,7 @@ class MyStockUtil(applicationContext : Context){
             destroyInstance()
         }.start()
     }
+
     fun AddInfoToAarray(s : String? , s2 :String? ,temp_array: ArrayList<String?>?){
         if (s2 != null){
             temp_array?.add(s + s2)

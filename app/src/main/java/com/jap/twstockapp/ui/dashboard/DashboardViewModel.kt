@@ -25,7 +25,6 @@ class DashboardViewModel(app: Application) : AndroidViewModel(app){
         lateinit var favorites: ArrayList<Favorite>
     }
 
-
     fun get_aLL_list(){
         MyStockUtil(context).get_all_twstock()
     }

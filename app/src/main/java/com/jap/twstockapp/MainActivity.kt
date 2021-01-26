@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
                         fragmentutil.selectedTab(fragmentutil.TAB_DASHBOARD)
                         return true
                     }
-                    R.id.navigation_notifications -> {
+                    R.id.navigation_favorites -> {
                         fragmentutil.selectedTab(fragmentutil.TAB_NOTIFICATIONS)
                         return true
                     }

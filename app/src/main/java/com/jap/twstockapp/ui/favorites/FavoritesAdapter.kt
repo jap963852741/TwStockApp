@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.github.zagum.switchicon.SwitchIconView
+import com.jap.twstockapp.MainActivity
 import com.jap.twstockapp.R
 import com.jap.twstockapp.databinding.ItemFavoritesBinding
 import com.jap.twstockapp.databinding.ItemHomeBinding
@@ -13,6 +14,7 @@ import com.jap.twstockapp.roomdb.Favorite
 import com.jap.twstockapp.ui.dashboard.DashboardFragment
 import com.jap.twstockapp.ui.dashboard.DashboardViewModel
 import com.jap.twstockapp.ui.favorites.FavoritesViewModel.Companion.favorites
+import com.jap.twstockapp.ui.home.HomeFragment
 import com.jap.twstockapp.util.FavoriteUtil
 
 class FavoritesAdapter(
@@ -64,6 +66,12 @@ class FavoritesAdapter(
                 DashboardFragment.dashboardViewModel.get_favorite()
             }
 
+        }
+
+        holder.itemView.setOnClickListener {
+            MainActivity.navigation.setSelectedItemId(MainActivity.navigation.menu.getItem(0).getItemId());
+            HomeFragment.stocktext.setText(stockno,false)
+            HomeFragment.homeViewModel.update_text(stockno)
         }
 
     }

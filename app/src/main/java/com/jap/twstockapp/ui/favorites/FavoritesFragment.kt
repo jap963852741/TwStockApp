@@ -19,6 +19,7 @@ import com.jap.twstockapp.ui.favorites.FavoritesViewModel.Companion.favorites
 import com.jap.twstockapp.ui.home.HomeAdapter
 import com.jap.twstockapp.ui.home.HomeFragment
 import com.jap.twstockapp.util.FavoriteUtil
+import kotlinx.android.synthetic.main.fragment_favorites.*
 
 class FavoritesFragment : Fragment() {
 
@@ -31,7 +32,7 @@ class FavoritesFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentFavoritesBinding.inflate(inflater, container, false);
+        binding = FragmentFavoritesBinding.inflate(inflater, container, false)
         favoritesViewModel = ViewModelProvider(this).get(FavoritesViewModel::class.java)
         favoritesViewModel.favorite.observe(viewLifecycleOwner, Observer {
             favorites = it
@@ -44,6 +45,7 @@ class FavoritesFragment : Fragment() {
                     false
                 )
             )
+            re_view_favorites.adapter = favoritesAdapter
         })
 
         favoritesViewModel.get_favorite()

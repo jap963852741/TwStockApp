@@ -8,13 +8,25 @@
     android:background="@color/colorWhite"
     android:clickable="true"
     >
-
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolBar_favorites"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:popupTheme="@style/toolbarstyletest"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp"
+        app:titleTextColor="@color/colorWhite"
+        />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/re_view_favorites"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolBar_favorites"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         />

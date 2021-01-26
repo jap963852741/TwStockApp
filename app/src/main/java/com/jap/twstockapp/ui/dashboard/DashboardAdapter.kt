@@ -25,13 +25,8 @@ class DashboardAdapter(
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-
-//        val v: View = LayoutInflater.from(parent.context).inflate(R.layout.item_detail, parent, false)
-//        val holder = VH(v,parentview)
         binding = ItemDetailBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return VH(binding)
-
-//        return holder
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
@@ -69,10 +64,10 @@ class DashboardAdapter(
 
         }
         holder.itemView.setOnClickListener {
-            var StockNo = dataList.get(holder.adapterPosition)!!.split(" ")[0]//.substring(0,4)
+//            var StockNo = dataList.get(holder.adapterPosition)!!.split(" ")[0]//.substring(0,4)
             MainActivity.navigation.setSelectedItemId(MainActivity.navigation.menu.getItem(0).getItemId());
-            HomeFragment.stocktext.setText(StockNo,false)
-            HomeFragment.homeViewModel.update_text(StockNo)
+            HomeFragment.stocktext.setText(stockno,false)
+            HomeFragment.homeViewModel.update_text(stockno)
         }
     }
 

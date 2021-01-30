@@ -1,4 +1,4 @@
-package com.jap.twstockapp.roomdb
+package com.jap.twstockapp.Repository.roomdb
 
 import android.content.Context
 import androidx.room.Database

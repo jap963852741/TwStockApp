@@ -1,4 +1,4 @@
-package com.jap.twstockapp.dialog;
+package com.jap.twstockapp.util.dialog;
 
 import android.app.Dialog;
 import android.content.Context;

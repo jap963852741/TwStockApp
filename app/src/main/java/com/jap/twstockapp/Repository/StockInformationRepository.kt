@@ -1,7 +1,7 @@
 package com.jap.twstockapp.Repository
 
 import android.content.Context
-import com.jap.twstockapp.roomdb.AppDatabase
+import com.jap.twstockapp.Repository.roomdb.AppDatabase
 import java.util.concurrent.Executors
 
 class StockInformationRepository {

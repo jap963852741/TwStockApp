@@ -5,10 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.jap.twstockapp.Repository.*
-import com.jap.twstockapp.roomdb.Favorite
-import com.jap.twstockapp.util.MyStockUtil
-import com.jap.twstockapp.roomdb.TwStock
-import com.jap.twstockapp.util.FavoriteUtil
+import com.jap.twstockapp.Repository.roomdb.Favorite
+import com.jap.twstockapp.Repository.roomdb.TwStock
 
 class DashboardViewModel(app: Application) : AndroidViewModel(app){
     val context = getApplication<Application>().applicationContext

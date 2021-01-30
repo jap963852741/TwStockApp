@@ -1,9 +1,8 @@
 package com.jap.twstockapp.Repository
 
 import android.content.Context
-import com.jap.twstockapp.roomdb.AppDatabase
-import com.jap.twstockapp.roomdb.Favorite
-import com.jap.twstockapp.roomdb.TwStock
+import com.jap.twstockapp.Repository.roomdb.AppDatabase
+import com.jap.twstockapp.Repository.roomdb.TwStock
 import java.util.concurrent.Executors
 
 class GetAllStockRespository {

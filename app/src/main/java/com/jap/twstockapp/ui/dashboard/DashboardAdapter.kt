@@ -7,8 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.zagum.switchicon.SwitchIconView
 import com.jap.twstockapp.MainActivity
 import com.jap.twstockapp.databinding.ItemDetailBinding
-import com.jap.twstockapp.roomdb.Favorite
-import com.jap.twstockapp.ui.dashboard.DashboardFragment.Companion.dashboardViewModel
+import com.jap.twstockapp.Repository.roomdb.Favorite
 import com.jap.twstockapp.ui.dashboard.DashboardViewModel.Companion.favorites
 import com.jap.twstockapp.ui.home.HomeFragment
 import com.jap.twstockapp.util.FavoriteUtil

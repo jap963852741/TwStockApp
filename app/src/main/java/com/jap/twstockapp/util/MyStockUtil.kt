@@ -1,10 +1,9 @@
 package com.jap.twstockapp.util
 
 import android.content.Context
-import androidx.lifecycle.MutableLiveData
-import com.jap.twstockapp.roomdb.AppDatabase
-import com.jap.twstockapp.roomdb.AppDatabase.Companion.destroyInstance
-import com.jap.twstockapp.roomdb.TwStock
+import com.jap.twstockapp.Repository.roomdb.AppDatabase
+import com.jap.twstockapp.Repository.roomdb.AppDatabase.Companion.destroyInstance
+import com.jap.twstockapp.Repository.roomdb.TwStock
 import com.jap.twstockapp.ui.dashboard.DashboardFragment
 import com.jap.twstockapp.ui.dashboard.DashboardViewModel
 import com.jap.twstockapp.ui.home.HomeFragment

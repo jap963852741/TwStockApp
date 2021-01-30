@@ -1,5 +1,4 @@
-package com.jap.twstockapp.roomdb
-import androidx.annotation.NonNull
+package com.jap.twstockapp.Repository.roomdb
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey

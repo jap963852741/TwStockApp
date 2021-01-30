@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jap.twstockapp.databinding.FragmentDashboardBinding
-import com.jap.twstockapp.dialog.LoadingDialog
+import com.jap.twstockapp.util.dialog.LoadingDialog
 import com.jap.twstockapp.ui.dashboard.DashboardViewModel.Companion.favorites
 
 

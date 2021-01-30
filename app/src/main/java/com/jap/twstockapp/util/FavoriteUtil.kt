@@ -2,13 +2,8 @@ package com.jap.twstockapp.util
 
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.jap.twstockapp.roomdb.AppDatabase
-import com.jap.twstockapp.roomdb.Favorite
-import com.jap.twstockapp.ui.dashboard.DashboardFragment
-import com.jap.twstockapp.ui.dashboard.DashboardViewModel
-import com.jap.twstockapp.ui.favorites.FavoritesViewModel
+import com.jap.twstockapp.Repository.roomdb.AppDatabase
+import com.jap.twstockapp.Repository.roomdb.Favorite
 
 
 class FavoriteUtil(applicationContext : Context){
@@ -19,7 +14,6 @@ class FavoriteUtil(applicationContext : Context){
             Log.e("add_favorite",StockNo)
             db.FavoriteDao().insertAll(Favorite(StockNo,Name))
             AppDatabase.destroyInstance()
-//            DashboardFragment.dashboardViewModel.get_favorite()//更新
         }.start()
     }
 
@@ -27,7 +21,6 @@ class FavoriteUtil(applicationContext : Context){
         Thread {
             db.FavoriteDao().delete(Favorite(StockNo,Name))
             AppDatabase.destroyInstance()
-//            DashboardFragment.dashboardViewModel.get_favorite()//更新
         }.start()
     }
 

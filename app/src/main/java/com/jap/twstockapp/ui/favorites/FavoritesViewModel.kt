@@ -4,10 +4,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.jap.twstockapp.Repository.FavoriteTaskFinish
 import com.jap.twstockapp.Repository.FavoritesRespository
-import com.jap.twstockapp.roomdb.Favorite
+import com.jap.twstockapp.Repository.roomdb.Favorite
 
 class FavoritesViewModel(app: Application) : AndroidViewModel(app){
     val context = getApplication<Application>().applicationContext

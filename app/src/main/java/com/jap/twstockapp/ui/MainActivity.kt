@@ -1,4 +1,4 @@
-package com.jap.twstockapp
+package com.jap.twstockapp.ui
 
 
 import android.os.Build
@@ -8,21 +8,18 @@ import android.view.MenuItem
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.jap.twstockapp.R
 import com.jap.twstockapp.databinding.ActivityMainBinding
-import com.jap.twstockapp.ui.home.HomeFragment
 import com.jap.twstockapp.util.FragmentSwitchUtil
-import java.util.*
-import kotlin.collections.HashMap
 
 
 class MainActivity : AppCompatActivity() {
+
     private lateinit var viewbinding: ActivityMainBinding
+    private lateinit var fragmentutil : FragmentSwitchUtil
 
     companion object{
-        lateinit var fragmentutil : FragmentSwitchUtil
         lateinit var navigation : BottomNavigationView
     }
     @RequiresApi(Build.VERSION_CODES.O)
@@ -34,21 +31,26 @@ class MainActivity : AppCompatActivity() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR //Statusbar 轉為深色
         navigation = viewbinding.navView
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        fragmentutil = FragmentSwitchUtil(fragmanager = supportFragmentManager).getInstance()
+
     }
     private val mOnNavigationItemSelectedListener: BottomNavigationView.OnNavigationItemSelectedListener =
         object : BottomNavigationView.OnNavigationItemSelectedListener {
             override fun onNavigationItemSelected(item: MenuItem): Boolean {
                 when (item.getItemId()) {
                     R.id.navigation_home -> {
-                        fragmentutil.selectedTab(fragmentutil.TAB_HOME)
+                        fragmentutil.selectedTab(
+                            fragmentutil.TAB_HOME)
                         return true
                     }
                     R.id.navigation_dashboard -> {
-                        fragmentutil.selectedTab(fragmentutil.TAB_DASHBOARD)
+                        fragmentutil.selectedTab(
+                            fragmentutil.TAB_DASHBOARD)
                         return true
                     }
                     R.id.navigation_favorites -> {
-                        fragmentutil.selectedTab(fragmentutil.TAB_NOTIFICATIONS)
+                        fragmentutil.selectedTab(
+                            fragmentutil.TAB_NOTIFICATIONS)
                         return true
                     }
                 }

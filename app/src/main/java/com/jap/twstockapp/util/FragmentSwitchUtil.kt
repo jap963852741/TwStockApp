@@ -4,13 +4,14 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.jap.twstockapp.ui.MainActivity
 import com.jap.twstockapp.R
 import com.jap.twstockapp.ui.dashboard.DashboardFragment
 import com.jap.twstockapp.ui.home.HomeFragment
 import com.jap.twstockapp.ui.favorites.FavoritesFragment
 import java.util.*
 
-class FragmentSwitchUtil constructor(context: Fragment){
+class FragmentSwitchUtil(fragmanager: FragmentManager){
 
     var mStacks: HashMap<String, Stack<Fragment>>? = null
     var mCurrentTab: String? = null
@@ -20,19 +21,28 @@ class FragmentSwitchUtil constructor(context: Fragment){
     var manager: FragmentManager
 
     init{
-        manager = context.parentFragmentManager
+        manager = fragmanager
+        mStacks = HashMap<String, Stack<Fragment>>()
+        mStacks!!.put(TAB_HOME, Stack<Fragment>())
+        mStacks!!.put(TAB_DASHBOARD, Stack<Fragment>())
+        mStacks!!.put(TAB_NOTIFICATIONS, Stack<Fragment>())
     }
+
     companion object {
         private var INSTANCE: FragmentSwitchUtil? = null
-        fun getInstance(context: Fragment): FragmentSwitchUtil {
-            if (INSTANCE == null) {
-                INSTANCE = FragmentSwitchUtil(context)
-            }
-            return INSTANCE!!
-        }
     }
 
-
+    fun getInstance(): FragmentSwitchUtil {
+        if (INSTANCE == null) {
+            INSTANCE = FragmentSwitchUtil(manager)
+        }
+        return INSTANCE!!
+    }
+    fun destroyInstance() {
+        if (INSTANCE != null) {
+            INSTANCE = null
+        }
+    }
     fun selectedTab(tabId: String) {
         mCurrentTab = tabId
         if (mStacks!![tabId]!!.size == 0) {
@@ -94,18 +104,6 @@ class FragmentSwitchUtil constructor(context: Fragment){
         return null
 
     }
-    fun GetHomeFragment() : HomeFragment?{
-        val fragments: List<Fragment> = manager.getFragments()
-        for (fragment in fragments) {
-            if(fragment is HomeFragment){
-                return fragment
-            }
-        }
-        return null
-    }
-
-
-
 
 
     fun replaceCateFragment(
@@ -119,9 +117,7 @@ class FragmentSwitchUtil constructor(context: Fragment){
         if (animType == 0) {
             transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
         }
-
         mStacks!![TAB_HOME]!!.push(frag)
-
         transaction.replace(R.id.nav_host_fragment, frag!!)
         Log.i("replaceCateFragment"," fragment :   "+frag.toString())
         transaction.commit()

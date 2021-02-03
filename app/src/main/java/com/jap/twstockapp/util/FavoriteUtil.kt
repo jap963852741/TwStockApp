@@ -11,9 +11,8 @@ class FavoriteUtil(applicationContext : Context){
 
     fun add_favorite(StockNo : String,Name : String){
         Thread {
-            Log.e("add_favorite",StockNo)
             db.FavoriteDao().insertAll(Favorite(StockNo,Name))
-            AppDatabase.destroyInstance()
+            AppDatabase.destroyInstance()//防內存洩漏
         }.start()
     }
 

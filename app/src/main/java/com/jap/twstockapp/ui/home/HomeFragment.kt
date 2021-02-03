@@ -1,5 +1,6 @@
 package com.jap.twstockapp.ui.home
 
+import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.TextView.OnEditorActionListener
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -15,15 +17,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.jap.twstockapp.MainActivity.Companion.fragmentutil
 import com.jap.twstockapp.R
 import com.jap.twstockapp.databinding.FragmentHomeBinding
 import com.jap.twstockapp.util.dialog.LoadingDialog
-import com.jap.twstockapp.util.MyStockUtil
 import com.jap.twstockapp.util.FragmentSwitchUtil
 import kotlinx.android.synthetic.main.fragment_home.*
-import java.util.*
-import kotlin.collections.HashMap
 
 
 class HomeFragment : Fragment() , View.OnClickListener{
@@ -43,7 +41,9 @@ class HomeFragment : Fragment() , View.OnClickListener{
         val toolbar: Toolbar = homeviewbinding.toolBarHome
         val recyclerView: RecyclerView = homeviewbinding.reView
 
-        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+//        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+        homeViewModel = ViewModelProvider(this,HomeViewModelFactory(application = requireActivity().application)).get(HomeViewModel::class.java)
+
         loadingdialog =  LoadingDialog(container!!.context,"正在更新...")//仅点击外部不可取消
         loadingdialog.setCanceledOnTouchOutside(false)//点击返回键和外部都不可取消
         loadingdialog.setCancelable(false)
@@ -73,6 +73,25 @@ class HomeFragment : Fragment() , View.OnClickListener{
             )
         })
 
+        homeViewModel.updateResult.observe(viewLifecycleOwner, Observer {
+            loadingdialog.hide()
+
+            if(it.success != null) {
+                Toast.makeText(
+                    context,
+                    "${it.success} ",
+                    Toast.LENGTH_LONG
+                ).show()
+            }else{
+                Toast.makeText(
+                    context,
+                    "${it.error} ",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        })
+
+
         homeviewbinding.search.setOnClickListener(this)
 
         stocktext.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
@@ -87,11 +106,8 @@ class HomeFragment : Fragment() , View.OnClickListener{
             event != null && event.keyCode === KeyEvent.KEYCODE_ENTER
         })
 
-        fragmentutil = FragmentSwitchUtil.getInstance(this)
-        fragmentutil.mStacks = HashMap<String, Stack<Fragment>>()
-        fragmentutil.mStacks!!.put(fragmentutil.TAB_HOME, Stack<Fragment>())
-        fragmentutil.mStacks!!.put(fragmentutil.TAB_DASHBOARD, Stack<Fragment>())
-        fragmentutil.mStacks!!.put(fragmentutil.TAB_NOTIFICATIONS, Stack<Fragment>())
+        val fragmentutil = FragmentSwitchUtil(parentFragmentManager).getInstance()
+
         val fragments = fragmentutil.manager.fragments
         for (fragment in fragments) {
             if (fragment != null && fragmentutil.mStacks!![fragmentutil.TAB_HOME]!!.size == 0) {
@@ -116,7 +132,7 @@ class HomeFragment : Fragment() , View.OnClickListener{
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.updateDB -> {
-                context.let { MyStockUtil(it!!).UpdateAllInformation()}
+                context.let { homeViewModel.update_stock_db()}
                 loadingdialog.show()
             }
         }

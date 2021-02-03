@@ -4,6 +4,8 @@
     <string name="type_number">請輸入代號</string>
     <string name="update_db">更新資料庫</string>
     <string name="type_condition">請輸入條件</string>
+    <string name="update_failed"> 更新失敗 </string>
+    <string name="update_success"> 更新成功 </string>
 
 
 

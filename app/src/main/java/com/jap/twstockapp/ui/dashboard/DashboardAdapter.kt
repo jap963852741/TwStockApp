@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.github.zagum.switchicon.SwitchIconView
-import com.jap.twstockapp.MainActivity
+import com.jap.twstockapp.ui.MainActivity
 import com.jap.twstockapp.databinding.ItemDetailBinding
 import com.jap.twstockapp.Repository.roomdb.Favorite
 import com.jap.twstockapp.ui.dashboard.DashboardViewModel.Companion.favorites
@@ -63,8 +63,8 @@ class DashboardAdapter(
 
         }
         holder.itemView.setOnClickListener {
-//            var StockNo = dataList.get(holder.adapterPosition)!!.split(" ")[0]//.substring(0,4)
-            MainActivity.navigation.setSelectedItemId(MainActivity.navigation.menu.getItem(0).getItemId());
+            MainActivity.navigation.setSelectedItemId(
+                MainActivity.navigation.menu.getItem(0).getItemId());
             HomeFragment.stocktext.setText(stockno,false)
             HomeFragment.homeViewModel.update_text(stockno)
         }

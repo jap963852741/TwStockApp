@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.jap.twstockapp.Repository.StockInformationRepository
-import com.jap.twstockapp.Repository.roomdb.network.UpdateDataSource
+import com.jap.twstockapp.Repository.network.UpdateDataSource
 
 /**
  * ViewModel provider factory to instantiate LoginViewModel.

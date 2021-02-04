@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import com.jap.twstockapp.Repository.*
 import com.jap.twstockapp.Repository.roomdb.Favorite
 import com.jap.twstockapp.Repository.roomdb.TwStock
-import com.jap.twstockapp.Repository.roomdb.network.FavoriteDataSource
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.disposables.Disposable

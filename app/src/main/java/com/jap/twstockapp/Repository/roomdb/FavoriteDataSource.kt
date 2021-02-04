@@ -1,4 +1,4 @@
-package com.jap.twstockapp.Repository.roomdb.network
+package com.jap.twstockapp.Repository.roomdb
 
 import android.content.Context
 import com.jap.twstockapp.R

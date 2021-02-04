@@ -3,6 +3,9 @@ package com.jap.twstockapp.Repository
 import android.content.Context
 import com.jap.twstockapp.Repository.roomdb.AppDatabase
 import com.jap.twstockapp.Repository.roomdb.Favorite
+import com.jap.twstockapp.Repository.roomdb.network.FavoriteDataSource
+import com.jap.twstockapp.Repository.roomdb.network.UpdateDataSource
+import com.jap.twstockapp.ui.home.UpdateResult
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.disposables.Disposable
@@ -10,42 +13,8 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 
 import java.util.concurrent.Executors
 
-class FavoritesRespository {
-    fun loadInfo(applicationContext : Context, task: FavoriteTaskFinish){
-        Executors.newSingleThreadExecutor().submit {
-
-            var temp_array = arrayListOf<Favorite>()
-
-            val observable = Observable.create<Favorite> {
-                val list_favorites = AppDatabase.getInstance(applicationContext).FavoriteDao().getAll()
-                for (i in list_favorites!!) {
-                    it.onNext(i)
-                }
-                it.onComplete()
-            }
-
-            val observer: Observer<Favorite> = object : Observer<Favorite> {
-                override fun onNext(item: Favorite) {
-                    temp_array.add(item)
-                }
-                override fun onError(e: Throwable) {
-                    println("Error Occured ${e.message}")
-                }
-                override fun onComplete() {
-                    AppDatabase.destroyInstance()
-                    task.onFinish(temp_array)
-                }
-
-                override fun onSubscribe(d: Disposable) {
-                }
-            }
-
-            observable.subscribeOn(Schedulers.newThread())
-                        .subscribe(observer)
-        }
+class FavoritesRespository(val favoriteDataSource: FavoriteDataSource) {
+    fun getAllFavorite(context : Context) : Observable<List<Favorite>> {
+        return favoriteDataSource.get_all_favorite(context = context)
     }
-}
-
-interface FavoriteTaskFinish{
-    fun onFinish(data: ArrayList<Favorite>)
 }

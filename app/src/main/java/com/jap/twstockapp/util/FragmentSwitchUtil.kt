@@ -4,10 +4,8 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.jap.twstockapp.ui.MainActivity
 import com.jap.twstockapp.R
-import com.jap.twstockapp.ui.dashboard.DashboardFragment
-import com.jap.twstockapp.ui.home.HomeFragment
+import com.jap.twstockapp.ui.condition.ConditionFragment
 import com.jap.twstockapp.ui.favorites.FavoritesFragment
 import java.util.*
 
@@ -52,7 +50,7 @@ class FragmentSwitchUtil(fragmanager: FragmentManager){
                *    We are adding a new fragment which is not present in stack. So add to stack is true.
                */
             if (tabId == TAB_DASHBOARD) {
-                switchContent(getNowFragment(), DashboardFragment() , tabId ,true)
+                switchContent(getNowFragment(), ConditionFragment() , tabId ,true)
             } else if (tabId == TAB_NOTIFICATIONS) {
                 switchContent(getNowFragment(), FavoritesFragment() , tabId ,false)
             }

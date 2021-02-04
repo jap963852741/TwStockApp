@@ -13,9 +13,9 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.jap.twstockapp.ui.dashboard.DashboardFragment"
+        android:name="com.jap.twstockapp.ui.condition.ConditionFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_condition" />
 
     <fragment
         android:id="@+id/navigation_favorites"

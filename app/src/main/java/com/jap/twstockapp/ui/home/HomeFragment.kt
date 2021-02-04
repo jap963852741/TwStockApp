@@ -41,7 +41,6 @@ class HomeFragment : Fragment() , View.OnClickListener{
         val toolbar: Toolbar = homeviewbinding.toolBarHome
         val recyclerView: RecyclerView = homeviewbinding.reView
 
-//        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         homeViewModel = ViewModelProvider(this,HomeViewModelFactory(application = requireActivity().application)).get(HomeViewModel::class.java)
 
         loadingdialog =  LoadingDialog(container!!.context,"正在更新...")//仅点击外部不可取消
@@ -79,13 +78,13 @@ class HomeFragment : Fragment() , View.OnClickListener{
             if(it.success != null) {
                 Toast.makeText(
                     context,
-                    "${it.success} ",
+                    "${resources.getString(it.success)} ",
                     Toast.LENGTH_LONG
                 ).show()
-            }else{
+            }else if(it.error != null){
                 Toast.makeText(
                     context,
-                    "${it.error} ",
+                    "${resources.getString(it.error)} ",
                     Toast.LENGTH_LONG
                 ).show()
             }

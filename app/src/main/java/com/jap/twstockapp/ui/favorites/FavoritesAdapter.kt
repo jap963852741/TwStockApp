@@ -9,7 +9,7 @@ import com.github.zagum.switchicon.SwitchIconView
 import com.jap.twstockapp.ui.MainActivity
 import com.jap.twstockapp.databinding.ItemFavoritesBinding
 import com.jap.twstockapp.Repository.roomdb.Favorite
-import com.jap.twstockapp.ui.dashboard.DashboardFragment
+import com.jap.twstockapp.ui.condition.ConditionFragment
 import com.jap.twstockapp.ui.favorites.FavoritesViewModel.Companion.favorites
 import com.jap.twstockapp.ui.home.HomeFragment
 import com.jap.twstockapp.util.FavoriteUtil
@@ -60,7 +60,7 @@ class FavoritesAdapter(
             } else {
                 FavoriteUtil(parentview.context).add_favorite(stockno,name)
                 holder.favorite_button.setIconEnabled(true)
-                DashboardFragment.dashboardViewModel.get_favorite()
+                ConditionFragment.conditionViewModel.get_favorite()
             }
 
         }

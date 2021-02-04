@@ -1,4 +1,4 @@
-package com.jap.twstockapp.ui.dashboard
+package com.jap.twstockapp.ui.condition
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,12 +8,12 @@ import com.github.zagum.switchicon.SwitchIconView
 import com.jap.twstockapp.ui.MainActivity
 import com.jap.twstockapp.databinding.ItemDetailBinding
 import com.jap.twstockapp.Repository.roomdb.Favorite
-import com.jap.twstockapp.ui.dashboard.DashboardViewModel.Companion.favorites
+import com.jap.twstockapp.ui.condition.ConditionViewModel.Companion.favorites
 import com.jap.twstockapp.ui.home.HomeFragment
 import com.jap.twstockapp.util.FavoriteUtil
 
 
-class DashboardAdapter(
+class ConditonAdapter(
     private val dataList: ArrayList<String?>,
     private val parentview: ViewGroup
 ) :

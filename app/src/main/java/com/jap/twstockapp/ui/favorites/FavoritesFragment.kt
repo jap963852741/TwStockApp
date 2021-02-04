@@ -4,22 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.jap.twstockapp.R
 import com.jap.twstockapp.databinding.FragmentFavoritesBinding
-import com.jap.twstockapp.databinding.FragmentHomeBinding
-import com.jap.twstockapp.ui.dashboard.DashboardViewModel
 import com.jap.twstockapp.ui.favorites.FavoritesViewModel.Companion.favorites
-import com.jap.twstockapp.ui.home.HomeAdapter
 import com.jap.twstockapp.ui.home.HomeFragment
-import com.jap.twstockapp.util.FavoriteUtil
-import kotlinx.android.synthetic.main.fragment_favorites.*
+import com.jap.twstockapp.ui.home.HomeViewModel
+import com.jap.twstockapp.ui.home.HomeViewModelFactory
 
 class FavoritesFragment : Fragment() {
 
@@ -33,7 +27,9 @@ class FavoritesFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         binding = FragmentFavoritesBinding.inflate(inflater, container, false)
-        favoritesViewModel = ViewModelProvider(this).get(FavoritesViewModel::class.java)
+        favoritesViewModel = ViewModelProvider(this,
+            FavoriteViewModelFactory(application = requireActivity().application)
+        ).get(FavoritesViewModel::class.java)
         favoritesViewModel.favorite.observe(viewLifecycleOwner, Observer {
             favorites = it
             favoritesAdapter = FavoritesAdapter(it, container!!)
@@ -45,7 +41,7 @@ class FavoritesFragment : Fragment() {
                     false
                 )
             )
-            re_view_favorites.adapter = favoritesAdapter
+            binding.reViewFavorites.adapter = favoritesAdapter
         })
 
         favoritesViewModel.get_favorite()

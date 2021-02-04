@@ -1,4 +1,4 @@
-package com.jap.twstockapp.ui.dashboard
+package com.jap.twstockapp.ui.condition
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -7,8 +7,14 @@ import androidx.lifecycle.MutableLiveData
 import com.jap.twstockapp.Repository.*
 import com.jap.twstockapp.Repository.roomdb.Favorite
 import com.jap.twstockapp.Repository.roomdb.TwStock
+import com.jap.twstockapp.Repository.roomdb.network.FavoriteDataSource
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observer
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 
-class DashboardViewModel(app: Application) : AndroidViewModel(app){
+class ConditionViewModel(app: Application
+                         ,private val favoritesRespository : FavoritesRespository) : AndroidViewModel(app){
     val context = getApplication<Application>().applicationContext
     private val _text = MutableLiveData<ArrayList<String?>>().apply {
         value = arrayListOf()
@@ -19,19 +25,19 @@ class DashboardViewModel(app: Application) : AndroidViewModel(app){
 
     val text: LiveData<ArrayList<String?>> = _text
     val favorite :  LiveData<ArrayList<Favorite>> = _favorite
+
     companion object {
         lateinit var twstocks: List<TwStock>
         lateinit var favorites: ArrayList<Favorite>
     }
 
     fun get_aLL_list(){
-//        MyStockUtil(context).get_all_twstock()
         get_favorite()
         GetAllStockRespository().loadInfo(context,object : AllTwStockTaskFinish {
                 override fun onFinish(data: List<TwStock>) {
                     twstocks = data
-                    DashboardFragment.loadingdialog.dismiss()
-                    DashboardFragment.mUI_Handler.sendEmptyMessage(DashboardFragment.MSG_TWSTOCK_OK)
+                    ConditionFragment.loadingdialog.dismiss()
+                    ConditionFragment.mUI_Handler.sendEmptyMessage(ConditionFragment.MSG_TWSTOCK_OK)
                 }
         })
 
@@ -364,11 +370,33 @@ class DashboardViewModel(app: Application) : AndroidViewModel(app){
         }
     }
 
+//    fun get_favorite(){
+//        FavoritesRespository(favoriteDataSource = FavoriteDataSource()).loadInfo(context,object : FavoriteTaskFinish{
+//            override fun onFinish(data: ArrayList<Favorite>) {
+//                _favorite.postValue(data)
+//            }
+//        })
+//    }
     fun get_favorite(){
-        FavoritesRespository().loadInfo(context,object : FavoriteTaskFinish{
-            override fun onFinish(data: ArrayList<Favorite>) {
-                _favorite.postValue(data)
+        val favorite_list = arrayListOf<Favorite>()
+        val observer: Observer<List<Favorite>> = object : Observer<List<Favorite>> {
+            override fun onNext(item: List<Favorite>) {
+                for(fav in item) {
+                    favorite_list.add(fav)
+                }
             }
-        })
+            override fun onError(e: Throwable) {
+            }
+            override fun onComplete() {
+                _favorite.value = favorite_list
+            }
+            override fun onSubscribe(d: Disposable) {
+            }
+        }
+
+        favoritesRespository.getAllFavorite(context)
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(observer)
     }
 }

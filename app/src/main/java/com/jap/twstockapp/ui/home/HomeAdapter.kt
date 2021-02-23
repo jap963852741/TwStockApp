@@ -2,6 +2,7 @@ package com.jap.twstockapp.ui.home
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -10,7 +11,7 @@ import com.jap.twstockapp.databinding.ItemHomeBinding
 
 class HomeAdapter(
     private val dataList: ArrayList<String>,
-    private val parentview: ViewGroup
+    private val parentview: View
 ) :
 
     RecyclerView.Adapter<VH>() {

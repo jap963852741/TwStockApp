@@ -4,8 +4,10 @@ import android.content.Context
 import com.jap.twstockapp.Repository.roomdb.AppDatabase
 import com.jap.twstockapp.Repository.network.UpdateDataSource
 import com.jap.twstockapp.ui.home.UpdateResult
+import com.jap.twstockapp.util.dialog.LoadingDialog
 import io.reactivex.rxjava3.core.Observable
 import java.util.concurrent.Executors
+import javax.inject.Inject
 
 class StockInformationRepository(val updatedataSource: UpdateDataSource) {
     fun loadInfo(applicationContext : Context,StockNo : String, task: OnTaskFinish){
@@ -48,8 +50,8 @@ class StockInformationRepository(val updatedataSource: UpdateDataSource) {
 
 
 
-    fun UpdateAllInformation(context : Context) : Observable<UpdateResult> {
-        return updatedataSource.update(context = context)
+    fun updateAllInformation(context : Context,loadingDialog:LoadingDialog) : Observable<UpdateResult> {
+        return updatedataSource.update(context = context,loadingDialog = loadingDialog)
     }
 
 }

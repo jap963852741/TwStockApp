@@ -1,43 +1,45 @@
 package com.jap.twstockapp.ui.home
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.jap.twstockapp.R
 import com.jap.twstockapp.Repository.OnTaskFinish
 import com.jap.twstockapp.Repository.StockInformationRepository
 import com.jap.twstockapp.Repository.StockNoArrayRepository
-import com.jap.twstockapp.Repository.roomdb.AppDatabase
-import com.jap.twstockapp.Repository.roomdb.TwStock
-import com.jap.twstockinformation.StockUtil
+import com.jap.twstockapp.di.App
+import com.jap.twstockapp.util.dialog.LoadingDialog
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class HomeViewModel(app : Application,private val stockinformationrepository : StockInformationRepository) : AndroidViewModel(app){
-    val context = getApplication<Application>().applicationContext
-    val _StockInformation = MutableLiveData<ArrayList<String>>()
-    val _StockNoArrayList = MutableLiveData<ArrayList<String>>().apply {
+class HomeViewModel(app : Application
+    , private val stockInformationRepository : StockInformationRepository) : AndroidViewModel(app){
+    val context = getApplication<Application>().applicationContext!!
+
+    private val _updateResult = MutableLiveData<UpdateResult>()
+    private val _StockInformation = MutableLiveData<ArrayList<String>>()
+    private val _StockNoArrayList = MutableLiveData<ArrayList<String>>().apply {
         StockNoArrayRepository()
             .loadInfo(context,object :
                 OnTaskFinish {
             override fun onFinish(data: ArrayList<String>) {
-                set_StockNoArrayList(data)
+                setStockNoArrayList(data)
             }
         })
     }
 
-    private val _updateResult = MutableLiveData<UpdateResult>()
+
     val updateResult: LiveData<UpdateResult> = _updateResult
+    val stockInformation: LiveData<ArrayList<String>> = _StockInformation
+    val stockNoArrayList: LiveData<ArrayList<String>> = _StockNoArrayList
 
-    val StockInformation: LiveData<ArrayList<String>> = _StockInformation
-    val StockNoArrayList: LiveData<ArrayList<String>> = _StockNoArrayList
-
-    fun update_text(StockNo : String){
-        stockinformationrepository
+    fun updateText(StockNo : String){
+        stockInformationRepository
             .loadInfo(context,StockNo,object :
             OnTaskFinish {
             override fun onFinish(data: ArrayList<String>) {
@@ -46,17 +48,19 @@ class HomeViewModel(app : Application,private val stockinformationrepository : S
         })
     }
 
-    fun set_StockNoArrayList(list : ArrayList<String>){
+    fun setStockNoArrayList(list : ArrayList<String>){
         this._StockNoArrayList.postValue(list)
     }
 
-    fun update_stock_db(){
+    fun updateStockDb(loadingDialog: LoadingDialog){
+
         val observer: Observer<UpdateResult> = object : Observer<UpdateResult> {
             override fun onNext(item: UpdateResult) {
                 _updateResult.value = UpdateResult(success =  R.string.update_success)
             }
             override fun onError(e: Throwable) {
                 _updateResult.value =  UpdateResult(error = R.string.update_failed)
+                Log.e("onError",e.toString())
             }
             override fun onComplete() {
             }
@@ -64,7 +68,7 @@ class HomeViewModel(app : Application,private val stockinformationrepository : S
             }
         }
 
-        stockinformationrepository.UpdateAllInformation(context)
+        stockInformationRepository.updateAllInformation(context,loadingDialog)
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(observer)

@@ -68,8 +68,8 @@ class FavoritesAdapter(
         holder.itemView.setOnClickListener {
             MainActivity.navigation.setSelectedItemId(
                 MainActivity.navigation.menu.getItem(0).getItemId());
-            HomeFragment.stocktext.setText(stockno,false)
-            HomeFragment.homeViewModel.update_text(stockno)
+            HomeFragment.stockText.setText(stockno,false)
+            HomeFragment.homeViewModel.updateText(stockno)
         }
 
     }

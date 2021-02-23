@@ -1,8 +1,11 @@
 package com.jap.twstockapp.ui.home
 
-import android.app.Application
 import android.content.Context
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
@@ -19,61 +22,84 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jap.twstockapp.R
 import com.jap.twstockapp.databinding.FragmentHomeBinding
+import com.jap.twstockapp.di.App
 import com.jap.twstockapp.util.dialog.LoadingDialog
 import com.jap.twstockapp.util.FragmentSwitchUtil
 import kotlinx.android.synthetic.main.fragment_home.*
+import javax.inject.Inject
 
 
 class HomeFragment : Fragment() , View.OnClickListener{
 
+
+    @Inject
+    lateinit var homeViewModelFactory: HomeViewModelFactory
+    @Inject
+    @JvmField
+    var loadingDialog: LoadingDialog?=null
     private lateinit var homeviewbinding: FragmentHomeBinding
     private lateinit var homeAdapter: HomeAdapter
-    lateinit var StockNo : String
+    private lateinit var stockNo : String
+    private lateinit var toolbar: Toolbar
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var fragmentUtil : FragmentSwitchUtil
 
     companion object {
-        lateinit var loadingdialog: LoadingDialog
-        lateinit var stocktext: AutoCompleteTextView
+
+        lateinit var stockText: AutoCompleteTextView
         lateinit var homeViewModel: HomeViewModel
+
     }
 
-    override fun onCreateView(inflater: LayoutInflater,container: ViewGroup?,savedInstanceState: Bundle?): View? {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        (activity?.application as App).createHomeComponent().inject(this)
+        homeViewModel = ViewModelProvider(this,homeViewModelFactory).get(HomeViewModel::class.java)
+        fragmentUtil = FragmentSwitchUtil(parentFragmentManager).getInstance()
+
+        for (fragment in fragmentUtil.manager.fragments) {
+            if (fragment != null && fragmentUtil.mStacks!![fragmentUtil.TAB_HOME]!!.size == 0) {
+                fragmentUtil.replaceCateFragment(1,fragment)
+            }
+        }
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         homeviewbinding = FragmentHomeBinding.inflate(inflater, container, false);
-        val toolbar: Toolbar = homeviewbinding.toolBarHome
-        val recyclerView: RecyclerView = homeviewbinding.reView
-
-        homeViewModel = ViewModelProvider(this,HomeViewModelFactory(application = requireActivity().application)).get(HomeViewModel::class.java)
-
-        loadingdialog =  LoadingDialog(container!!.context,"正在更新...")//仅点击外部不可取消
-        loadingdialog.setCanceledOnTouchOutside(false)//点击返回键和外部都不可取消
-        loadingdialog.setCancelable(false)
+        toolbar = homeviewbinding.toolBarHome
         toolbar.overflowIcon = resources.getDrawable(R.drawable.ic_refresh_black) //把三個小點換掉
         (activity as AppCompatActivity?)!!.setSupportActionBar(toolbar)
         setHasOptionsMenu(true)
+        recyclerView = homeviewbinding.reView
+        stockText = homeviewbinding.autoCompleteText
+        stockNo = stockText.text.toString()
+        return homeviewbinding.root
+    }
 
-        stocktext = homeviewbinding.autoCompleteText
-        StockNo = stocktext.text.toString()
-
-        homeViewModel.StockNoArrayList.observe(viewLifecycleOwner, Observer {
-            val adapter = ArrayAdapter(container!!.context, android.R.layout.simple_list_item_1, it)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        homeViewModel.stockNoArrayList.observe(viewLifecycleOwner, Observer {
+            val adapter = ArrayAdapter(view.context, android.R.layout.simple_list_item_1, it)
             Log.e("homeViewModel",it.toString())
             auto_complete_text.threshold = 1
             auto_complete_text.setAdapter(adapter)
         })
-
-        homeViewModel.StockInformation.observe(viewLifecycleOwner, Observer {
-            homeAdapter = HomeAdapter(it, container!!)
+        homeViewModel.stockInformation.observe(viewLifecycleOwner, Observer {
+            homeAdapter = HomeAdapter(it, view)
             recyclerView.setAdapter(homeAdapter)
             recyclerView.setLayoutManager(
-                LinearLayoutManager(
+                object : LinearLayoutManager(
                     context,
                     RecyclerView.VERTICAL,
                     false
-                )
+                ){
+
+                }
             )
         })
-
         homeViewModel.updateResult.observe(viewLifecycleOwner, Observer {
-            loadingdialog.hide()
+            loadingDialog!!.hide()
 
             if(it.success != null) {
                 Toast.makeText(
@@ -89,11 +115,7 @@ class HomeFragment : Fragment() , View.OnClickListener{
                 ).show()
             }
         })
-
-
-        homeviewbinding.search.setOnClickListener(this)
-
-        stocktext.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
+        stockText.setOnEditorActionListener(OnEditorActionListener { v, _, event ->
             /**
              *
              * @param v 被监听的对象
@@ -104,22 +126,13 @@ class HomeFragment : Fragment() , View.OnClickListener{
             onClick(v)
             event != null && event.keyCode === KeyEvent.KEYCODE_ENTER
         })
-
-        val fragmentutil = FragmentSwitchUtil(parentFragmentManager).getInstance()
-
-        val fragments = fragmentutil.manager.fragments
-        for (fragment in fragments) {
-            if (fragment != null && fragmentutil.mStacks!![fragmentutil.TAB_HOME]!!.size == 0) {
-                fragmentutil.replaceCateFragment(1,fragment)
-            }
-        }
-        return homeviewbinding.root
+        homeviewbinding.search.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(v?.windowToken, 0)
-        homeViewModel.update_text(stocktext.text.toString())
+        homeViewModel.updateText(stockText.text.toString())
     }
 
    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -127,16 +140,29 @@ class HomeFragment : Fragment() , View.OnClickListener{
        super.onCreateOptionsMenu(menu, inflater)
     }
 
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+   override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.updateDB -> {
-                context.let { homeViewModel.update_stock_db()}
-                loadingdialog.show()
+                context.let { homeViewModel.updateStockDb(loadingDialog!!)}
+                loadingDialog!!.show()
             }
         }
         return super.onOptionsItemSelected(item)
+   }
+
+    override fun onPause() {
+        super.onPause()
+        loadingDialog!!.hide()
     }
 
+    override fun onStart() {
+        super.onStart()
+        (activity?.application as App).createHomeComponent().inject(this)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        (activity?.application as App).releaseHomeComponent()
+    }
 
 }

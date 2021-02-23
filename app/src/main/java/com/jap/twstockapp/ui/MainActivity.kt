@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.jap.twstockapp.R
 import com.jap.twstockapp.databinding.ActivityMainBinding
+import com.jap.twstockapp.di.DaggerMainComponent
 import com.jap.twstockapp.util.FragmentSwitchUtil
 
 
@@ -24,7 +25,6 @@ class MainActivity : AppCompatActivity() {
     }
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.i("MainActivity","onCreateView savedInstanceState"+savedInstanceState.toString())
         super.onCreate(savedInstanceState)
         viewbinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewbinding.root)

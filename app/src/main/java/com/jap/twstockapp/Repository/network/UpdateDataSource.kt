@@ -1,22 +1,33 @@
 package com.jap.twstockapp.Repository.network
 
 import android.content.Context
+import android.util.Log
 import com.jap.twstockapp.R
 import com.jap.twstockapp.Repository.roomdb.AppDatabase
 import com.jap.twstockapp.Repository.roomdb.TwStock
 import com.jap.twstockapp.ui.home.UpdateResult
+import com.jap.twstockapp.util.dialog.LoadingDialog
 import com.jap.twstockinformation.StockUtil
 import io.reactivex.rxjava3.core.Observable
 
 class UpdateDataSource {
 
-    fun update(context: Context): Observable<UpdateResult> {
+    fun update(context: Context , loadingDialog:LoadingDialog): Observable<UpdateResult> {
+        Log.e("UpdateDataSource loadingDialog",loadingDialog.toString())
 
-        val observable = Observable.create<UpdateResult> {
-            val TotalInformation:HashMap<String,HashMap<String,String>> = StockUtil(context).Get_HashMap_Num_MapTotalInformation()
+        return Observable.create {
+
+            loadingDialog.setProgressBar(10)
+            val totalInformation:HashMap<String,HashMap<String,String>> = StockUtil(context).Get_HashMap_Num_MapTotalInformation()
+            loadingDialog.setProgressBar(20)
+
             val db = AppDatabase.getInstance(context)
             try {
-                for ((key_number, value_map) in TotalInformation) {
+                var totoalFinish = 0.0f
+                for ((key_number, value_map) in totalInformation) {
+                    totoalFinish += 1
+                    loadingDialog.setProgressBar(20 + (totoalFinish/totalInformation.size)*80)
+
                     println("$key_number = $value_map")
                     var Name = value_map.get("Name")
                     var Price: Double? = null
@@ -50,7 +61,6 @@ class UpdateDataSource {
                         PriceBookRatio = value_map.get("PriceBookRatio")?.toDouble()
                     }
 
-
                     val OperatingRevenue = value_map.get("OperatingRevenue")?.toLong()
                     val MoM = value_map.get("MoM")?.toDouble()
                     val YoY = value_map.get("YoY")?.toDouble()
@@ -60,7 +70,6 @@ class UpdateDataSource {
                     val InvestmentRation = value_map.get("InvestmentRation")?.toDouble()
                     val SelfEmployedRation = value_map.get("SelfEmployedRation")?.toDouble()
                     val ThreeBigRation = value_map.get("ThreeBigRation")?.toDouble()
-
 
                     val twStock = TwStock(
                         StockNo = key_number,
@@ -100,7 +109,6 @@ class UpdateDataSource {
             }
             AppDatabase.destroyInstance()
         }
-        return observable
     }
 
 }

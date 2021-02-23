@@ -36,11 +36,13 @@ class FragmentSwitchUtil(fragmanager: FragmentManager){
         }
         return INSTANCE!!
     }
+
     fun destroyInstance() {
         if (INSTANCE != null) {
             INSTANCE = null
         }
     }
+
     fun selectedTab(tabId: String) {
         mCurrentTab = tabId
         if (mStacks!![tabId]!!.size == 0) {
@@ -89,16 +91,14 @@ class FragmentSwitchUtil(fragmanager: FragmentManager){
 
     fun getNowFragment() : Fragment?{
         val fragments: List<Fragment> = manager.getFragments()
-        if (fragments != null) {
-            val i = fragments.size-1
-            for (i in 0..fragments.size-1) {
-                val j = fragments.size - 1 - i
-                if (fragments[j] != null && fragments[j].isVisible ) {
-//                    Log.i("FragmentSwitchUtil","getNowFragment : " + fragments[j].toString() )
-                    return fragments[j]
-                }
+//        val i = fragments.size-1
+        for (i in 0..fragments.size-1) {
+            val j = fragments.size - 1 - i
+            if (fragments[j].isVisible ) {
+                return fragments[j]
             }
         }
+
         return null
 
     }

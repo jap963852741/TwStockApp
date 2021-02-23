@@ -14,3 +14,7 @@
 
 ## 2.智慧選股 : 找尋符合的資訊
  ![image](https://github.com/jap963852741/TwStockApp/blob/master/condition.png)
+
+
+## 3.喜愛清單 : 記錄自己的選股
+ ![image](https://github.com/jap963852741/TwStockApp/blob/master/favorite.png)

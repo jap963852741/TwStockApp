@@ -1,32 +1,43 @@
 package com.jap.twstockapp.Repository.network
 
 import android.content.Context
-import android.util.Log
 import com.jap.twstockapp.R
 import com.jap.twstockapp.Repository.roomdb.AppDatabase
 import com.jap.twstockapp.Repository.roomdb.TwStock
 import com.jap.twstockapp.ui.home.UpdateResult
 import com.jap.twstockapp.util.dialog.LoadingDialog
 import com.jap.twstockinformation.StockUtil
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Observer
+import io.reactivex.rxjava3.disposables.Disposable
+import java.util.concurrent.TimeUnit
 
 class UpdateDataSource {
+    lateinit var mDisposable: Disposable
 
     fun update(context: Context , loadingDialog:LoadingDialog): Observable<UpdateResult> {
-        Log.e("UpdateDataSource loadingDialog",loadingDialog.toString())
 
         return Observable.create {
 
-            loadingDialog.setProgressBar(10)
+            var countSecond = 0
+            interval(1000,object : RxAction {
+                override fun action(number: Long) {
+                    loadingDialog.setProgressBar(countSecond)
+                    countSecond += 1
+                }
+            })
+
             val totalInformation:HashMap<String,HashMap<String,String>> = StockUtil(context).Get_HashMap_Num_MapTotalInformation()
-            loadingDialog.setProgressBar(20)
+
+            cancel()
 
             val db = AppDatabase.getInstance(context)
             try {
                 var totoalFinish = 0.0f
                 for ((key_number, value_map) in totalInformation) {
                     totoalFinish += 1
-                    loadingDialog.setProgressBar(20 + (totoalFinish/totalInformation.size)*80)
+                    loadingDialog.setProgressBar(countSecond + (totoalFinish/totalInformation.size)*(100 - countSecond))
 
                     println("$key_number = $value_map")
                     var Name = value_map.get("Name")
@@ -108,6 +119,42 @@ class UpdateDataSource {
                 it.onError(e)
             }
             AppDatabase.destroyInstance()
+        }
+    }
+    /**
+     * 每隔milliseconds毫秒后执行指定动作
+     * @param milliSeconds
+     * @param rxAction
+     */
+    private fun interval(milliSeconds : Long,  rxAction :RxAction) {
+        Observable.interval(milliSeconds, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<Long> {
+                override fun onComplete() {
+                    TODO("Not yet implemented")
+                }
+                override fun onSubscribe(d: Disposable) {
+                    mDisposable = d
+                }
+                override fun onNext(t: Long) {
+                    rxAction.action(t)
+                }
+                override fun onError(e: Throwable?) {
+                    TODO("Not yet implemented")
+                }
+            });
+    }
+
+    interface RxAction {
+        fun action( number:Long)
+    }
+
+    /**
+     * 停止數秒loading
+     */
+    private fun cancel() {
+        if (!mDisposable.isDisposed) {
+            mDisposable.dispose();
         }
     }
 

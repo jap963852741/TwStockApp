@@ -11,9 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jap.twstockapp.databinding.FragmentFavoritesBinding
 import com.jap.twstockapp.ui.favorites.FavoritesViewModel.Companion.favorites
-import com.jap.twstockapp.ui.home.HomeFragment
-import com.jap.twstockapp.ui.home.HomeViewModel
-import com.jap.twstockapp.ui.home.HomeViewModelFactory
 
 class FavoritesFragment : Fragment() {
 

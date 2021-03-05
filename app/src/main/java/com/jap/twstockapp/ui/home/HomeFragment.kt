@@ -1,12 +1,7 @@
 package com.jap.twstockapp.ui.home
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.os.Message
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
@@ -37,6 +32,7 @@ class HomeFragment : Fragment() , View.OnClickListener{
     @Inject
     @JvmField
     var loadingDialog: LoadingDialog?=null
+
     private lateinit var homeviewbinding: FragmentHomeBinding
     private lateinit var homeAdapter: HomeAdapter
     private lateinit var stockNo : String
@@ -45,10 +41,8 @@ class HomeFragment : Fragment() , View.OnClickListener{
     private lateinit var fragmentUtil : FragmentSwitchUtil
 
     companion object {
-
         lateinit var stockText: AutoCompleteTextView
         lateinit var homeViewModel: HomeViewModel
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,7 +75,6 @@ class HomeFragment : Fragment() , View.OnClickListener{
         super.onViewCreated(view, savedInstanceState)
         homeViewModel.stockNoArrayList.observe(viewLifecycleOwner, Observer {
             val adapter = ArrayAdapter(view.context, android.R.layout.simple_list_item_1, it)
-            Log.e("homeViewModel",it.toString())
             auto_complete_text.threshold = 1
             auto_complete_text.setAdapter(adapter)
         })
@@ -152,12 +145,7 @@ class HomeFragment : Fragment() , View.OnClickListener{
 
     override fun onPause() {
         super.onPause()
-        loadingDialog!!.hide()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        (activity?.application as App).createHomeComponent().inject(this)
+        loadingDialog!!.dismiss()
     }
 
     override fun onDestroyView() {

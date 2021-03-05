@@ -9,13 +9,11 @@ import com.jap.twstockapp.R
 import com.jap.twstockapp.Repository.OnTaskFinish
 import com.jap.twstockapp.Repository.StockInformationRepository
 import com.jap.twstockapp.Repository.StockNoArrayRepository
-import com.jap.twstockapp.di.App
 import com.jap.twstockapp.util.dialog.LoadingDialog
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import javax.inject.Inject
 
 class HomeViewModel(app : Application
     , private val stockInformationRepository : StockInformationRepository) : AndroidViewModel(app){

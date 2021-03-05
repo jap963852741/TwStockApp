@@ -1,5 +1,7 @@
 package com.jap.twstockapp.di
 
+import com.jap.twstockapp.di.condition.ConditionComponent
+import com.jap.twstockapp.di.condition.ConditionModule
 import com.jap.twstockapp.di.home.HomeComponent
 import com.jap.twstockapp.di.home.HomeModule
 import com.jap.twstockapp.di.modules.AppModule
@@ -16,4 +18,5 @@ import javax.inject.Singleton
 
 interface MainComponent {
     fun plus(homeModule: HomeModule): HomeComponent
+    fun plus(conditionModule: ConditionModule): ConditionComponent
 }

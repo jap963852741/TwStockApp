@@ -1,6 +1,9 @@
 package com.jap.twstockapp.di
 
+import android.app.Activity
 import android.app.Application
+import com.jap.twstockapp.di.condition.ConditionComponent
+import com.jap.twstockapp.di.condition.ConditionModule
 import com.jap.twstockapp.di.home.HomeComponent
 import com.jap.twstockapp.di.home.HomeModule
 import com.jap.twstockapp.di.modules.AppModule
@@ -10,6 +13,7 @@ class App: Application() {
 
     private lateinit var mainComponent: MainComponent
     private var homeComponent : HomeComponent? = null
+    private var conditionComponent : ConditionComponent? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -30,5 +34,11 @@ class App: Application() {
         homeComponent = null
     }
 
-
+    fun createConditionComponent(): ConditionComponent {
+        conditionComponent = mainComponent.plus(ConditionModule())
+        return conditionComponent!!
+    }
+    fun releaseConditionComponent() {
+        conditionComponent = null
+    }
 }

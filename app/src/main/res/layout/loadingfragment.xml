@@ -6,44 +6,37 @@
     android:background="@android:color/transparent"
     android:orientation="vertical">
 
-<LinearLayout
-android:id="@+id/LinearLayout"
-android:layout_width="140dp"
-android:layout_height="140dp"
-android:layout_centerInParent="true"
-android:background="@drawable/loading_shape"
-android:gravity="center"
-android:orientation="vertical">
-
-<!--<ProgressBar-->
-<!--    android:id="@+id/progressBar1"-->
-<!--    style="?android:attr/progressBarStyleInverse"-->
-<!--    android:layout_width="50.0dp"-->
-<!--    android:layout_height="50.0dp"-->
-<!--    android:layout_gravity="center"-->
-<!--    android:background="@android:color/transparent"-->
-<!--    />-->
-<com.white.progressview.CircleProgressView
-    android:id="@+id/progressBar1"
-    android:layout_width="wrap_content"
-    android:layout_height="0dp"
-    android:layout_weight="1"
-    android:padding="10dp"
-    android:progress="0"
-    app:progressNormalSize="4dp"
-    app:progressReachSize="4dp"
-    app:progressStyle="Normal"
-    app:radius="28dp"
-    />
-
-
-<TextView
-    android:id="@+id/tv"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
+    <LinearLayout
+    android:id="@+id/LinearLayout"
+    android:layout_width="140dp"
+    android:layout_height="140dp"
+    android:layout_centerInParent="true"
+    android:background="@drawable/loading_shape"
     android:gravity="center"
-    android:paddingTop="10dp"
-    android:textColor="#fff" />
-</LinearLayout>
-    </RelativeLayout>
+    android:orientation="vertical">
+
+    <com.white.progressview.CircleProgressView
+        android:id="@+id/progressBar1"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:progress="0"
+        app:progressNormalSize="4dp"
+        app:progressReachSize="4dp"
+        app:progressStyle="Normal"
+        app:radius="28dp"
+        />
+
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:textColor="#fff" />
+    </LinearLayout>
+
+</RelativeLayout>

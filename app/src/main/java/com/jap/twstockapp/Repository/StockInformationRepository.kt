@@ -7,7 +7,6 @@ import com.jap.twstockapp.ui.home.UpdateResult
 import com.jap.twstockapp.util.dialog.LoadingDialog
 import io.reactivex.rxjava3.core.Observable
 import java.util.concurrent.Executors
-import javax.inject.Inject
 
 class StockInformationRepository(val updatedataSource: UpdateDataSource) {
     fun loadInfo(applicationContext : Context,StockNo : String, task: OnTaskFinish){

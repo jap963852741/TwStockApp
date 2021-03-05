@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.jap.twstockapp.Repository.*
 import com.jap.twstockapp.Repository.roomdb.Favorite
 import com.jap.twstockapp.Repository.roomdb.TwStock
+import com.jap.twstockapp.util.dialog.LoadingDialog
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.disposables.Disposable
@@ -30,12 +31,12 @@ class ConditionViewModel(app: Application
         lateinit var favorites: ArrayList<Favorite>
     }
 
-    fun get_aLL_list(){
+    fun get_aLL_list(loadingDialog: LoadingDialog){
         get_favorite()
         GetAllStockRespository().loadInfo(context,object : AllTwStockTaskFinish {
                 override fun onFinish(data: List<TwStock>) {
                     twstocks = data
-                    ConditionFragment.loadingdialog.dismiss()
+                    loadingDialog.dismiss()
                     ConditionFragment.mUI_Handler.sendEmptyMessage(ConditionFragment.MSG_TWSTOCK_OK)
                 }
         })
@@ -369,13 +370,7 @@ class ConditionViewModel(app: Application
         }
     }
 
-//    fun get_favorite(){
-//        FavoritesRespository(favoriteDataSource = FavoriteDataSource()).loadInfo(context,object : FavoriteTaskFinish{
-//            override fun onFinish(data: ArrayList<Favorite>) {
-//                _favorite.postValue(data)
-//            }
-//        })
-//    }
+
     fun get_favorite(){
         val favorite_list = arrayListOf<Favorite>()
         val observer: Observer<List<Favorite>> = object : Observer<List<Favorite>> {

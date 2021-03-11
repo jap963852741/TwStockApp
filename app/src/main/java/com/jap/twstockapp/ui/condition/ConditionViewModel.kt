@@ -1,6 +1,7 @@
 package com.jap.twstockapp.ui.condition
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -31,12 +32,11 @@ class ConditionViewModel(app: Application
         lateinit var favorites: ArrayList<Favorite>
     }
 
-    fun get_aLL_list(loadingDialog: LoadingDialog){
+    fun get_aLL_list(){
         get_favorite()
         GetAllStockRespository().loadInfo(context,object : AllTwStockTaskFinish {
                 override fun onFinish(data: List<TwStock>) {
                     twstocks = data
-                    loadingDialog.dismiss()
                     ConditionFragment.mUI_Handler.sendEmptyMessage(ConditionFragment.MSG_TWSTOCK_OK)
                 }
         })

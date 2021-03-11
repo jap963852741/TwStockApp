@@ -2,8 +2,10 @@ package com.jap.twstockapp.ui.home
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.TextView.OnEditorActionListener
@@ -26,12 +28,11 @@ import javax.inject.Inject
 
 class HomeFragment : Fragment() , View.OnClickListener{
 
-
+    val TAG = "HomeFragment"
     @Inject
     lateinit var homeViewModelFactory: HomeViewModelFactory
     @Inject
-    @JvmField
-    var loadingDialog: LoadingDialog?=null
+    lateinit var loadingDialog: LoadingDialog
 
     private lateinit var homeviewbinding: FragmentHomeBinding
     private lateinit var homeAdapter: HomeAdapter
@@ -48,7 +49,7 @@ class HomeFragment : Fragment() , View.OnClickListener{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        (activity?.application as App).createHomeComponent().inject(this)
+        (activity?.application as App).createHomeComponent(requireContext()).inject(this)
         homeViewModel = ViewModelProvider(this,homeViewModelFactory).get(HomeViewModel::class.java)
         fragmentUtil = FragmentSwitchUtil(parentFragmentManager).getInstance()
 
@@ -75,24 +76,21 @@ class HomeFragment : Fragment() , View.OnClickListener{
         super.onViewCreated(view, savedInstanceState)
         homeViewModel.stockNoArrayList.observe(viewLifecycleOwner, Observer {
             val adapter = ArrayAdapter(view.context, android.R.layout.simple_list_item_1, it)
-            auto_complete_text.threshold = 1
+            Log.e("stockNoArrayList",it.toString())
+//            auto_complete_text.threshold = 1
             auto_complete_text.setAdapter(adapter)
         })
         homeViewModel.stockInformation.observe(viewLifecycleOwner, Observer {
             homeAdapter = HomeAdapter(it, view)
-            recyclerView.setAdapter(homeAdapter)
-            recyclerView.setLayoutManager(
-                object : LinearLayoutManager(
-                    context,
-                    RecyclerView.VERTICAL,
-                    false
-                ){
-
-                }
+            recyclerView.adapter = homeAdapter
+            recyclerView.layoutManager = LinearLayoutManager(
+                context,
+                RecyclerView.VERTICAL,
+                false
             )
         })
         homeViewModel.updateResult.observe(viewLifecycleOwner, Observer {
-            loadingDialog!!.hide()
+            loadingDialog.hide()
 
             if(it.success != null) {
                 Toast.makeText(
@@ -136,8 +134,9 @@ class HomeFragment : Fragment() , View.OnClickListener{
    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.updateDB -> {
-                context.let { homeViewModel.updateStockDb(loadingDialog!!)}
-                loadingDialog!!.show()
+                context.let { homeViewModel.updateStockDb(loadingDialog)}
+                loadingDialog.setProgressBar(0)
+                loadingDialog.show()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -145,7 +144,7 @@ class HomeFragment : Fragment() , View.OnClickListener{
 
     override fun onPause() {
         super.onPause()
-        loadingDialog!!.dismiss()
+        loadingDialog.dismiss()
     }
 
     override fun onDestroyView() {

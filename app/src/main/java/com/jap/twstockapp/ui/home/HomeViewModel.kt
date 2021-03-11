@@ -61,6 +61,7 @@ class HomeViewModel(app : Application
                 Log.e("onError",e.toString())
             }
             override fun onComplete() {
+                loadingDialog.dismiss()
             }
             override fun onSubscribe(d: Disposable) {
             }

@@ -24,7 +24,7 @@ class HomeAdapter(
 
     @SuppressLint("ResourceType")
     override fun onBindViewHolder(holder: VH, position: Int) {
-        val c = dataList.get(position)
+        val c = dataList[position]
         holder.itemInformation.text = c
         when {
             position == 0 -> holder.itemInformation.setBackgroundColor(parentview.resources.getColor(R.color.colorLightGray))
@@ -36,6 +36,7 @@ class HomeAdapter(
             position == 17 -> if (c!!.contains("-")) holder.itemInformation.setTextColor(parentview.resources.getColor(R.color.colorLightGreen)) else  holder.itemInformation.setTextColor(parentview.resources.getColor(R.color.colorRed))
             position == 18 -> if (c!!.contains("-")) holder.itemInformation.setTextColor(parentview.resources.getColor(R.color.colorLightGreen)) else  holder.itemInformation.setTextColor(parentview.resources.getColor(R.color.colorRed))
 
+            position == 21 -> holder.itemInformation.setTextColor(parentview.resources.getColor(R.color.colorBlack))
         }
     }
 

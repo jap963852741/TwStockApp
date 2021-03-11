@@ -37,9 +37,9 @@ public class LoadingDialog extends Dialog {
         //去掉白色边角 我的小米手机在xml里设置 android:background="@android:color/transparent"居然不生效
         //所以在代码里设置，不知道是不是小米手机的原因
         getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+//        getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
         setContentView(R.layout.loadingfragment);
-        Log.i("LHD", "LoadingDialog onCreate");
+        Log.i("LHD", "LoadingDialog init");
         this.tv = (TextView) findViewById(R.id.tv);
         this.circleProgressView = (CircleProgressView) findViewById(R.id.progressBar1);
         tv.setText(s);

@@ -71,7 +71,7 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:2.14.1"
     kapt 'com.google.dagger:dagger-compiler:2.14.1'
     //check oom
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.6'
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.6'
 
     def room_version = "2.2.5"
     implementation "androidx.room:room-runtime:$room_version"

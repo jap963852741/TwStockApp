@@ -20,7 +20,7 @@ interface TwStockDao {
 
 
 
-    @Query("SELECT StockNo FROM twstock")
+    @Query("SELECT (StockNo || ' ' || Name) FROM twstock")
     fun getAllStockNo(): List<String>?
 
     @Insert

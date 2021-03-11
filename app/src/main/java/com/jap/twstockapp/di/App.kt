@@ -2,11 +2,13 @@ package com.jap.twstockapp.di
 
 import android.app.Activity
 import android.app.Application
+import android.content.Context
 import com.jap.twstockapp.di.condition.ConditionComponent
 import com.jap.twstockapp.di.condition.ConditionModule
 import com.jap.twstockapp.di.home.HomeComponent
 import com.jap.twstockapp.di.home.HomeModule
 import com.jap.twstockapp.di.modules.AppModule
+import com.jap.twstockapp.ui.home.HomeFragment
 
 
 class App: Application() {
@@ -26,8 +28,8 @@ class App: Application() {
                 .build()
     }
 
-    fun createHomeComponent(): HomeComponent {
-        homeComponent = mainComponent.plus(HomeModule())
+    fun createHomeComponent(fragmentContext : Context): HomeComponent {
+        homeComponent = mainComponent.plus(HomeModule(fragmentContext))
         return homeComponent!!
     }
     fun releaseHomeComponent() {

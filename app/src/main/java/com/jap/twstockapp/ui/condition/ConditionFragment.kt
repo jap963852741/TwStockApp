@@ -28,8 +28,7 @@ import javax.inject.Inject
 
 class ConditionFragment : Fragment() , View.OnClickListener{
 
-    @Inject
-    lateinit var loadingdialog: LoadingDialog
+
     lateinit var conditionAdapter: ConditonAdapter
 
     companion object {
@@ -99,7 +98,6 @@ class ConditionFragment : Fragment() , View.OnClickListener{
         Log.e("ConditionFragment","onCreateView")
         dashboardBinding = FragmentConditionBinding.inflate(inflater, container, false)
         conditionViewModel = ViewModelProvider(this, ConditionViewModelFactory(application = requireActivity().application)).get(ConditionViewModel::class.java)
-
 //        loadingdialog =  LoadingDialog(container!!.context,"正在對比...")
 
         val condition = arrayOf<String>("現價","漲跌","漲跌現價比","周漲跌現價比"
@@ -120,7 +118,8 @@ class ConditionFragment : Fragment() , View.OnClickListener{
         dashboardBinding.condition4.conditionSymbol.adapter = symbolList
         dashboardBinding.condition5.conditionSymbol.adapter = symbolList
 
-
+        search_button =dashboardBinding.conditionSearch
+        search_button.setOnClickListener(this)
 
        conditionViewModel.text.observe(viewLifecycleOwner, Observer {
            conditionAdapter = ConditonAdapter(it, container)
@@ -147,13 +146,11 @@ class ConditionFragment : Fragment() , View.OnClickListener{
     }
 
     override fun onClick(v: View?) {
-        conditionViewModel.get_aLL_list(loadingdialog)
-        loadingdialog.show()
+        conditionViewModel.get_aLL_list()
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
         conditionViewModel.get_favorite()
-        Log.e("onHiddenChanged","onHiddenChangedonHiddenChangedonHiddenChanged")
         super.onHiddenChanged(hidden)
     }
 }

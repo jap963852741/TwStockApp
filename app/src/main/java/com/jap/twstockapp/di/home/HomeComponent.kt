@@ -10,5 +10,5 @@ import dagger.Subcomponent
 
 interface HomeComponent {
     fun inject(homeFragment: HomeFragment)
-    fun inject(homeViewModel : HomeViewModel)
+//    fun inject(homeViewModel : HomeViewModel)
 }

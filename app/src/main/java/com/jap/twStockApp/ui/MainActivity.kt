@@ -6,15 +6,18 @@ import android.view.MenuItem
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.jap.twStockApp.R
 import com.jap.twStockApp.databinding.ActivityMainBinding
+import com.jap.twStockApp.ui.base.BaseFragmentViewModelFactory
 import com.jap.twStockApp.util.FragmentSwitchUtil
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewbinding: ActivityMainBinding
     private lateinit var fragmentutil: FragmentSwitchUtil
+    var baseViewModel: BaseViewModel? = null
 
     companion object {
         lateinit var navigation: BottomNavigationView
@@ -28,6 +31,8 @@ class MainActivity : AppCompatActivity() {
         navigation = viewbinding.navView
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         fragmentutil = FragmentSwitchUtil(fragmanager = supportFragmentManager).getInstance()
+        baseViewModel = ViewModelProvider(this, BaseFragmentViewModelFactory())[BaseViewModel::class.java]
+
     }
     private val mOnNavigationItemSelectedListener: BottomNavigationView.OnNavigationItemSelectedListener =
         object : BottomNavigationView.OnNavigationItemSelectedListener {

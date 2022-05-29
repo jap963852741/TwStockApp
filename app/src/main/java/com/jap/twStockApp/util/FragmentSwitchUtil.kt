@@ -8,10 +8,11 @@ import com.jap.twStockApp.R
 import com.jap.twStockApp.ui.condition.ConditionFragment
 import com.jap.twStockApp.ui.favorites.FavoritesFragment
 import java.util.*
+import kotlin.collections.HashMap
 
 class FragmentSwitchUtil(fragmanager: FragmentManager) {
 
-    var mStacks: HashMap<String, Stack<Fragment>>? = null
+    var mStacks: HashMap<String, Stack<Fragment>> = HashMap()
     var mCurrentTab: String? = null
     val TAB_HOME = "tab_home"
     val TAB_DASHBOARD = "tab_dashboard"
@@ -20,10 +21,9 @@ class FragmentSwitchUtil(fragmanager: FragmentManager) {
 
     init {
         manager = fragmanager
-        mStacks = HashMap<String, Stack<Fragment>>()
-        mStacks!!.put(TAB_HOME, Stack<Fragment>())
-        mStacks!!.put(TAB_DASHBOARD, Stack<Fragment>())
-        mStacks!!.put(TAB_NOTIFICATIONS, Stack<Fragment>())
+        mStacks[TAB_HOME] = Stack<Fragment>()
+        mStacks[TAB_DASHBOARD] = Stack<Fragment>()
+        mStacks[TAB_NOTIFICATIONS] = Stack<Fragment>()
     }
 
     companion object {
@@ -45,7 +45,7 @@ class FragmentSwitchUtil(fragmanager: FragmentManager) {
 
     fun selectedTab(tabId: String) {
         mCurrentTab = tabId
-        if (mStacks!![tabId]!!.size == 0) {
+        if (mStacks[tabId]!!.size == 0) {
             /*
                *    First time this tab is selected. So add first fragment of that tab.
                *    Dont need animation, so that argument is false.
@@ -57,7 +57,7 @@ class FragmentSwitchUtil(fragmanager: FragmentManager) {
                 switchContent(getNowFragment(), FavoritesFragment(), tabId, false)
             }
         } else {
-            switchContent(getNowFragment(), mStacks!![tabId]!!.lastElement(), tabId, false)
+            switchContent(getNowFragment(), mStacks[tabId]!!.lastElement(), tabId, false)
         }
     }
 
@@ -73,7 +73,7 @@ class FragmentSwitchUtil(fragmanager: FragmentManager) {
         init: Boolean
     ) {
 
-        if (init) mStacks!![tag]!!.push(to)
+        if (init) mStacks[tag]!!.push(to)
         if (from !== to) {
             val transaction: FragmentTransaction = manager.beginTransaction()
             // 此处必须要进行判断，因为同一个fragment只能被add一次，否则会发生异常
@@ -113,7 +113,7 @@ class FragmentSwitchUtil(fragmanager: FragmentManager) {
         if (animType == 0) {
             transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
         }
-        mStacks!![TAB_HOME]!!.push(frag)
+        mStacks[TAB_HOME]!!.push(frag)
         transaction.replace(R.id.nav_host_fragment, frag!!)
         Log.i("replaceCateFragment", " fragment :   " + frag.toString())
         transaction.commit()

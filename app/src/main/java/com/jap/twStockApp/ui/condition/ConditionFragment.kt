@@ -18,9 +18,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jap.twStockApp.databinding.FragmentConditionBinding
 import com.jap.twStockApp.di.App
+import com.jap.twStockApp.ui.base.BaseFragment
 import com.jap.twStockApp.ui.condition.ConditionViewModel.Companion.favorites
 
-class ConditionFragment : Fragment(), View.OnClickListener {
+class ConditionFragment : BaseFragment(), View.OnClickListener {
 
     lateinit var conditionAdapter: ConditonAdapter
 
@@ -96,7 +97,7 @@ class ConditionFragment : Fragment(), View.OnClickListener {
     ): View? {
         Log.e("ConditionFragment", "onCreateView")
         dashboardBinding = FragmentConditionBinding.inflate(inflater, container, false)
-        conditionViewModel = ViewModelProvider(this, ConditionViewModelFactory(application = requireActivity().application)).get(ConditionViewModel::class.java)
+        conditionViewModel = ViewModelProvider(this, ConditionViewModelFactory(application = requireActivity().application))[ConditionViewModel::class.java]
 //        loadingdialog =  LoadingDialog(container!!.context,"正在對比...")
 
         val condition = arrayOf<String>("現價", "漲跌", "漲跌現價比", "周漲跌現價比", "最高最低振福", "開盤價", "最高價", "最低價", "交易量", "交易總值", "殖利率", "本益比", "股價淨值比", "營業收入", "月增率", "年增率", "董監持股比例", "外商持股比例", "投信持股比例", "自營商持股", "三大法人持股比例")
@@ -122,6 +123,7 @@ class ConditionFragment : Fragment(), View.OnClickListener {
             viewLifecycleOwner,
             Observer {
                 conditionAdapter = ConditonAdapter(it, container)
+                conditionAdapter.setHomeSearchText = baseViewModel?.let {it::setHomeFragmentSearchText}
                 dashboardBinding.reViewDashboard.adapter = conditionAdapter
                 dashboardBinding.reViewDashboard.layoutManager = LinearLayoutManager(
                     context,

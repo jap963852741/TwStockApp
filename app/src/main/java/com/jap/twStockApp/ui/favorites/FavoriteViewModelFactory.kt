@@ -10,7 +10,7 @@ import com.jap.twStockApp.Repository.roomdb.FavoriteDataSource
  * ViewModel provider factory to instantiate LoginViewModel.
  * Required given LoginViewModel has a non-empty constructor
  */
-class FavoriteViewModelFactory(val application: Application) : ViewModelProvider.Factory {
+class FavoriteViewModelFactory(val application: Application) : ViewModelProvider.NewInstanceFactory(){
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

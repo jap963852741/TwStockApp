@@ -22,7 +22,7 @@ class FavoritesAdapter(
     RecyclerView.Adapter<VH>() {
 
     private lateinit var binding: ItemFavoritesBinding
-
+    var setHomeSearchText: ((String) -> Unit)? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         binding = ItemFavoritesBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return VH(binding)
@@ -62,11 +62,9 @@ class FavoritesAdapter(
         }
 
         holder.itemView.setOnClickListener {
-            MainActivity.navigation.setSelectedItemId(
-                MainActivity.navigation.menu.getItem(0).getItemId()
-            )
-            HomeFragment.stockText.setText(stockno, false)
-            HomeFragment.homeViewModel.updateText(stockno)
+            MainActivity.navigation.selectedItemId = MainActivity.navigation.menu.getItem(0).itemId
+//            HomeFragment.stockText.setText(stockno, false)
+            setHomeSearchText?.invoke(stockno)
         }
     }
 

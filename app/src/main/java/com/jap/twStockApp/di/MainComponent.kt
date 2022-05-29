@@ -21,4 +21,5 @@ import javax.inject.Singleton
 interface MainComponent {
     fun plus(homeModule: HomeModule): HomeComponent
     fun plus(conditionModule: ConditionModule): ConditionComponent
+//    fun plus(baseModule: BaseModule): BaseComponent
 }

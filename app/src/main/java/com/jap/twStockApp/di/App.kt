@@ -13,6 +13,7 @@ class App : Application() {
     private lateinit var mainComponent: MainComponent
     private var homeComponent: HomeComponent? = null
     private var conditionComponent: ConditionComponent? = null
+//    private var baseComponent: BaseComponent? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -25,9 +26,9 @@ class App : Application() {
             .build()
     }
 
-    fun createHomeComponent(fragmentContext: Context): HomeComponent {
+    fun createHomeComponent(fragmentContext: Context): HomeComponent? {
         homeComponent = mainComponent.plus(HomeModule(fragmentContext))
-        return homeComponent!!
+        return homeComponent
     }
     fun releaseHomeComponent() {
         homeComponent = null
@@ -37,6 +38,13 @@ class App : Application() {
         conditionComponent = mainComponent.plus(ConditionModule())
         return conditionComponent!!
     }
+
+//    fun createBaseFragmentComponent(): BaseComponent? {
+//        baseComponent = mainComponent.plus(BaseModule())
+//        return baseComponent
+//    }
+
+
     fun releaseConditionComponent() {
         conditionComponent = null
     }

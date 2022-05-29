@@ -22,7 +22,6 @@ import androidx.appcompat.widget.AppCompatSpinner
 import androidx.appcompat.widget.ThemeUtils
 import androidx.appcompat.widget.TintTypedArray
 
-
 class MySpinner : AppCompatSpinner {
     private var mPopup: SpinnerPopup? = null
     private val TAG = "MySpinner"
@@ -32,16 +31,21 @@ class MySpinner : AppCompatSpinner {
     private val MODE_DIALOG = 0
     private var mPopupSet = false
     private var mTempAdapter: SpinnerAdapter? = null
-    private var next_mode : Int = 0
+    private var next_mode: Int = 0
 
-    constructor(context: Context) : this(context,null)
+    constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.spinnerStyle)
-    constructor(context: Context, attrs: AttributeSet?,defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
-    constructor(context: Context, attrs: AttributeSet?,defStyleAttr: Int, mode: Int) : this(context, attrs, defStyleAttr, mode, null)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, mode: Int) : this(context, attrs, defStyleAttr, mode, null)
 
     @SuppressLint("RestrictedApi")
-    constructor(context: Context, attrs: AttributeSet?,
-                defStyleAttr: Int, mode: Int, popupTheme: Theme?) : super(context, attrs, defStyleAttr, mode, popupTheme){
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        mode: Int,
+        popupTheme: Theme?
+    ) : super(context, attrs, defStyleAttr, mode, popupTheme) {
 
         ThemeUtils.checkAppCompatTheme(this, getContext())
 
@@ -69,7 +73,7 @@ class MySpinner : AppCompatSpinner {
                     defStyleAttr, 0
                 )
                 if (aa.hasValue(0)) {
-                    next_mode  = aa.getInt(0, MODE_DIALOG)
+                    next_mode = aa.getInt(0, MODE_DIALOG)
                 }
             } catch (e: Exception) {
                 Log.i(TAG, "Could not read android:spinnerMode", e)
@@ -83,7 +87,6 @@ class MySpinner : AppCompatSpinner {
                 (mPopup as DialogPopup).setPromptText(a.getString(R.styleable.Spinner_android_prompt))
             }
         }
-
 
         val entries =
             a.getTextArray(R.styleable.Spinner_android_entries)
@@ -112,7 +115,6 @@ class MySpinner : AppCompatSpinner {
 //        (mPopup as DialogPopup).setPromptText(a.getString(R.styleable.Spinner_android_prompt))
     }
 
-
     override fun setAdapter(adapter: SpinnerAdapter?) {
         // The super constructor may call setAdapter before we're prepared.
         // Postpone doing anything until we've finished construction.
@@ -132,7 +134,6 @@ class MySpinner : AppCompatSpinner {
             mPopup!!.setAdapter(this.DropDownAdapter(adapter, popupContext.theme))
         }
     }
-
 
     interface SpinnerPopup {
         fun setAdapter(adapter: ListAdapter?)
@@ -168,8 +169,7 @@ class MySpinner : AppCompatSpinner {
         var horizontalOffset: Int
     }
 
-
-    inner class DialogPopup : SpinnerPopup,DialogInterface.OnClickListener {
+    inner class DialogPopup : SpinnerPopup, DialogInterface.OnClickListener {
         var mPopup: AlertDialog? = null
         private var mListAdapter: ListAdapter? = null
         override var hintText: CharSequence? = null
@@ -199,8 +199,6 @@ class MySpinner : AppCompatSpinner {
             }
             val builder = AlertDialog.Builder(mPopupContext)
 
-
-
             if (hintText != null) {
                 builder.setTitle(hintText)
             }
@@ -210,12 +208,11 @@ class MySpinner : AppCompatSpinner {
                 selectedItemPosition, this
             ).create()
 
-            //改寫 原 spinner alertdialog 可關閉
+            // 改寫 原 spinner alertdialog 可關閉
             mPopup!!.setCancelable(false)
             mPopup!!.setCanceledOnTouchOutside(false)
 
             mPopup!!.show()
-
         }
 
         override fun onClick(dialog: DialogInterface, which: Int) {
@@ -275,12 +272,11 @@ class MySpinner : AppCompatSpinner {
     }
 
     /**
-    * <p>Wrapper
-    class for an Adapter. Transforms the embedded Adapter instance
-    * into a ListAdapter.</p>
-    */
-    inner class DropDownAdapter : ListAdapter, SpinnerAdapter
-    {
+     * <p>Wrapper
+     class for an Adapter. Transforms the embedded Adapter instance
+     * into a ListAdapter.</p>
+     */
+    inner class DropDownAdapter : ListAdapter, SpinnerAdapter {
 
         var mAdapter: SpinnerAdapter? = null
 
@@ -394,7 +390,4 @@ class MySpinner : AppCompatSpinner {
             return count == 0
         }
     }
-
-
 }
-

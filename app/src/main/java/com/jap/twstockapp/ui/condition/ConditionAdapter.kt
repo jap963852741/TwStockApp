@@ -5,13 +5,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.github.zagum.switchicon.SwitchIconView
-import com.jap.twstockapp.ui.MainActivity
-import com.jap.twstockapp.databinding.ItemDetailBinding
 import com.jap.twstockapp.Repository.roomdb.Favorite
+import com.jap.twstockapp.databinding.ItemDetailBinding
+import com.jap.twstockapp.ui.MainActivity
 import com.jap.twstockapp.ui.condition.ConditionViewModel.Companion.favorites
 import com.jap.twstockapp.ui.home.HomeFragment
 import com.jap.twstockapp.util.FavoriteUtil
-
 
 class ConditonAdapter(
     private val dataList: ArrayList<String?>,
@@ -19,9 +18,7 @@ class ConditonAdapter(
 ) :
     RecyclerView.Adapter<VH>() {
 
-
-    private lateinit var binding : ItemDetailBinding
-
+    private lateinit var binding: ItemDetailBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         binding = ItemDetailBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -36,36 +33,35 @@ class ConditonAdapter(
         holder.tv_dashboard.text = c
 
         var favorite_tag = false
-        for(i in favorites){
-            if(stockno == i.StockNo && name  == i.Name){
+        for (i in favorites) {
+            if (stockno == i.StockNo && name == i.Name) {
                 favorite_tag = true
                 break
             }
         }
-        if(favorite_tag){
+        if (favorite_tag) {
             holder.favorite_button.setIconEnabled(true)
-        }else{
+        } else {
             holder.favorite_button.setIconEnabled(false)
         }
-
 
         holder.favorite_button.setOnClickListener {
 
             if (holder.favorite_button.isIconEnabled) {
-                favorites.remove(Favorite(stockno,name))
-                FavoriteUtil(parentview.context).remove_favorite(stockno,name)
+                favorites.remove(Favorite(stockno, name))
+                FavoriteUtil(parentview.context).remove_favorite(stockno, name)
                 holder.favorite_button.setIconEnabled(false)
             } else {
-                favorites.add(Favorite(stockno,name))
-                FavoriteUtil(parentview.context).add_favorite(stockno,name)
+                favorites.add(Favorite(stockno, name))
+                FavoriteUtil(parentview.context).add_favorite(stockno, name)
                 holder.favorite_button.setIconEnabled(true)
             }
-
         }
         holder.itemView.setOnClickListener {
             MainActivity.navigation.setSelectedItemId(
-                MainActivity.navigation.menu.getItem(0).getItemId());
-            HomeFragment.stockText.setText(stockno,false)
+                MainActivity.navigation.menu.getItem(0).getItemId()
+            )
+            HomeFragment.stockText.setText(stockno, false)
             HomeFragment.homeViewModel.updateText(stockno)
         }
     }
@@ -73,12 +69,10 @@ class ConditonAdapter(
     override fun getItemCount(): Int {
         return dataList.size
     }
-
 }
-
 
 class VH(binding: ItemDetailBinding) :
     RecyclerView.ViewHolder(binding.root) {
     var tv_dashboard: TextView = binding.tvDashboard
-    var favorite_button : SwitchIconView = binding.favoriteButton
+    var favorite_button: SwitchIconView = binding.favoriteButton
 }

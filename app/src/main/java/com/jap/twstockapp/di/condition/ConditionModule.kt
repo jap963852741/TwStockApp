@@ -1,9 +1,7 @@
 package com.jap.twstockapp.di.condition
 
-import android.content.Context
 import com.jap.twstockapp.Repository.StockInformationRepository
 import com.jap.twstockapp.Repository.network.UpdateDataSource
-import com.jap.twstockapp.util.dialog.LoadingDialog
 import dagger.Module
 import dagger.Provides
 

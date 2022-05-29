@@ -19,27 +19,31 @@ class FavoritesFragment : Fragment() {
     private lateinit var favoritesAdapter: FavoritesAdapter
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         binding = FragmentFavoritesBinding.inflate(inflater, container, false)
-        favoritesViewModel = ViewModelProvider(this,
+        favoritesViewModel = ViewModelProvider(
+            this,
             FavoriteViewModelFactory(application = requireActivity().application)
         ).get(FavoritesViewModel::class.java)
-        favoritesViewModel.favorite.observe(viewLifecycleOwner, Observer {
-            favorites = it
-            favoritesAdapter = FavoritesAdapter(it, container!!)
-            binding.reViewFavorites.setAdapter(favoritesAdapter)
-            binding.reViewFavorites.setLayoutManager(
-                LinearLayoutManager(
-                    context,
-                    RecyclerView.VERTICAL,
-                    false
+        favoritesViewModel.favorite.observe(
+            viewLifecycleOwner,
+            Observer {
+                favorites = it
+                favoritesAdapter = FavoritesAdapter(it, container!!)
+                binding.reViewFavorites.setAdapter(favoritesAdapter)
+                binding.reViewFavorites.setLayoutManager(
+                    LinearLayoutManager(
+                        context,
+                        RecyclerView.VERTICAL,
+                        false
+                    )
                 )
-            )
-            binding.reViewFavorites.adapter = favoritesAdapter
-        })
+                binding.reViewFavorites.adapter = favoritesAdapter
+            }
+        )
 
         favoritesViewModel.get_favorite()
 

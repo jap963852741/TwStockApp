@@ -2,13 +2,12 @@ package com.jap.twstockapp.di.modules
 
 import android.app.Application
 import android.content.Context
-import com.jap.twstockapp.util.dialog.LoadingDialog
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class AppModule constructor(context: Context , private val application: Application){
+class AppModule constructor(context: Context, private val application: Application) {
 
     private val appContext = context
 
@@ -32,5 +31,4 @@ class AppModule constructor(context: Context , private val application: Applicat
 //        loadingDialog.setCancelable(false)
 //        return loadingDialog
 //    }
-
 }

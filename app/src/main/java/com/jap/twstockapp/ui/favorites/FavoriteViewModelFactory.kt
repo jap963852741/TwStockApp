@@ -19,7 +19,7 @@ class FavoriteViewModelFactory(val application: Application) : ViewModelProvider
                 app = application,
                 favoritesRespository = FavoritesRespository(
                     favoriteDataSource = FavoriteDataSource()
-            )
+                )
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

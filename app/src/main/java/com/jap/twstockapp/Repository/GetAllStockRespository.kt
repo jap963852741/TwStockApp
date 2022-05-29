@@ -6,7 +6,7 @@ import com.jap.twstockapp.Repository.roomdb.TwStock
 import java.util.concurrent.Executors
 
 class GetAllStockRespository {
-    fun loadInfo(applicationContext : Context, task: AllTwStockTaskFinish) {
+    fun loadInfo(applicationContext: Context, task: AllTwStockTaskFinish) {
         Executors.newSingleThreadExecutor().submit {
             val all = AppDatabase.getInstance(applicationContext).TwStockDao().getAll()
 
@@ -14,6 +14,6 @@ class GetAllStockRespository {
         }
     }
 }
-interface AllTwStockTaskFinish{
+interface AllTwStockTaskFinish {
     fun onFinish(data: List<TwStock>)
 }

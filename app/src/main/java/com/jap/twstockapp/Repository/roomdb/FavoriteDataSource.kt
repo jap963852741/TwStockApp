@@ -15,5 +15,4 @@ class FavoriteDataSource {
 
         return observable
     }
-
 }

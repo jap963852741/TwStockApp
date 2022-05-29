@@ -8,17 +8,18 @@ import com.jap.twstockapp.ui.home.HomeViewModelFactory
 import com.jap.twstockapp.util.dialog.LoadingDialog
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 
 @HomeScope
 @Module
-class HomeModule(fragmentContext : Context) {
+class HomeModule(fragmentContext: Context) {
 
     private val fragmentContext = fragmentContext
 
     @Provides
-    fun provideHomeViewModelFactory(application: Application,
-                                    stockInformationRepository : StockInformationRepository): HomeViewModelFactory {
+    fun provideHomeViewModelFactory(
+        application: Application,
+        stockInformationRepository: StockInformationRepository
+    ): HomeViewModelFactory {
         return HomeViewModelFactory(application, stockInformationRepository)
     }
 
@@ -29,8 +30,8 @@ class HomeModule(fragmentContext : Context) {
 
     @Provides
     fun provideHomeLoadingDialog(): LoadingDialog {
-        val loadingDialog = LoadingDialog(fragmentContext , "正在更新...")//仅点击外部不可取消
-        loadingDialog.setCanceledOnTouchOutside(false)//点击返回键和外部都不可取消
+        val loadingDialog = LoadingDialog(fragmentContext, "正在更新...") // 仅点击外部不可取消
+        loadingDialog.setCanceledOnTouchOutside(false) // 点击返回键和外部都不可取消
         loadingDialog.setCancelable(false)
         return loadingDialog
     }

@@ -16,19 +16,22 @@ import java.util.concurrent.TimeUnit
 class UpdateDataSource {
     lateinit var mDisposable: Disposable
 
-    fun update(context: Context , loadingDialog:LoadingDialog): Observable<UpdateResult> {
+    fun update(context: Context, loadingDialog: LoadingDialog): Observable<UpdateResult> {
 
         return Observable.create {
 
             var countSecond = 0
-            interval(1000,object : RxAction {
-                override fun action(number: Long) {
-                    loadingDialog.setProgressBar(countSecond)
-                    countSecond += 1
+            interval(
+                1000,
+                object : RxAction {
+                    override fun action(number: Long) {
+                        loadingDialog.setProgressBar(countSecond)
+                        countSecond += 1
+                    }
                 }
-            })
+            )
 
-            val totalInformation:HashMap<String,HashMap<String,String>> = StockUtil(context).Get_HashMap_Num_MapTotalInformation()
+            val totalInformation: HashMap<String, HashMap<String, String>> = StockUtil(context).Get_HashMap_Num_MapTotalInformation()
 
             cancel()
 
@@ -37,7 +40,7 @@ class UpdateDataSource {
                 var totoalFinish = 0.0f
                 for ((key_number, value_map) in totalInformation) {
                     totoalFinish += 1
-                    loadingDialog.setProgressBar(countSecond + (totoalFinish/totalInformation.size)*(100 - countSecond))
+                    loadingDialog.setProgressBar(countSecond + (totoalFinish / totalInformation.size) * (100 - countSecond))
 
                     println("$key_number = $value_map")
                     var Name = value_map.get("Name")
@@ -115,7 +118,7 @@ class UpdateDataSource {
                     }
                 }
                 it.onNext(UpdateResult(success = R.string.update_success))
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 it.onError(e)
             }
             AppDatabase.destroyInstance()
@@ -126,7 +129,7 @@ class UpdateDataSource {
      * @param milliSeconds
      * @param rxAction
      */
-    private fun interval(milliSeconds : Long,  rxAction :RxAction) {
+    private fun interval(milliSeconds: Long, rxAction: RxAction) {
         Observable.interval(milliSeconds, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<Long> {
@@ -142,11 +145,11 @@ class UpdateDataSource {
                 override fun onError(e: Throwable?) {
                     TODO("Not yet implemented")
                 }
-            });
+            })
     }
 
     interface RxAction {
-        fun action( number:Long)
+        fun action(number: Long)
     }
 
     /**
@@ -154,8 +157,7 @@ class UpdateDataSource {
      */
     private fun cancel() {
         if (!mDisposable.isDisposed) {
-            mDisposable.dispose();
+            mDisposable.dispose()
         }
     }
-
 }

@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = arrayOf(TwStock::class,Favorite::class), version = 1)
+@Database(entities = arrayOf(TwStock::class, Favorite::class), version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun FavoriteDao(): FavoriteDao
     abstract fun TwStockDao(): TwStockDao
@@ -14,7 +14,8 @@ abstract class AppDatabase : RoomDatabase() {
         fun getInstance(context: Context): AppDatabase {
             if (INSTANCE == null) {
                 synchronized(AppDatabase::class) {
-                    INSTANCE = Room.databaseBuilder(context,
+                    INSTANCE = Room.databaseBuilder(
+                        context,
                         AppDatabase::class.java,
                         AppDatabase::class.java.simpleName
                     ).build()
@@ -23,14 +24,11 @@ abstract class AppDatabase : RoomDatabase() {
             return INSTANCE!!
         }
 
-
         fun destroyInstance() {
             if (INSTANCE?.isOpen == true) {
                 INSTANCE?.close()
             }
             INSTANCE = null
         }
-
     }
-
 }

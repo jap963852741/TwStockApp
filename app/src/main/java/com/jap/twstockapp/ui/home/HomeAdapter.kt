@@ -15,7 +15,7 @@ class HomeAdapter(
 ) :
 
     RecyclerView.Adapter<VH>() {
-    private lateinit var binding : ItemHomeBinding
+    private lateinit var binding: ItemHomeBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         binding = ItemHomeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -32,9 +32,9 @@ class HomeAdapter(
             position == 15 -> holder.itemInformation.setBackgroundColor(parentview.resources.getColor(R.color.colorLightGray))
             position == 19 -> holder.itemInformation.setBackgroundColor(parentview.resources.getColor(R.color.colorLightGray))
 
-            position == 2 -> if (c!!.contains("▲")) holder.itemInformation.setTextColor(parentview.resources.getColor(R.color.colorRed)) else  holder.itemInformation.setTextColor(parentview.resources.getColor(R.color.colorLightGreen))
-            position == 17 -> if (c!!.contains("-")) holder.itemInformation.setTextColor(parentview.resources.getColor(R.color.colorLightGreen)) else  holder.itemInformation.setTextColor(parentview.resources.getColor(R.color.colorRed))
-            position == 18 -> if (c!!.contains("-")) holder.itemInformation.setTextColor(parentview.resources.getColor(R.color.colorLightGreen)) else  holder.itemInformation.setTextColor(parentview.resources.getColor(R.color.colorRed))
+            position == 2 -> if (c!!.contains("▲")) holder.itemInformation.setTextColor(parentview.resources.getColor(R.color.colorRed)) else holder.itemInformation.setTextColor(parentview.resources.getColor(R.color.colorLightGreen))
+            position == 17 -> if (c!!.contains("-")) holder.itemInformation.setTextColor(parentview.resources.getColor(R.color.colorLightGreen)) else holder.itemInformation.setTextColor(parentview.resources.getColor(R.color.colorRed))
+            position == 18 -> if (c!!.contains("-")) holder.itemInformation.setTextColor(parentview.resources.getColor(R.color.colorLightGreen)) else holder.itemInformation.setTextColor(parentview.resources.getColor(R.color.colorRed))
 
             position == 21 -> holder.itemInformation.setTextColor(parentview.resources.getColor(R.color.colorBlack))
         }
@@ -43,7 +43,6 @@ class HomeAdapter(
     override fun getItemCount(): Int {
         return dataList.size
     }
-
 }
 
 class VH(binding: ItemHomeBinding) :

@@ -28,10 +28,10 @@ data class TwStock(
     @ColumnInfo(name = "InvestmentRation") val InvestmentRation: Double?,
     @ColumnInfo(name = "SelfEmployedRation") val SelfEmployedRation: Double?,
     @ColumnInfo(name = "ThreeBigRation") val ThreeBigRation: Double?
-    )
-//{
+)
+// {
 //    constructor(Name: String?,Price: Double?) : this(null,Name,Price)
-//}
+// }
 
 /**
  * key : 代號

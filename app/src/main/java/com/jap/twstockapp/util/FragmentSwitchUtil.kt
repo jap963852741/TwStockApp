@@ -9,7 +9,7 @@ import com.jap.twstockapp.ui.condition.ConditionFragment
 import com.jap.twstockapp.ui.favorites.FavoritesFragment
 import java.util.*
 
-class FragmentSwitchUtil(fragmanager: FragmentManager){
+class FragmentSwitchUtil(fragmanager: FragmentManager) {
 
     var mStacks: HashMap<String, Stack<Fragment>>? = null
     var mCurrentTab: String? = null
@@ -18,7 +18,7 @@ class FragmentSwitchUtil(fragmanager: FragmentManager){
     val TAB_NOTIFICATIONS = "tab_notifications"
     var manager: FragmentManager
 
-    init{
+    init {
         manager = fragmanager
         mStacks = HashMap<String, Stack<Fragment>>()
         mStacks!!.put(TAB_HOME, Stack<Fragment>())
@@ -52,12 +52,12 @@ class FragmentSwitchUtil(fragmanager: FragmentManager){
                *    We are adding a new fragment which is not present in stack. So add to stack is true.
                */
             if (tabId == TAB_DASHBOARD) {
-                switchContent(getNowFragment(), ConditionFragment() , tabId ,true)
+                switchContent(getNowFragment(), ConditionFragment(), tabId, true)
             } else if (tabId == TAB_NOTIFICATIONS) {
-                switchContent(getNowFragment(), FavoritesFragment() , tabId ,false)
+                switchContent(getNowFragment(), FavoritesFragment(), tabId, false)
             }
         } else {
-            switchContent(getNowFragment(),mStacks!![tabId]!!.lastElement() , tabId ,false)
+            switchContent(getNowFragment(), mStacks!![tabId]!!.lastElement(), tabId, false)
         }
     }
 
@@ -69,16 +69,16 @@ class FragmentSwitchUtil(fragmanager: FragmentManager){
     fun switchContent(
         from: Fragment?,
         to: Fragment,
-        tag :String?,
-        init : Boolean
+        tag: String?,
+        init: Boolean
     ) {
 
         if (init) mStacks!![tag]!!.push(to)
         if (from !== to) {
             val transaction: FragmentTransaction = manager.beginTransaction()
-            //此处必须要进行判断，因为同一个fragment只能被add一次，否则会发生异常
+            // 此处必须要进行判断，因为同一个fragment只能被add一次，否则会发生异常
             if (!to.isAdded) {
-                //未添加
+                // 未添加
                 transaction.hide(from!!)
                 transaction.add(R.id.nav_host_fragment, to)
                 transaction.show(to).commit()
@@ -89,20 +89,18 @@ class FragmentSwitchUtil(fragmanager: FragmentManager){
         }
     }
 
-    fun getNowFragment() : Fragment?{
+    fun getNowFragment(): Fragment? {
         val fragments: List<Fragment> = manager.getFragments()
 //        val i = fragments.size-1
-        for (i in 0..fragments.size-1) {
+        for (i in 0..fragments.size - 1) {
             val j = fragments.size - 1 - i
-            if (fragments[j].isVisible ) {
+            if (fragments[j].isVisible) {
                 return fragments[j]
             }
         }
 
         return null
-
     }
-
 
     fun replaceCateFragment(
         animType: Int,
@@ -117,8 +115,7 @@ class FragmentSwitchUtil(fragmanager: FragmentManager){
         }
         mStacks!![TAB_HOME]!!.push(frag)
         transaction.replace(R.id.nav_host_fragment, frag!!)
-        Log.i("replaceCateFragment"," fragment :   "+frag.toString())
+        Log.i("replaceCateFragment", " fragment :   " + frag.toString())
         transaction.commit()
     }
-
 }

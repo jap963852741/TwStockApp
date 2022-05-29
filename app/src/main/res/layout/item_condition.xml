@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     >
 
-    <com.jap.twstockapp.util.dialog.MySpinner
+    <com.jap.twStockApp.util.dialog.MySpinner
         android:id="@+id/conditionName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -17,7 +17,7 @@
 
     />
 
-    <com.jap.twstockapp.util.dialog.MySpinner
+    <com.jap.twStockApp.util.dialog.MySpinner
         android:id="@+id/conditionSymbol"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

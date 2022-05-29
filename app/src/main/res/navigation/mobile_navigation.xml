@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.jap.twstockapp.ui.home.HomeFragment"
+        android:name="com.jap.twStockApp.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.jap.twstockapp.ui.condition.ConditionFragment"
+        android:name="com.jap.twStockApp.ui.condition.ConditionFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_condition" />
 
     <fragment
         android:id="@+id/navigation_favorites"
-        android:name="com.jap.twstockapp.ui.favorites.FavoritesFragment"
+        android:name="com.jap.twStockApp.ui.favorites.FavoritesFragment"
         android:label="@string/title_favorites"
         tools:layout="@layout/fragment_favorites" />
 </navigation>

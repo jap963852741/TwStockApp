@@ -42,7 +42,7 @@
         android:id="@+id/search_text_home"
         android:layout_below="@+id/toolBar_home"
         android:orientation="horizontal">
-        <com.jap.twstockapp.util.dialog.MyAutoCompleteTextView
+        <com.jap.twStockApp.util.dialog.MyAutoCompleteTextView
             android:id="@+id/auto_complete_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

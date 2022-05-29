@@ -110,11 +110,11 @@ class UpdateDataSource {
                         SelfEmployedRation = SelfEmployedRation,
                         ThreeBigRation = ThreeBigRation
                     )
-                    val HaveStock: TwStock? = db.TwStockDao().getStockNoInformation(key_number)
+                    val HaveStock: TwStock? = db?.TwStockDao()?.getStockNoInformation(key_number)
                     if (HaveStock != null) {
-                        db.TwStockDao().update(twStock)
+                        db?.TwStockDao()?.update(twStock)
                     } else {
-                        db.TwStockDao().insertAll(twStock)
+                        db?.TwStockDao()?.insertAll(twStock)
                     }
                 }
                 it.onNext(UpdateResult(success = R.string.update_success))

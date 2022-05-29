@@ -11,14 +11,13 @@ import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class FavoritesViewModel(app: Application, private val favoritesRespository: FavoritesRespository) : AndroidViewModel(app) {
+class FavoritesViewModel(app: Application, private val favoritesRespository: FavoritesRespository) :
+    AndroidViewModel(app) {
     val context = getApplication<Application>().applicationContext
     val _favorite = MutableLiveData<ArrayList<Favorite>>().apply {
         value = arrayListOf()
     }
-    companion object {
-        lateinit var favorites: ArrayList<Favorite>
-    }
+
     val favorite: LiveData<ArrayList<Favorite>> = _favorite
 
     fun get_favorite() {
@@ -29,11 +28,14 @@ class FavoritesViewModel(app: Application, private val favoritesRespository: Fav
                     favorite_list.add(fav)
                 }
             }
+
             override fun onError(e: Throwable) {
             }
+
             override fun onComplete() {
                 _favorite.value = favorite_list
             }
+
             override fun onSubscribe(d: Disposable) {
             }
         }

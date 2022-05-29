@@ -14,7 +14,7 @@ class StockNoArrayRepository {
             var vocabulary = arrayListOf<String>()
 
             val observable = Observable.create<String> {
-                val temp_arraylist = AppDatabase.getInstance(applicationContext).TwStockDao().getAllStockNo()
+                val temp_arraylist = AppDatabase.getInstance(applicationContext)?.TwStockDao()?.getAllStockNo()
 //                    Log.e("StockNoArrayRepository",temp_arraylist.toString())
                 for (i in temp_arraylist!!) {
 //                        Log.e("i",i.toString())

@@ -9,14 +9,11 @@ import com.github.zagum.switchicon.SwitchIconView
 import com.jap.twStockApp.Repository.roomdb.Favorite
 import com.jap.twStockApp.databinding.ItemFavoritesBinding
 import com.jap.twStockApp.ui.MainActivity
-import com.jap.twStockApp.ui.condition.ConditionFragment
-import com.jap.twStockApp.ui.favorites.FavoritesViewModel.Companion.favorites
-import com.jap.twStockApp.ui.home.HomeFragment
 import com.jap.twStockApp.util.FavoriteUtil
 
 class FavoritesAdapter(
     private val dataList: ArrayList<Favorite>,
-    private val parentview: ViewGroup
+    private val favoriteUtil: FavoriteUtil
 ) :
 
     RecyclerView.Adapter<VH>() {
@@ -30,41 +27,27 @@ class FavoritesAdapter(
 
     @SuppressLint("ResourceType", "SetTextI18n")
     override fun onBindViewHolder(holder: VH, position: Int) {
-        val favorite = dataList.get(position)
-        val stockno = favorite.StockNo
+        val favorite = dataList[position]
+        val stockNo = favorite.StockNo
         val name = favorite.Name!!
 
-        holder.itemFavorite.text = favorite.StockNo + " " + favorite.Name
-
-        var favorite_tag = false
-        for (i in favorites) {
-            if (stockno == i.StockNo && name == i.Name) {
-                favorite_tag = true
-                break
-            }
-        }
-        if (favorite_tag) {
-            holder.favorite_button.setIconEnabled(true)
-        } else {
-            holder.favorite_button.setIconEnabled(false)
-        }
+        holder.itemFavorite.text = "${favorite.StockNo}  ${favorite.Name}"
+        holder.favorite_button.setIconEnabled(true)
 
         holder.favorite_button.setOnClickListener {
 
             if (holder.favorite_button.isIconEnabled) {
-                FavoriteUtil(parentview.context).remove_favorite(stockno, name)
+                favoriteUtil.remove_favorite(stockNo, name)
                 holder.favorite_button.setIconEnabled(false)
             } else {
-                FavoriteUtil(parentview.context).add_favorite(stockno, name)
+                favoriteUtil.add_favorite(stockNo, name)
                 holder.favorite_button.setIconEnabled(true)
-                ConditionFragment.conditionViewModel.get_favorite()
             }
         }
 
         holder.itemView.setOnClickListener {
             MainActivity.navigation.selectedItemId = MainActivity.navigation.menu.getItem(0).itemId
-//            HomeFragment.stockText.setText(stockno, false)
-            setHomeSearchText?.invoke(stockno)
+            setHomeSearchText?.invoke(stockNo)
         }
     }
 

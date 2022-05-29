@@ -7,6 +7,6 @@ import io.reactivex.rxjava3.core.Observable
 
 class FavoritesRespository(val favoriteDataSource: FavoriteDataSource) {
     fun getAllFavorite(context: Context): Observable<List<Favorite>> {
-        return favoriteDataSource.get_all_favorite(context = context)
+        return favoriteDataSource.getAllFavorite(context = context)
     }
 }

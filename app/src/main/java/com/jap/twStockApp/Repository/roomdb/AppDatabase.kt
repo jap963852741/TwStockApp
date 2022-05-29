@@ -11,7 +11,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun TwStockDao(): TwStockDao
     companion object {
         private var INSTANCE: AppDatabase? = null
-        fun getInstance(context: Context): AppDatabase {
+        fun getInstance(context: Context?): AppDatabase? {
+            if (context == null) return null
             if (INSTANCE == null) {
                 synchronized(AppDatabase::class) {
                     INSTANCE = Room.databaseBuilder(
@@ -21,7 +22,7 @@ abstract class AppDatabase : RoomDatabase() {
                     ).build()
                 }
             }
-            return INSTANCE!!
+            return INSTANCE
         }
 
         fun destroyInstance() {

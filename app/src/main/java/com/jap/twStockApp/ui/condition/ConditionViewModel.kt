@@ -23,368 +23,124 @@ class ConditionViewModel(
     val _favorite = MutableLiveData<ArrayList<Favorite>>().apply {
         value = arrayListOf()
     }
+    private val _filter = MutableLiveData<Unit>()
 
     val text: LiveData<ArrayList<String?>> = _text
     val favorite: LiveData<ArrayList<Favorite>> = _favorite
+    val filter: LiveData<Unit?> = _filter
 
     companion object {
         lateinit var twstocks: List<TwStock>
         lateinit var favorites: ArrayList<Favorite>
     }
 
-    fun get_aLL_list() {
+    fun getFilteredList() {
         get_favorite()
         GetAllStockRespository().loadInfo(
             context,
             object : AllTwStockTaskFinish {
                 override fun onFinish(data: List<TwStock>) {
                     twstocks = data
-                    ConditionFragment.mUI_Handler.sendEmptyMessage(ConditionFragment.MSG_TWSTOCK_OK)
+                    _filter.postValue(null)
                 }
             }
         )
     }
 
     fun filter_list(Name: String, Symbol: String, value: Double) {
-        val temp_twstocks: ArrayList<TwStock> = arrayListOf()
-        if (Name == "現價" && Symbol == ">") {
-            for (twstock in twstocks) {
-                if (twstock.Price != null && twstock.Price > value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "現價" && Symbol == "<") {
-            for (twstock in twstocks) {
-                if (twstock.Price != null && twstock.Price < value) {
-                    temp_twstocks.add(twstock)
-                    System.out.println(twstock)
-                }
-            }
-        }
-        if (Name == "漲跌" && Symbol == ">") {
-            for (twstock in twstocks) {
-                if (twstock.UpAndDown != null && change_string_toint(twstock.UpAndDown) != null && change_string_toint(twstock.UpAndDown)!! > value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "漲跌" && Symbol == "<") {
-            for (twstock in twstocks) {
-                if (twstock.UpAndDown != null && change_string_toint(twstock.UpAndDown) != null && change_string_toint(twstock.UpAndDown)!! < value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "漲跌現價比" && Symbol == ">") {
-            for (twstock in twstocks) {
-                if (twstock.UpAndDownPercent != null && change_string_toint(twstock.UpAndDownPercent) != null && change_string_toint(twstock.UpAndDownPercent)!! > value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "漲跌現價比" && Symbol == "<") {
-            for (twstock in twstocks) {
-                if (twstock.UpAndDownPercent != null && change_string_toint(twstock.UpAndDownPercent) != null && change_string_toint(twstock.UpAndDownPercent)!! < value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "周漲跌現價比" && Symbol == ">") {
-            for (twstock in twstocks) {
-                if (twstock.WeekUpAndDownPercent != null && change_string_toint(twstock.WeekUpAndDownPercent) != null && change_string_toint(twstock.WeekUpAndDownPercent)!! > value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "周漲跌現價比" && Symbol == "<") {
-            for (twstock in twstocks) {
-                if (twstock.WeekUpAndDownPercent != null && change_string_toint(twstock.WeekUpAndDownPercent) != null && change_string_toint(twstock.WeekUpAndDownPercent)!! < value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "最高最低振福" && Symbol == "<") {
-            for (twstock in twstocks) {
-                if (twstock.HighestAndLowestPercent != null && change_string_toint(twstock.HighestAndLowestPercent) != null && change_string_toint(twstock.HighestAndLowestPercent)!! < value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "最高最低振福" && Symbol == "<") {
-            for (twstock in twstocks) {
-                if (twstock.HighestAndLowestPercent != null && change_string_toint(twstock.HighestAndLowestPercent) != null && change_string_toint(twstock.HighestAndLowestPercent)!! < value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "開盤價" && Symbol == ">") {
-            for (twstock in twstocks) {
-                if (twstock.Open != null && twstock.Open > value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "開盤價" && Symbol == "<") {
-            for (twstock in twstocks) {
-                if (twstock.Open != null && twstock.Open < value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "最高價" && Symbol == ">") {
-            for (twstock in twstocks) {
-                if (twstock.High != null && twstock.High > value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "最高價" && Symbol == "<") {
-            for (twstock in twstocks) {
-                if (twstock.High != null && twstock.High < value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "最低價" && Symbol == ">") {
-            for (twstock in twstocks) {
-                if (twstock.Low != null && twstock.Low > value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "最低價" && Symbol == "<") {
-            for (twstock in twstocks) {
-                if (twstock.Low != null && twstock.Low < value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "交易量" && Symbol == ">") {
-            for (twstock in twstocks) {
-                if (twstock.DealVolume != null && twstock.DealVolume > value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "交易量" && Symbol == "<") {
-            for (twstock in twstocks) {
-                if (twstock.DealVolume != null && twstock.DealVolume < value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "交易總值" && Symbol == ">") {
-            for (twstock in twstocks) {
-                if (twstock.DealTotalValue != null && twstock.DealTotalValue > value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "交易總值" && Symbol == "<") {
-            for (twstock in twstocks) {
-                if (twstock.DealTotalValue != null && twstock.DealTotalValue < value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "殖利率" && Symbol == ">") {
-            for (twstock in twstocks) {
-                if (twstock.DividendYield != null && twstock.DividendYield > value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "殖利率" && Symbol == "<") {
-            for (twstock in twstocks) {
-                if (twstock.DividendYield != null && twstock.DividendYield < value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "本益比" && Symbol == ">") {
-            for (twstock in twstocks) {
-                if (twstock.PriceToEarningRatio != null && twstock.PriceToEarningRatio > value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "本益比" && Symbol == "<") {
-            for (twstock in twstocks) {
-                if (twstock.PriceToEarningRatio != null && twstock.PriceToEarningRatio < value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "股價淨值比" && Symbol == ">") {
-            for (twstock in twstocks) {
-                if (twstock.PriceBookRatio != null && twstock.PriceBookRatio > value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "股價淨值比" && Symbol == "<") {
-            for (twstock in twstocks) {
-                if (twstock.PriceBookRatio != null && twstock.PriceBookRatio < value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "營業收入" && Symbol == ">") {
-            for (twstock in twstocks) {
-                if (twstock.OperatingRevenue != null && twstock.OperatingRevenue > value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "營業收入" && Symbol == "<") {
-            for (twstock in twstocks) {
-                if (twstock.OperatingRevenue != null && twstock.OperatingRevenue < value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "月增率" && Symbol == ">") {
-            for (twstock in twstocks) {
-                if (twstock.MoM != null && twstock.MoM > value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "月增率" && Symbol == "<") {
-            for (twstock in twstocks) {
-                if (twstock.MoM != null && twstock.MoM < value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "年增率" && Symbol == ">") {
-            for (twstock in twstocks) {
-                if (twstock.YoY != null && twstock.YoY > value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "年增率" && Symbol == "<") {
-            for (twstock in twstocks) {
-                if (twstock.YoY != null && twstock.YoY < value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "董監持股比例" && Symbol == ">") {
-            for (twstock in twstocks) {
-                if (twstock.DirectorsSupervisorsRatio != null && twstock.DirectorsSupervisorsRatio > value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "董監持股比例" && Symbol == "<") {
-            for (twstock in twstocks) {
-                if (twstock.DirectorsSupervisorsRatio != null && twstock.DirectorsSupervisorsRatio < value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "外商持股比例" && Symbol == ">") {
-            for (twstock in twstocks) {
-                if (twstock.ForeignInvestmentRatio != null && twstock.ForeignInvestmentRatio > value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "外商持股比例" && Symbol == "<") {
-            for (twstock in twstocks) {
-                if (twstock.ForeignInvestmentRatio != null && twstock.ForeignInvestmentRatio < value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "投信持股比例" && Symbol == ">") {
-            for (twstock in twstocks) {
-                if (twstock.InvestmentRation != null && twstock.InvestmentRation > value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "投信持股比例" && Symbol == "<") {
-            for (twstock in twstocks) {
-                if (twstock.InvestmentRation != null && twstock.InvestmentRation < value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "自營商持股" && Symbol == ">") {
-            for (twstock in twstocks) {
-                if (twstock.SelfEmployedRation != null && twstock.SelfEmployedRation > value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "自營商持股" && Symbol == "<") {
-            for (twstock in twstocks) {
-                if (twstock.SelfEmployedRation != null && twstock.SelfEmployedRation < value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "三大法人持股比例" && Symbol == ">") {
-            for (twstock in twstocks) {
-                if (twstock.ThreeBigRation != null && twstock.ThreeBigRation > value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        if (Name == "三大法人持股比例" && Symbol == "<") {
-            for (twstock in twstocks) {
-                if (twstock.ThreeBigRation != null && twstock.ThreeBigRation < value) {
-                    temp_twstocks.add(twstock)
-                }
-            }
-        }
-        twstocks = temp_twstocks
-        System.out.println(twstocks)
+        twstocks = filterAConditionInTwStock(Name, value, Symbol)
+        println(twstocks)
     }
 
-    fun change_string_toint(s: String): Double? {
+    private fun filterAConditionInTwStock(name: String, input: Number, symbol: String): ArrayList<TwStock> {
+        val twStocks: ArrayList<TwStock> = arrayListOf()
+
+        if (symbol == "<") {
+            for (twStock in twstocks) {
+                val twStockValue = twStock.getParamsByName(name)
+                if (twStockValue != null && twStockValue.toInt() < input.toInt()) {
+                    twStocks.add(twStock)
+                }
+            }
+        } else {
+            for (twStock in twstocks) {
+                val twStockValue = twStock.getParamsByName(name)
+                if (twStockValue != null && twStockValue.toInt() > input.toInt()) {
+                    twStocks.add(twStock)
+                }
+            }
+        }
+
+        return twStocks
+    }
+
+    private fun TwStock.getParamsByName(name: String): Number? {
+        when (name) {
+            "現價" -> return Price
+            "漲跌" -> return stringToDouble(UpAndDown)
+            "漲跌現價比" -> return stringToDouble(UpAndDownPercent)
+            "周漲跌現價比" -> return stringToDouble(WeekUpAndDownPercent)
+            "最高最低振福" -> return stringToDouble(HighestAndLowestPercent)
+            "開盤價" -> return Open
+            "最高價" -> return High
+            "最低價" -> return Low
+            "交易量" -> return DealVolume
+            "交易總值" -> return DealTotalValue
+            "殖利率" -> return DividendYield
+            "本益比" -> return PriceToEarningRatio
+            "股價淨值比" -> return PriceBookRatio
+            "營業收入" -> return OperatingRevenue
+            "月增率" -> return MoM
+            "年增率" -> return YoY
+            "董監持股比例" -> return DirectorsSupervisorsRatio
+            "外商持股比例" -> return ForeignInvestmentRatio
+            "投信持股比例" -> return InvestmentRation
+            "自營商持股" -> return SelfEmployedRation
+            "三大法人持股比例" -> return ThreeBigRation
+        }
+        return null
+    }
+
+    private fun stringToDouble(s: String?): Double? {
+        if (s == null) return null
         if (s == "--") return null
-        var result_string = ""
-        result_string = s.replace("▲", "")
+        val resultString = s.replace("▲", "")
             .replace("▼", "")
             .replace("+", "")
-        if (result_string.contains("%")) {
-            return result_string.replace("%", "").toDouble() * 0.01
+
+        return if (resultString.contains("%")) {
+            resultString.replace("%", "").toDouble() * 0.01
         } else {
-            return result_string.toDouble()
+            resultString.toDouble()
         }
     }
 
-    fun update_dashboard_livedata() {
-        var temp_array: ArrayList<String?>
-        if (twstocks.size > 0) {
-            temp_array = arrayListOf(twstocks[0].StockNo + " " + twstocks[0].Name)
-            for (i in 1..twstocks.size - 1) {
-                temp_array.add(twstocks[i].StockNo + " " + twstocks[i].Name)
+    fun updateText() {
+        val tempArray: ArrayList<String?> = arrayListOf()
+        if (twstocks.isNotEmpty()) {
+            for (twStock in twstocks) {
+                tempArray.add(twStock.StockNo + " " + twStock.Name)
             }
-            _text.postValue(temp_array)
+            _text.postValue(tempArray)
         } else {
             _text.postValue(arrayListOf(""))
         }
     }
 
     fun get_favorite() {
-        val favorite_list = arrayListOf<Favorite>()
+        val favorites = arrayListOf<Favorite>()
         val observer: Observer<List<Favorite>> = object : Observer<List<Favorite>> {
             override fun onNext(item: List<Favorite>) {
-                for (fav in item) {
-                    favorite_list.add(fav)
-                }
+                item.forEach { favorites.add(it) }
             }
+
             override fun onError(e: Throwable) {
             }
+
             override fun onComplete() {
-                _favorite.value = favorite_list
+                _favorite.value = favorites
             }
+
             override fun onSubscribe(d: Disposable) {
             }
         }

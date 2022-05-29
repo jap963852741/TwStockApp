@@ -9,8 +9,8 @@ import com.jap.twStockApp.Repository.roomdb.Favorite
 import com.jap.twStockApp.databinding.ItemDetailBinding
 import com.jap.twStockApp.ui.MainActivity
 import com.jap.twStockApp.ui.condition.ConditionViewModel.Companion.favorites
-import com.jap.twStockApp.ui.home.HomeFragment
 import com.jap.twStockApp.util.FavoriteUtil
+import java.util.*
 
 class ConditonAdapter(
     private val dataList: ArrayList<String?>,
@@ -27,10 +27,14 @@ class ConditonAdapter(
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        val c = dataList.get(position)
-        val stockno = c!!.split(" ")[0]
-        val name = c!!.split(" ")[1]
+        val c = dataList[position]
 
+        if (c?.contains(" ") == false) return
+
+        val stockno = c?.split(" ")?.get(0)
+        val name = c?.split(" ")?.get(1)
+
+        if (stockno == null || name == null) return
         holder.tv_dashboard.text = c
 
         var favorite_tag = false
@@ -40,11 +44,7 @@ class ConditonAdapter(
                 break
             }
         }
-        if (favorite_tag) {
-            holder.favorite_button.setIconEnabled(true)
-        } else {
-            holder.favorite_button.setIconEnabled(false)
-        }
+        holder.favorite_button.setIconEnabled(favorite_tag)
 
         holder.favorite_button.setOnClickListener {
 
@@ -60,7 +60,6 @@ class ConditonAdapter(
         }
         holder.itemView.setOnClickListener {
             MainActivity.navigation.selectedItemId = MainActivity.navigation.menu.getItem(0).itemId
-//            HomeFragment.stockText.setText(stockno, false)
             setHomeSearchText?.invoke(stockno)
         }
     }

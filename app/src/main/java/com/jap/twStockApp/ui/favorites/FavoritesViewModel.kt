@@ -1,9 +1,8 @@
 package com.jap.twStockApp.ui.favorites
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.jap.twStockApp.Repository.FavoritesRespository
 import com.jap.twStockApp.Repository.roomdb.Favorite
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -11,13 +10,10 @@ import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class FavoritesViewModel(app: Application, private val favoritesRespository: FavoritesRespository) :
-    AndroidViewModel(app) {
-    val context = getApplication<Application>().applicationContext
-    val _favorite = MutableLiveData<ArrayList<Favorite>>().apply {
-        value = arrayListOf()
-    }
+class FavoritesViewModel(private val favoritesRespository: FavoritesRespository) :
+    ViewModel() {
 
+    private val _favorite = MutableLiveData<ArrayList<Favorite>>()
     val favorite: LiveData<ArrayList<Favorite>> = _favorite
 
     fun get_favorite() {
@@ -40,7 +36,7 @@ class FavoritesViewModel(app: Application, private val favoritesRespository: Fav
             }
         }
 
-        favoritesRespository.getAllFavorite(context)
+        favoritesRespository.getAllFavorite()
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(observer)

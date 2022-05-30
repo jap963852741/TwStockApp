@@ -7,13 +7,9 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -50,14 +46,13 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
 
         fragmentUtil?.manager?.fragments?.run {
             for (fragment in this) {
-                if (fragment != null && fragmentUtil?.mStacks?.containsKey(fragmentUtil?.TAB_HOME) == true
-                    && fragmentUtil?.mStacks?.get(fragmentUtil?.TAB_HOME)?.size == 0
+                if (fragment != null && fragmentUtil?.mStacks?.containsKey(FragmentSwitchUtil.TAB_HOME) == true &&
+                    fragmentUtil?.mStacks?.get(FragmentSwitchUtil.TAB_HOME)?.size == 0
                 ) {
                     fragmentUtil?.replaceCateFragment(1, fragment)
                 }
             }
         }
-
     }
 
     override fun onCreateView(
@@ -110,7 +105,6 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
             } else if (it.error != null) {
                 toast(resources.getString(it.error))
             }
-
         }
         stockText?.setOnEditorActionListener { v, _, event ->
             /**

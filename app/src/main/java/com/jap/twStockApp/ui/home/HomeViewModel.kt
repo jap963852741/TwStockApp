@@ -75,7 +75,7 @@ class HomeViewModel(
             }
         }
 
-        stockInformationRepository.updateAllInformation(context, loadingDialog)
+        stockInformationRepository.updateAllInformation(loadingDialog)
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(observer)

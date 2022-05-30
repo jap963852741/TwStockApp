@@ -32,7 +32,6 @@ class StockNoArrayRepository {
                     println("Error Occured ${e.message}")
                 }
                 override fun onComplete() {
-                    AppDatabase.destroyInstance()
                     task.onFinish(vocabulary)
                 }
 

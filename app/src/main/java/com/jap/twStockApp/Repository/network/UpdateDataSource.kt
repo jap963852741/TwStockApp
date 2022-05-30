@@ -1,12 +1,11 @@
 package com.jap.twStockApp.Repository.network
 
-import android.content.Context
 import com.jap.twStockApp.R
 import com.jap.twStockApp.Repository.roomdb.AppDatabase
 import com.jap.twStockApp.Repository.roomdb.TwStock
 import com.jap.twStockApp.ui.home.UpdateResult
+import com.jap.twStockApp.util.SingleStockUtil
 import com.jap.twStockApp.util.dialog.LoadingDialog
-import com.jap.twstockinformation.StockUtil
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer
@@ -16,7 +15,7 @@ import java.util.concurrent.TimeUnit
 class UpdateDataSource {
     lateinit var mDisposable: Disposable
 
-    fun update(context: Context, loadingDialog: LoadingDialog): Observable<UpdateResult> {
+    fun update(loadingDialog: LoadingDialog): Observable<UpdateResult> {
 
         return Observable.create {
 
@@ -31,11 +30,11 @@ class UpdateDataSource {
                 }
             )
 
-            val totalInformation: HashMap<String, HashMap<String, String>> = StockUtil(context).Get_HashMap_Num_MapTotalInformation()
+            val totalInformation: HashMap<String, HashMap<String, String>> = SingleStockUtil.getInstance().Get_HashMap_Num_MapTotalInformation()
 
             cancel()
 
-            val db = AppDatabase.getInstance(context)
+            val db = AppDatabase.getInstance(null)
             try {
                 var totoalFinish = 0.0f
                 for ((key_number, value_map) in totalInformation) {
@@ -121,7 +120,6 @@ class UpdateDataSource {
             } catch (e: Exception) {
                 it.onError(e)
             }
-            AppDatabase.destroyInstance()
         }
     }
     /**

@@ -14,9 +14,6 @@ class FragmentSwitchUtil(fragmanager: FragmentManager) {
 
     var mStacks: HashMap<String, Stack<Fragment>> = HashMap()
     var mCurrentTab: String? = null
-    val TAB_HOME = "tab_home"
-    val TAB_DASHBOARD = "tab_dashboard"
-    val TAB_NOTIFICATIONS = "tab_notifications"
     var manager: FragmentManager
 
     init {
@@ -28,16 +25,21 @@ class FragmentSwitchUtil(fragmanager: FragmentManager) {
 
     companion object {
         private var INSTANCE: FragmentSwitchUtil? = null
+        const val TAB_HOME = "tab_home"
+        const val TAB_DASHBOARD = "tab_dashboard"
+        const val TAB_NOTIFICATIONS = "tab_notifications"
     }
 
-    fun getInstance(): FragmentSwitchUtil {
+    fun getInstance(): FragmentSwitchUtil? {
         if (INSTANCE == null) {
-            INSTANCE = FragmentSwitchUtil(manager)
+            synchronized(FragmentSwitchUtil::class) {
+                INSTANCE = FragmentSwitchUtil(manager)
+            }
         }
-        return INSTANCE!!
+        return INSTANCE
     }
 
-    fun destroyInstance() {
+    fun closeInstance() {
         if (INSTANCE != null) {
             INSTANCE = null
         }

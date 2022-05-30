@@ -2,11 +2,13 @@ package com.jap.twStockApp.di
 
 import android.app.Application
 import android.content.Context
+import com.jap.twStockApp.Repository.roomdb.AppDatabase
 import com.jap.twStockApp.di.condition.ConditionComponent
 import com.jap.twStockApp.di.condition.ConditionModule
 import com.jap.twStockApp.di.home.HomeComponent
 import com.jap.twStockApp.di.home.HomeModule
 import com.jap.twStockApp.di.modules.AppModule
+import com.jap.twStockApp.util.SingleStockUtil
 
 class App : Application() {
 
@@ -17,6 +19,9 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        // init roomDB
+        AppDatabase.appDataBaseInit(applicationContext)
+        SingleStockUtil.init(applicationContext)
         initDependencies()
     }
 
@@ -43,7 +48,6 @@ class App : Application() {
 //        baseComponent = mainComponent.plus(BaseModule())
 //        return baseComponent
 //    }
-
 
     fun releaseConditionComponent() {
         conditionComponent = null

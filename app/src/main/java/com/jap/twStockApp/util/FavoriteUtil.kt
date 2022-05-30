@@ -10,14 +10,12 @@ class FavoriteUtil(applicationContext: Context?) {
     fun add_favorite(StockNo: String, Name: String) {
         Thread {
             db?.FavoriteDao()?.insertAll(Favorite(StockNo, Name))
-            AppDatabase.destroyInstance() // 防內存洩漏
         }.start()
     }
 
     fun remove_favorite(StockNo: String, Name: String) {
         Thread {
             db?.FavoriteDao()?.delete(Favorite(StockNo, Name))
-            AppDatabase.destroyInstance()
         }.start()
     }
 }

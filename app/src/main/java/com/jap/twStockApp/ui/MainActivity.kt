@@ -16,7 +16,7 @@ import com.jap.twStockApp.util.FragmentSwitchUtil
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewbinding: ActivityMainBinding
-    private lateinit var fragmentutil: FragmentSwitchUtil
+    private var fragmentUtil: FragmentSwitchUtil? = null
     var baseViewModel: BaseViewModel? = null
 
     companion object {
@@ -30,29 +30,28 @@ class MainActivity : AppCompatActivity() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR // Statusbar 轉為深色
         navigation = viewbinding.navView
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        fragmentutil = FragmentSwitchUtil(fragmanager = supportFragmentManager).getInstance()
+        fragmentUtil = FragmentSwitchUtil(fragmanager = supportFragmentManager).getInstance()
         baseViewModel = ViewModelProvider(this, BaseFragmentViewModelFactory())[BaseViewModel::class.java]
-
     }
     private val mOnNavigationItemSelectedListener: BottomNavigationView.OnNavigationItemSelectedListener =
         object : BottomNavigationView.OnNavigationItemSelectedListener {
             override fun onNavigationItemSelected(item: MenuItem): Boolean {
-                when (item.getItemId()) {
+                when (item.itemId) {
                     R.id.navigation_home -> {
-                        fragmentutil.selectedTab(
-                            fragmentutil.TAB_HOME
+                        fragmentUtil?.selectedTab(
+                            FragmentSwitchUtil.TAB_HOME
                         )
                         return true
                     }
                     R.id.navigation_dashboard -> {
-                        fragmentutil.selectedTab(
-                            fragmentutil.TAB_DASHBOARD
+                        fragmentUtil?.selectedTab(
+                            FragmentSwitchUtil.TAB_DASHBOARD
                         )
                         return true
                     }
                     R.id.navigation_favorites -> {
-                        fragmentutil.selectedTab(
-                            fragmentutil.TAB_NOTIFICATIONS
+                        fragmentUtil?.selectedTab(
+                            FragmentSwitchUtil.TAB_NOTIFICATIONS
                         )
                         return true
                     }

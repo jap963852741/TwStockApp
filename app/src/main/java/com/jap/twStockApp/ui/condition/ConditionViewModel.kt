@@ -145,7 +145,7 @@ class ConditionViewModel(
             }
         }
 
-        favoritesRespository.getAllFavorite(context)
+        favoritesRespository.getAllFavorite()
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(observer)

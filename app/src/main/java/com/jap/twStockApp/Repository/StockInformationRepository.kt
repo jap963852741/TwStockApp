@@ -44,14 +44,12 @@ class StockInformationRepository(val updatedataSource: UpdateDataSource) {
             } else {
                 task.onFinish(arrayListOf(""))
             }
-            AppDatabase.destroyInstance()
         }
     }
 
     fun updateAllInformation(
-        context: Context,
         loadingDialog: LoadingDialog
     ): Observable<UpdateResult> {
-        return updatedataSource.update(context = context, loadingDialog = loadingDialog)
+        return updatedataSource.update(loadingDialog = loadingDialog)
     }
 }

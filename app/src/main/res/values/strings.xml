@@ -8,7 +8,7 @@
     <string name="update_success"> 更新成功 </string>
 
 
-
+    <string name="title_start">Start</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_favorites">favorites</string>

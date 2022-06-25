@@ -1,161 +1,78 @@
 package com.jap.twStockApp.Repository.network
 
-import com.jap.twStockApp.R
 import com.jap.twStockApp.Repository.roomdb.AppDatabase
 import com.jap.twStockApp.Repository.roomdb.TwStock
-import com.jap.twStockApp.ui.home.UpdateResult
 import com.jap.twStockApp.util.SingleStockUtil
-import com.jap.twStockApp.util.dialog.LoadingDialog
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Observer
-import io.reactivex.rxjava3.disposables.Disposable
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.cancellable
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 
 class UpdateDataSource {
-    lateinit var mDisposable: Disposable
+    private var countSecond = 0
 
-    fun update(loadingDialog: LoadingDialog): Observable<UpdateResult> {
+    suspend fun updateDB(loadingPercent: (Int) -> Unit) = withContext(Dispatchers.IO) {
+        val countJob = CoroutineScope(currentCoroutineContext()).launch { beginToCount(loadingPercent).cancellable().collect() }
 
-        return Observable.create {
+        val totalInformation: HashMap<String, HashMap<String, String>> = SingleStockUtil.getInstance().Get_HashMap_Num_MapTotalInformation()
+        countJob.cancel()
 
-            var countSecond = 0
-            interval(
-                1000,
-                object : RxAction {
-                    override fun action(number: Long) {
-                        loadingDialog.setProgressBar(countSecond)
-                        countSecond += 1
-                    }
-                }
-            )
+        val db = AppDatabase.getInstance(null)
 
-            val totalInformation: HashMap<String, HashMap<String, String>> = SingleStockUtil.getInstance().Get_HashMap_Num_MapTotalInformation()
+        try {
+            var totoalFinish = 0.0f
+            for ((key_number, value_map) in totalInformation) {
+                totoalFinish += 1
+                loadingPercent.invoke((countSecond + (totoalFinish / totalInformation.size) * (100 - countSecond)).toInt())
+                println("$key_number = $value_map")
 
-            cancel()
+                var priceToEarningRatio: Double? = null
+                if (value_map["PriceToEarningRatio"] != "-") priceToEarningRatio = value_map["PriceToEarningRatio"]?.toDouble()
 
-            val db = AppDatabase.getInstance(null)
-            try {
-                var totoalFinish = 0.0f
-                for ((key_number, value_map) in totalInformation) {
-                    totoalFinish += 1
-                    loadingDialog.setProgressBar(countSecond + (totoalFinish / totalInformation.size) * (100 - countSecond))
+                var priceBookRatio: Double? = null
+                if (value_map["PriceBookRatio"] != "-") priceBookRatio = value_map["PriceBookRatio"]?.toDouble()
 
-                    println("$key_number = $value_map")
-                    var Name = value_map.get("Name")
-                    var Price: Double? = null
-                    if (value_map.containsKey("Price")) {
-                        Price = value_map.get("Price")?.toDouble()
-                    }
-                    var UpAndDown = value_map.get("UpAndDown")
-                    var UpAndDownPercent = value_map.get("UpAndDownPercent")
-                    var WeekUpAndDownPercent = value_map.get("WeekUpAndDownPercent")
-                    var HighestAndLowestPercent = value_map.get("HighestAndLowestPercent")
-                    var Open = value_map.get("Open")?.toDouble()
-                    var High = value_map.get("High")?.toDouble()
-                    var Low = value_map.get("Low")?.toDouble()
-                    var DealVolume = value_map.get("DealVolume")?.replace(",", "")?.toInt()
+                val twStock = TwStock(
+                    StockNo = key_number,
+                    Name = value_map["Name"],
+                    Price = value_map["Price"]?.toDouble(),
+                    UpAndDown = value_map["UpAndDown"],
+                    UpAndDownPercent = value_map["UpAndDownPercent"],
+                    WeekUpAndDownPercent = value_map["WeekUpAndDownPercent"],
+                    HighestAndLowestPercent = value_map["HighestAndLowestPercent"],
+                    Open = value_map["Open"]?.toDouble(),
+                    High = value_map["High"]?.toDouble(),
+                    Low = value_map["Low"]?.toDouble(),
+                    DealVolume = value_map["DealVolume"]?.replace(",", "")?.toInt(),
+                    DealTotalValue = (value_map["DealTotalValue"]?.toDouble()?.times(100000000f))?.toInt(),
+                    DividendYield = value_map["DividendYield"]?.toDouble(),
+                    PriceToEarningRatio = priceToEarningRatio,
+                    PriceBookRatio = priceBookRatio,
+                    OperatingRevenue = value_map["OperatingRevenue"]?.toLong(),
+                    MoM = value_map["MoM"]?.toDouble(),
+                    YoY = value_map["YoY"]?.toDouble(),
+                    DirectorsSupervisorsRatio = value_map["DirectorsSupervisorsRatio"]?.toDouble(),
+                    ForeignInvestmentRatio = value_map["ForeignInvestmentRatio"]?.toDouble(),
+                    InvestmentRation = value_map["InvestmentRation"]?.toDouble(),
+                    SelfEmployedRation = value_map["SelfEmployedRation"]?.toDouble(),
+                    ThreeBigRation = value_map["ThreeBigRation"]?.toDouble()
+                )
+                val haveStock: TwStock? = db?.TwStockDao()?.getStockNoInformation(key_number)
 
-                    var DealTotalValue: Int? = null
-                    if (value_map.containsKey("DealTotalValue")) {
-                        DealTotalValue =
-                            (value_map.get("DealTotalValue")?.toDouble()!! * 100000000f).toInt()
-                    }
+                if (haveStock != null) db.TwStockDao().update(twStock)
+                else db?.TwStockDao()?.insertAll(twStock)
 
-                    var DividendYield = value_map.get("DividendYield")?.toDouble()
-
-                    var PriceToEarningRatio: Double? = null
-                    if (value_map.get("PriceToEarningRatio") != "-") {
-                        PriceToEarningRatio = value_map.get("PriceToEarningRatio")?.toDouble()
-                    }
-
-                    var PriceBookRatio: Double? = null
-                    if (value_map.get("PriceBookRatio") != "-") {
-                        PriceBookRatio = value_map.get("PriceBookRatio")?.toDouble()
-                    }
-
-                    val OperatingRevenue = value_map.get("OperatingRevenue")?.toLong()
-                    val MoM = value_map.get("MoM")?.toDouble()
-                    val YoY = value_map.get("YoY")?.toDouble()
-                    val DirectorsSupervisorsRatio =
-                        value_map.get("DirectorsSupervisorsRatio")?.toDouble()
-                    val ForeignInvestmentRatio = value_map.get("ForeignInvestmentRatio")?.toDouble()
-                    val InvestmentRation = value_map.get("InvestmentRation")?.toDouble()
-                    val SelfEmployedRation = value_map.get("SelfEmployedRation")?.toDouble()
-                    val ThreeBigRation = value_map.get("ThreeBigRation")?.toDouble()
-
-                    val twStock = TwStock(
-                        StockNo = key_number,
-                        Name = Name,
-                        Price = Price,
-                        UpAndDown = UpAndDown,
-                        UpAndDownPercent = UpAndDownPercent,
-                        WeekUpAndDownPercent = WeekUpAndDownPercent,
-                        HighestAndLowestPercent = HighestAndLowestPercent,
-                        Open = Open,
-                        High = High,
-                        Low = Low,
-                        DealVolume = DealVolume,
-                        DealTotalValue = DealTotalValue,
-                        DividendYield = DividendYield,
-                        PriceToEarningRatio = PriceToEarningRatio,
-                        PriceBookRatio = PriceBookRatio,
-                        OperatingRevenue = OperatingRevenue,
-                        MoM = MoM,
-                        YoY = YoY,
-                        DirectorsSupervisorsRatio = DirectorsSupervisorsRatio,
-                        ForeignInvestmentRatio = ForeignInvestmentRatio,
-                        InvestmentRation = InvestmentRation,
-                        SelfEmployedRation = SelfEmployedRation,
-                        ThreeBigRation = ThreeBigRation
-                    )
-                    val HaveStock: TwStock? = db?.TwStockDao()?.getStockNoInformation(key_number)
-                    if (HaveStock != null) {
-                        db?.TwStockDao()?.update(twStock)
-                    } else {
-                        db?.TwStockDao()?.insertAll(twStock)
-                    }
-                }
-                it.onNext(UpdateResult(success = R.string.update_success))
-            } catch (e: Exception) {
-                it.onError(e)
             }
+        } catch (e: Exception) {
         }
-    }
-    /**
-     * 每隔milliseconds毫秒后执行指定动作
-     * @param milliSeconds
-     * @param rxAction
-     */
-    private fun interval(milliSeconds: Long, rxAction: RxAction) {
-        Observable.interval(milliSeconds, TimeUnit.MILLISECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<Long> {
-                override fun onComplete() {
-                    TODO("Not yet implemented")
-                }
-                override fun onSubscribe(d: Disposable) {
-                    mDisposable = d
-                }
-                override fun onNext(t: Long) {
-                    rxAction.action(t)
-                }
-                override fun onError(e: Throwable?) {
-                    TODO("Not yet implemented")
-                }
-            })
+        countSecond = 0
     }
 
-    interface RxAction {
-        fun action(number: Long)
-    }
-
-    /**
-     * 停止數秒loading
-     */
-    private fun cancel() {
-        if (!mDisposable.isDisposed) {
-            mDisposable.dispose()
+    private suspend fun beginToCount(loadingPercent: (Int) -> Unit): Flow<Unit> = flow {
+        while (currentCoroutineContext().isActive) {
+            loadingPercent.invoke(countSecond++)
+            delay(1000)
         }
     }
 }

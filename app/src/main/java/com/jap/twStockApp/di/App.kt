@@ -39,8 +39,8 @@ class App : Application() {
         homeComponent = null
     }
 
-    fun createConditionComponent(): ConditionComponent {
-        conditionComponent = mainComponent.plus(ConditionModule())
+    fun createConditionComponent(fragmentContext: Context): ConditionComponent {
+        conditionComponent = mainComponent.plus(ConditionModule(fragmentContext))
         return conditionComponent!!
     }
 

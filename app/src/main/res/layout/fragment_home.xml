@@ -83,7 +83,6 @@
         android:layout_below="@id/search_text_home"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/toolBar_home"
-        app:layout_constraintBottom_toTopOf="@id/nav_view"
         app:layout_constraintStart_toStartOf="parent"
         >
         <androidx.recyclerview.widget.RecyclerView

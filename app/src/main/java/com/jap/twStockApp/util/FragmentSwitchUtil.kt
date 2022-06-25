@@ -1,123 +1,83 @@
 package com.jap.twStockApp.util
 
-import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.jap.twStockApp.R
 import com.jap.twStockApp.ui.condition.ConditionFragment
 import com.jap.twStockApp.ui.favorites.FavoritesFragment
+import com.jap.twStockApp.ui.home.HomeFragment
 import java.util.*
-import kotlin.collections.HashMap
 
-class FragmentSwitchUtil(fragmanager: FragmentManager) {
+class FragmentSwitchUtil private constructor(fragmentManager: FragmentManager) {
 
-    var mStacks: HashMap<String, Stack<Fragment>> = HashMap()
-    var mCurrentTab: String? = null
-    var manager: FragmentManager
-
-    init {
-        manager = fragmanager
-        mStacks[TAB_HOME] = Stack<Fragment>()
-        mStacks[TAB_DASHBOARD] = Stack<Fragment>()
-        mStacks[TAB_NOTIFICATIONS] = Stack<Fragment>()
+    private var stacks: HashMap<String, Stack<Fragment>> = HashMap<String, Stack<Fragment>>().apply {
+        this[TAB_HOME] = Stack<Fragment>()
+        this[TAB_DASHBOARD] = Stack<Fragment>()
+        this[TAB_NOTIFICATIONS] = Stack<Fragment>()
     }
+    private var currentTab: String? = null
+    private var manager: FragmentManager = fragmentManager
 
     companion object {
+        @Volatile
         private var INSTANCE: FragmentSwitchUtil? = null
         const val TAB_HOME = "tab_home"
         const val TAB_DASHBOARD = "tab_dashboard"
         const val TAB_NOTIFICATIONS = "tab_notifications"
-    }
 
-    fun getInstance(): FragmentSwitchUtil? {
-        if (INSTANCE == null) {
-            synchronized(FragmentSwitchUtil::class) {
-                INSTANCE = FragmentSwitchUtil(manager)
-            }
-        }
-        return INSTANCE
-    }
-
-    fun closeInstance() {
-        if (INSTANCE != null) {
-            INSTANCE = null
+        fun getInstance(fragmentManager: FragmentManager): FragmentSwitchUtil? {
+            if (INSTANCE != null) return INSTANCE
+            synchronized(FragmentSwitchUtil::class) { INSTANCE = FragmentSwitchUtil(fragmentManager) }
+            return INSTANCE
         }
     }
 
     fun selectedTab(tabId: String) {
-        mCurrentTab = tabId
-        if (mStacks[tabId]!!.size == 0) {
-            /*
-               *    First time this tab is selected. So add first fragment of that tab.
-               *    Dont need animation, so that argument is false.
-               *    We are adding a new fragment which is not present in stack. So add to stack is true.
-               */
-            if (tabId == TAB_DASHBOARD) {
-                switchContent(getNowFragment(), ConditionFragment(), tabId, true)
-            } else if (tabId == TAB_NOTIFICATIONS) {
-                switchContent(getNowFragment(), FavoritesFragment(), tabId, false)
+        currentTab = tabId
+        if (stacks[tabId]?.size == 0) {
+            when (tabId) {
+                TAB_HOME -> {
+                    initHomeTab()
+                }
+                TAB_DASHBOARD -> {
+                    switchContent(getNowFragment(), ConditionFragment(), tabId, true)
+                }
+                TAB_NOTIFICATIONS -> {
+                    switchContent(getNowFragment(), FavoritesFragment(), tabId, true)
+                }
             }
         } else {
-            switchContent(getNowFragment(), mStacks[tabId]!!.lastElement(), tabId, false)
+            stacks[tabId]?.lastElement()?.let { switchContent(getNowFragment(), it, tabId, false) }
         }
     }
 
-    /**
-     * 切换fragment
-     * @param from 要隐藏的fragment
-     * @param to 要显示的fragment
-     */
-    fun switchContent(
-        from: Fragment?,
-        to: Fragment,
-        tag: String?,
-        init: Boolean
-    ) {
-
-        if (init) mStacks[tag]!!.push(to)
-        if (from !== to) {
-            val transaction: FragmentTransaction = manager.beginTransaction()
-            // 此处必须要进行判断，因为同一个fragment只能被add一次，否则会发生异常
-            if (!to.isAdded) {
-                // 未添加
-                transaction.hide(from!!)
-                transaction.add(R.id.nav_host_fragment, to)
-                transaction.show(to).commit()
-            } else {
-                transaction.hide(from!!)
-                transaction.show(to).commit()
-            }
-        }
+    private fun initHomeTab() {
+        val frag = HomeFragment()
+        val transaction: FragmentTransaction = manager.beginTransaction()
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+        stacks[TAB_HOME]?.push(frag)
+        transaction.replace(R.id.nav_host_fragment, frag)
+        transaction.commit()
     }
 
-    fun getNowFragment(): Fragment? {
-        val fragments: List<Fragment> = manager.getFragments()
-//        val i = fragments.size-1
-        for (i in 0..fragments.size - 1) {
+    private fun switchContent(from: Fragment?, to: Fragment, tag: String, init: Boolean) {
+        if (from == null || from == to) return
+        if (init) stacks[tag]?.push(to)
+        val transaction: FragmentTransaction = manager.beginTransaction()
+        transaction.hide(from)
+        if (!to.isAdded) transaction.add(R.id.nav_host_fragment, to)
+        transaction.show(to).commit()
+    }
+
+    private fun getNowFragment(): Fragment? {
+        val fragments: List<Fragment> = manager.fragments
+        for (i in fragments.indices) {
             val j = fragments.size - 1 - i
             if (fragments[j].isVisible) {
                 return fragments[j]
             }
         }
-
         return null
-    }
-
-    fun replaceCateFragment(
-        animType: Int,
-        frag: Fragment?
-    ) {
-        val transaction: FragmentTransaction = manager.beginTransaction()
-        if (animType == 1) {
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-        }
-        if (animType == 0) {
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
-        }
-        mStacks[TAB_HOME]!!.push(frag)
-        transaction.replace(R.id.nav_host_fragment, frag!!)
-        Log.i("replaceCateFragment", " fragment :   " + frag.toString())
-        transaction.commit()
     }
 }

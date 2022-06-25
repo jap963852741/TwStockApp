@@ -4,40 +4,40 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.jap.twStockApp.Repository.*
 import com.jap.twStockApp.Repository.roomdb.Favorite
 import com.jap.twStockApp.Repository.roomdb.TwStock
+import com.jap.twStockApp.ui.model.StockNoNameFav
+import com.jap.twStockApp.util.FavoriteUtil
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.launch
 
 class ConditionViewModel(
     app: Application,
     private val favoritesRespository: FavoritesRespository
 ) : AndroidViewModel(app) {
-    val context = getApplication<Application>().applicationContext
-    private val _text = MutableLiveData<ArrayList<String?>>().apply {
-        value = arrayListOf()
-    }
-    val _favorite = MutableLiveData<ArrayList<Favorite>>().apply {
-        value = arrayListOf()
-    }
+    private val _text = MutableLiveData<ArrayList<StockNoNameFav?>>(arrayListOf())
+    private val _favorite = MutableLiveData<ArrayList<Favorite>>(arrayListOf())
     private val _filter = MutableLiveData<Unit>()
 
-    val text: LiveData<ArrayList<String?>> = _text
+    val text: LiveData<ArrayList<StockNoNameFav?>> = _text
     val favorite: LiveData<ArrayList<Favorite>> = _favorite
     val filter: LiveData<Unit?> = _filter
 
+    private lateinit var twstocks: List<TwStock>
+
     companion object {
-        lateinit var twstocks: List<TwStock>
-        lateinit var favorites: ArrayList<Favorite>
+        lateinit var favorites: Set<Favorite>
     }
 
     fun getFilteredList() {
         get_favorite()
         GetAllStockRespository().loadInfo(
-            context,
+            getApplication<Application>().applicationContext,
             object : AllTwStockTaskFinish {
                 override fun onFinish(data: List<TwStock>) {
                     twstocks = data
@@ -116,15 +116,13 @@ class ConditionViewModel(
     }
 
     fun updateText() {
-        val tempArray: ArrayList<String?> = arrayListOf()
-        if (twstocks.isNotEmpty()) {
-            for (twStock in twstocks) {
-                tempArray.add(twStock.StockNo + " " + twStock.Name)
-            }
-            _text.postValue(tempArray)
-        } else {
-            _text.postValue(arrayListOf(""))
+        val tempArray: ArrayList<StockNoNameFav?> = arrayListOf()
+        if (twstocks.isEmpty()) _text.postValue(arrayListOf())
+        for (twStock in twstocks) {
+            if (twStock.Name == null) continue
+            tempArray.add(StockNoNameFav(twStock.StockNo, twStock.Name, favorites.contains(Favorite(twStock.StockNo, twStock.Name))))
         }
+        _text.postValue(tempArray)
     }
 
     fun get_favorite() {
@@ -149,5 +147,15 @@ class ConditionViewModel(
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(observer)
+    }
+
+    fun addFavorite(stockNoNameFav: StockNoNameFav, successListener: ((Boolean) -> Unit)) = viewModelScope.launch {
+        val result = FavoriteUtil(getApplication<Application>().applicationContext).addFavorite(stockNoNameFav.stockNo, stockNoNameFav.stockName)
+        successListener.invoke(result)
+    }
+
+    fun removeFavorite(stockNoNameFav: StockNoNameFav, successListener: ((Boolean) -> Unit)) = viewModelScope.launch {
+        val result = FavoriteUtil(getApplication<Application>().applicationContext).removeFavorite(stockNoNameFav.stockNo, stockNoNameFav.stockName)
+        successListener.invoke(result)
     }
 }

@@ -10,6 +10,8 @@ import com.jap.twStockApp.Repository.roomdb.Favorite
 import com.jap.twStockApp.databinding.ItemFavoritesBinding
 import com.jap.twStockApp.ui.MainActivity
 import com.jap.twStockApp.util.FavoriteUtil
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class FavoritesAdapter(
     private val dataList: ArrayList<Favorite>,

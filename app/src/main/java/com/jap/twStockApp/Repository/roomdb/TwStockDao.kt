@@ -19,7 +19,7 @@ interface TwStockDao {
     fun getStockPriceConditionSmaller(Value: Int): List<TwStock>
 
     @Query("SELECT (StockNo || ' ' || Name) FROM twstock")
-    fun getAllStockNo(): List<String>?
+    fun getAllStockNo(): List<String?>?
 
     @Insert
     fun insertAll(vararg twstock: TwStock)

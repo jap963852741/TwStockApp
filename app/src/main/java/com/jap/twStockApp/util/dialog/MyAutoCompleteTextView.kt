@@ -12,5 +12,7 @@ class MyAutoCompleteTextView : androidx.appcompat.widget.AppCompatAutoCompleteTe
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    override fun replaceText(text: CharSequence?) = super.replaceText(text!!.split(" ")[0])
+    override fun replaceText(text: CharSequence?) {
+        text?.let { super.replaceText(it.split(" ")[0])}
+    }
 }

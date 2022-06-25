@@ -6,24 +6,32 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.jap.twStockApp.Repository.roomdb.Favorite
 import com.jap.twStockApp.databinding.FragmentConditionBinding
 import com.jap.twStockApp.di.App
 import com.jap.twStockApp.ui.base.BaseFragment
 import com.jap.twStockApp.ui.condition.ConditionViewModel.Companion.favorites
+import com.jap.twStockApp.ui.model.StockNoNameFav
+import com.jap.twStockApp.util.FragmentSwitchUtil
+import com.jap.twStockApp.util.dialog.LoadingDialog
+import javax.inject.Inject
 
 class ConditionFragment : BaseFragment(), View.OnClickListener {
 
     private lateinit var dashboardBinding: FragmentConditionBinding
     private var conditionViewModel: ConditionViewModel? = null
-    private var conditionAdapter: ConditonAdapter? = null
+    private var conditionAdapter: ConditionAdapter? = null
+    @Inject
+    lateinit var loadingDialog: LoadingDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity?.application as App).createConditionComponent().inject(this)
+        (activity?.application as App).createConditionComponent(requireContext()).inject(this)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -83,24 +91,37 @@ class ConditionFragment : BaseFragment(), View.OnClickListener {
         dashboardBinding.conditionSearch.setOnClickListener(this)
 
         conditionViewModel?.text?.observe(viewLifecycleOwner) {
-            conditionAdapter = ConditonAdapter(it, container)
-            conditionAdapter?.setHomeSearchText =
-                baseViewModel?.let { it::setHomeFragmentSearchText }
+            conditionAdapter = ConditionAdapter(it)
             dashboardBinding.reViewDashboard.adapter = conditionAdapter
-            dashboardBinding.reViewDashboard.layoutManager = LinearLayoutManager(
-                context,
-                RecyclerView.VERTICAL,
-                false
-            )
+            dashboardBinding.reViewDashboard.layoutManager = MyLinearLayoutManager(context)
+
+            conditionAdapter?.rootEvent?.observe(viewLifecycleOwner) { stockNo ->
+                FragmentSwitchUtil.getInstance(parentFragmentManager)?.selectedTab(FragmentSwitchUtil.TAB_HOME)
+                baseViewModel?.setHomeFragmentSearchText(stockNo)
+            }
+
+            conditionAdapter?.favoriteButtonEvent?.observe(viewLifecycleOwner) { stockNoNameFav ->
+                if (stockNoNameFav.stockFavorite) {
+                    favorites = favorites.plus(Favorite(stockNoNameFav.stockNo, stockNoNameFav.stockName))
+                    conditionViewModel?.addFavorite(stockNoNameFav) { success ->
+                        if (success) conditionAdapter?.updateStatus(stockNoNameFav)
+                        else Toast.makeText(context, "add favorite Fail", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    favorites = favorites.minus(Favorite(stockNoNameFav.stockNo, stockNoNameFav.stockName))
+                    conditionViewModel?.removeFavorite(stockNoNameFav) { success ->
+                        if (success) conditionAdapter?.updateStatus(stockNoNameFav)
+                        else Toast.makeText(context, "cancel favorite Fail", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
+
         conditionViewModel?.favorite?.observe(viewLifecycleOwner) {
-            favorites = it
+            favorites = it.toSet()
             dashboardBinding.reViewDashboard.adapter = conditionAdapter
-            dashboardBinding.reViewDashboard.layoutManager = LinearLayoutManager(
-                context,
-                RecyclerView.VERTICAL,
-                false
-            )
+            dashboardBinding.reViewDashboard.layoutManager = MyLinearLayoutManager(context)
+            conditionAdapter?.setNewFavoriteList(it.toSet())
         }
         conditionViewModel?.filter?.observe(viewLifecycleOwner) {
             beginFilter()

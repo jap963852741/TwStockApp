@@ -31,12 +31,5 @@ abstract class AppDatabase : RoomDatabase() {
             return INSTANCE
         }
 
-        // database" is when your app is being closed by the OS. So let the OS handle it for you.
-        // https://stackoverflow.com/questions/6608498/best-place-to-close-database-connection/7739454#7739454
-//        fun closeInstance() {
-//            if (INSTANCE?.isOpen == true) {
-//                INSTANCE?.close()
-//            }
-//        }
     }
 }

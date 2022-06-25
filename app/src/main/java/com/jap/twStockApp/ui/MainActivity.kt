@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         lateinit var navigation: BottomNavigationView
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,34 +30,28 @@ class MainActivity : AppCompatActivity() {
         setContentView(viewbinding.root)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR // Statusbar 轉為深色
         navigation = viewbinding.navView
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        fragmentUtil = FragmentSwitchUtil(fragmanager = supportFragmentManager).getInstance()
+        navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+        fragmentUtil = FragmentSwitchUtil.getInstance(supportFragmentManager)
         baseViewModel = ViewModelProvider(this, BaseFragmentViewModelFactory())[BaseViewModel::class.java]
     }
-    private val mOnNavigationItemSelectedListener: BottomNavigationView.OnNavigationItemSelectedListener =
-        object : BottomNavigationView.OnNavigationItemSelectedListener {
-            override fun onNavigationItemSelected(item: MenuItem): Boolean {
-                when (item.itemId) {
-                    R.id.navigation_home -> {
-                        fragmentUtil?.selectedTab(
-                            FragmentSwitchUtil.TAB_HOME
-                        )
-                        return true
-                    }
-                    R.id.navigation_dashboard -> {
-                        fragmentUtil?.selectedTab(
-                            FragmentSwitchUtil.TAB_DASHBOARD
-                        )
-                        return true
-                    }
-                    R.id.navigation_favorites -> {
-                        fragmentUtil?.selectedTab(
-                            FragmentSwitchUtil.TAB_NOTIFICATIONS
-                        )
-                        return true
-                    }
+
+    private val onNavigationItemSelectedListener: BottomNavigationView.OnNavigationItemSelectedListener = object : BottomNavigationView.OnNavigationItemSelectedListener {
+        override fun onNavigationItemSelected(item: MenuItem): Boolean {
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    fragmentUtil?.selectedTab(FragmentSwitchUtil.TAB_HOME)
+                    return true
                 }
-                return false
+                R.id.navigation_dashboard -> {
+                    fragmentUtil?.selectedTab(FragmentSwitchUtil.TAB_DASHBOARD)
+                    return true
+                }
+                R.id.navigation_favorites -> {
+                    fragmentUtil?.selectedTab(FragmentSwitchUtil.TAB_NOTIFICATIONS)
+                    return true
+                }
             }
+            return false
         }
+    }
 }

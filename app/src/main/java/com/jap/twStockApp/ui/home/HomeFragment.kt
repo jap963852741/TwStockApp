@@ -33,7 +33,6 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
     lateinit var loadingDialog: LoadingDialog
     private var homeViewBinding: FragmentHomeBinding? = null
     private var fragmentUtil: FragmentSwitchUtil? = null
-    private var stockText: AutoCompleteTextView? = null
     private var homeViewModel: HomeViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,17 +41,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
         (activity?.application as App).createHomeComponent(requireContext())?.inject(this)
 
         homeViewModel = ViewModelProvider(this, homeViewModelFactory)[HomeViewModel::class.java]
-        fragmentUtil = FragmentSwitchUtil(parentFragmentManager).getInstance()
-
-        fragmentUtil?.manager?.fragments?.run {
-            for (fragment in this) {
-                if (fragment != null && fragmentUtil?.mStacks?.containsKey(FragmentSwitchUtil.TAB_HOME) == true &&
-                    fragmentUtil?.mStacks?.get(FragmentSwitchUtil.TAB_HOME)?.size == 0
-                ) {
-                    fragmentUtil?.replaceCateFragment(1, fragment)
-                }
-            }
-        }
+        fragmentUtil = FragmentSwitchUtil.getInstance(parentFragmentManager)
     }
 
     override fun onCreateView(
@@ -61,63 +50,52 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
         savedInstanceState: Bundle?
     ): View? {
         homeViewBinding = FragmentHomeBinding.inflate(inflater, container, false)
-        homeViewBinding?.toolBarHome?.overflowIcon =
-            resources.getDrawable(R.drawable.ic_refresh_black) // 把三個小點換掉
+        homeViewBinding?.toolBarHome?.overflowIcon = resources.getDrawable(R.drawable.ic_refresh_black) // 把三個小點換掉
         (activity as AppCompatActivity?)!!.setSupportActionBar(homeViewBinding?.toolBarHome)
         setHasOptionsMenu(true)
-        stockText = homeViewBinding?.autoCompleteText
         return homeViewBinding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        homeViewModel?.stockNoArrayList?.observe(
-            viewLifecycleOwner
-        ) {
-            val adapter = ArrayAdapter(view.context, android.R.layout.simple_list_item_1, it)
-            auto_complete_text.setAdapter(adapter)
-            Log.e("stockNoArrayList", it.toString())
+        initObserve()
+        homeViewBinding?.search?.setOnClickListener(this)
+    }
+
+    private fun initObserve() {
+        homeViewModel?.stockNoArrayList?.observe(viewLifecycleOwner) { list ->
+            if (list.isNullOrEmpty()) return@observe
+            val adapter = view?.context?.let { context -> ArrayAdapter(context, android.R.layout.simple_list_item_1, list) }
+            homeViewBinding?.autoCompleteText?.setAdapter(adapter)
         }
-        baseViewModel?.homeFragmentSearchText?.observe(
-            viewLifecycleOwner
-        ) {
+        homeViewBinding?.autoCompleteText?.setOnEditorActionListener { v, _, event ->
+            onClick(v)
+            event != null && event.keyCode == KeyEvent.KEYCODE_ENTER
+        }
+
+        baseViewModel?.homeFragmentSearchText?.observe(viewLifecycleOwner) {
             it?.let {
-                stockText?.setText(it)
+                homeViewBinding?.autoCompleteText?.setText(it)
                 homeViewModel?.updateText(it)
             }
         }
-
-        homeViewModel?.stockInformation?.observe(
-            viewLifecycleOwner
-        ) {
+        homeViewModel?.stockInformation?.observe(viewLifecycleOwner) {
+            if (it.isNullOrEmpty()) return@observe
             homeViewBinding?.reView?.apply {
-                adapter = HomeAdapter(it, view)
+                adapter = view?.let { view -> HomeAdapter(it, view) }
                 layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             }
         }
-        homeViewModel?.updateResult?.observe(
-            viewLifecycleOwner
-        ) {
-            loadingDialog.hide()
-
-            if (it.success != null) {
-                toast(resources.getString(it.success))
-            } else if (it.error != null) {
-                toast(resources.getString(it.error))
-            }
+        homeViewModel?.updateResult?.observe(viewLifecycleOwner) {
+            if (it.success != null) toast(resources.getString(it.success))
+            else if (it.error != null) toast(resources.getString(it.error))
         }
-        stockText?.setOnEditorActionListener { v, _, event ->
-            /**
-             *
-             * @param v 被监听的对象
-             * @param actionId  动作标识符,如果值等于EditorInfo.IME_NULL，则回车键被按下。
-             * @param event    如果由输入键触发，这是事件；否则，这是空的(比如非输入键触发是空的)。
-             * @return 返回你的动作
-             */
-            onClick(v)
-            event != null && event.keyCode === KeyEvent.KEYCODE_ENTER
+        homeViewModel?.loadingDialog?.observe(viewLifecycleOwner) {
+            if (it) {
+                loadingDialog.setProgressBar(0)
+                loadingDialog.show()
+            } else loadingDialog.dismiss()
         }
-        homeViewBinding?.search?.setOnClickListener(this)
     }
 
     private fun toast(s: String) = Toast.makeText(context, s, Toast.LENGTH_LONG).show()
@@ -125,7 +103,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(v?.windowToken, 0)
-        homeViewModel?.updateText(stockText?.text.toString())
+        homeViewModel?.updateText(homeViewBinding?.autoCompleteText?.text.toString())
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -135,18 +113,9 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.updateDB -> {
-                homeViewModel?.updateStockDb(loadingDialog)
-                loadingDialog.setProgressBar(0)
-                loadingDialog.show()
-            }
+            R.id.updateDB -> homeViewModel?.newUpdateStockDb { loadingDialog.setProgressBar(it) }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        loadingDialog.dismiss()
     }
 
     override fun onDestroyView() {

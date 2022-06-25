@@ -4,8 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class BaseViewModel() : ViewModel() {
-
+class BaseViewModel : ViewModel() {
     private var _homeFragmentSearchText: MutableLiveData<String?> = MutableLiveData()
     val homeFragmentSearchText: LiveData<String?> = _homeFragmentSearchText
 

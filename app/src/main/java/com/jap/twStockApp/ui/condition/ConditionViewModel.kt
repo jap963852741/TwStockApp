@@ -5,7 +5,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.jap.twStockApp.Repository.*
+import com.jap.twStockApp.Repository.AllTwStockTaskFinish
+import com.jap.twStockApp.Repository.FavoritesRespository
+import com.jap.twStockApp.Repository.GetAllStockRespository
 import com.jap.twStockApp.Repository.roomdb.Favorite
 import com.jap.twStockApp.Repository.roomdb.TwStock
 import com.jap.twStockApp.Repository.roomdb.getParamsByName
@@ -13,19 +15,15 @@ import com.jap.twStockApp.ui.condition.filter.BiggerOrSmaller
 import com.jap.twStockApp.ui.condition.filter.FilterModel
 import com.jap.twStockApp.ui.model.StockNoNameFav
 import com.jap.twStockApp.util.FavoriteUtil
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observer
-import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.launch
 
 class ConditionViewModel(app: Application, private val favoritesRespository: FavoritesRespository) : AndroidViewModel(app) {
     private val _text = MutableLiveData<ArrayList<StockNoNameFav?>>(arrayListOf())
-    private val _favorite = MutableLiveData<ArrayList<Favorite>>(arrayListOf())
+    private val _favorite = MutableLiveData<List<Favorite>>(arrayListOf())
     private val _filter = MutableLiveData<Unit>()
 
     val text: LiveData<ArrayList<StockNoNameFav?>> = _text
-    val favorite: LiveData<ArrayList<Favorite>> = _favorite
+    val favorite: LiveData<List<Favorite>> = _favorite
     val filter: LiveData<Unit?> = _filter
 
     private lateinit var twstocks: List<TwStock>
@@ -75,29 +73,7 @@ class ConditionViewModel(app: Application, private val favoritesRespository: Fav
         _text.postValue(tempArray)
     }
 
-    fun getFavorite() {
-        val favorites = arrayListOf<Favorite>()
-        val observer: Observer<List<Favorite>> = object : Observer<List<Favorite>> {
-            override fun onNext(item: List<Favorite>) {
-                item.forEach { favorites.add(it) }
-            }
-
-            override fun onError(e: Throwable) {
-            }
-
-            override fun onComplete() {
-                _favorite.value = favorites
-            }
-
-            override fun onSubscribe(d: Disposable) {
-            }
-        }
-
-        favoritesRespository.getAllFavorite()
-            .subscribeOn(Schedulers.newThread())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(observer)
-    }
+    fun getFavorite() = viewModelScope.launch { _favorite.value = favoritesRespository.getAllFavorite() }
 
     fun addFavorite(stockNoNameFav: StockNoNameFav, successListener: ((Boolean) -> Unit)) = viewModelScope.launch {
         val result = FavoriteUtil(getApplication<Application>().applicationContext).addFavorite(stockNoNameFav.stockNo, stockNoNameFav.stockName)
@@ -109,3 +85,4 @@ class ConditionViewModel(app: Application, private val favoritesRespository: Fav
         successListener.invoke(result)
     }
 }
+

@@ -50,6 +50,7 @@ class ConditionAdapter : RecyclerView.Adapter<VH>() {
                 val oldFav = newList[index]?.stockFavorite
                 if (oldFav == favoriteSet.contains(Favorite(element.stockNo, element.stockName))) return@forEachIndexed
                 newList[index] = StockNoNameFav(element.stockNo, element.stockName, oldFav == false)
+                list = newList
                 notifyItemChanged(index)
             }
         }

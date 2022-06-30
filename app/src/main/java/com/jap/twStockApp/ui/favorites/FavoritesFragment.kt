@@ -44,7 +44,7 @@ class FavoritesFragment : BaseFragment() {
         super.onHiddenChanged(hidden)
     }
 
-    private fun getFavoriteData() = favoritesViewModel.getFavorite()
+    private fun getFavoriteData() = favoritesViewModel.getFavoriteNew()
 
     private fun initAdapter() {
         favoritesAdapter = FavoritesAdapter()

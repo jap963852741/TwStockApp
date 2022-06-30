@@ -95,7 +95,7 @@ class ConditionFragment : BaseFragment(), View.OnClickListener {
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
-        conditionViewModel?.getFavorite()
+        if(!hidden) conditionViewModel?.getFavorite()
         super.onHiddenChanged(hidden)
     }
 

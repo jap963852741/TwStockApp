@@ -4,6 +4,7 @@ import android.R
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doAfterTextChanged
 import androidx.core.widget.doOnTextChanged
@@ -44,12 +45,18 @@ class VH(
     init {
         binding.conditionName.setIndexChangeListener { index -> data?.conditionType = conditionTypeArray[index] }
         binding.conditionSymbol.setIndexChangeListener { index -> data?.operator = biggerOrSmallerArray[index] }
-        binding.conditionText.doOnTextChanged { text, _, _, _ -> data?.value = text.toString().toDouble() }
+        binding.conditionText.doOnTextChanged { text, _, _, _ ->
+            try {
+                data?.value = text.toString().toDouble()
+            } catch (e: NumberFormatException) {
+                Toast.makeText(binding.root.context, "請輸入數字", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     var data: FilterModel? = null
     val conditionAdapter = ArrayAdapter(binding.root.context, R.layout.simple_spinner_dropdown_item, getConditionTypeNameArray())
-    val symbolAdapter = ArrayAdapter( binding.root.context, R.layout.simple_spinner_dropdown_item, getBiggerOrSmallerNameArray())
+    val symbolAdapter = ArrayAdapter(binding.root.context, R.layout.simple_spinner_dropdown_item, getBiggerOrSmallerNameArray())
     var conditionName = binding.conditionName
     var conditionSymbol = binding.conditionSymbol
     var conditionText = binding.conditionText

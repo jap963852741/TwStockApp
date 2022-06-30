@@ -1,6 +1,8 @@
 package com.jap.twStockApp.Repository.roomdb
 
 import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class FavoriteDataSource {
 
@@ -13,5 +15,9 @@ class FavoriteDataSource {
         }
 
         return observable
+    }
+
+    suspend fun getNewAllFavorite(): List<Favorite>? = withContext(Dispatchers.IO){
+        AppDatabase.getInstance(null)?.FavoriteDao()?.getAll()
     }
 }

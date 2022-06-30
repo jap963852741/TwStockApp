@@ -1,7 +1,48 @@
 package com.jap.twStockApp.Repository.roomdb
+
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+
+fun TwStock.getParamsByName(name: String): Number? {
+    when (name) {
+        "現價" -> return Price
+        "漲跌" -> return filterInValidStringAndToDouble(UpAndDown)
+        "漲跌現價比" -> return filterInValidStringAndToDouble(UpAndDownPercent)
+        "周漲跌現價比" -> return filterInValidStringAndToDouble(WeekUpAndDownPercent)
+        "最高最低振福" -> return filterInValidStringAndToDouble(HighestAndLowestPercent)
+        "開盤價" -> return Open
+        "最高價" -> return High
+        "最低價" -> return Low
+        "交易量" -> return DealVolume
+        "交易總值" -> return DealTotalValue
+        "殖利率" -> return DividendYield
+        "本益比" -> return PriceToEarningRatio
+        "股價淨值比" -> return PriceBookRatio
+        "營業收入" -> return OperatingRevenue
+        "月增率" -> return MoM
+        "年增率" -> return YoY
+        "董監持股比例" -> return DirectorsSupervisorsRatio
+        "外商持股比例" -> return ForeignInvestmentRatio
+        "投信持股比例" -> return InvestmentRation
+        "自營商持股" -> return SelfEmployedRation
+        "三大法人持股比例" -> return ThreeBigRation
+    }
+    return null
+}
+
+private fun filterInValidStringAndToDouble(s: String?): Double? {
+    if (s == null) return null
+    if (s == "--") return null
+    val resultString = s.replaceWithSpace("▲").replaceWithSpace("▼").replaceWithSpace("+")
+    return if (resultString.contains("%")) {
+        resultString.replaceWithSpace("%").toDouble() * 0.01
+    } else {
+        resultString.toDouble()
+    }
+}
+
+private fun String.replaceWithSpace(s: String) = replace(s, "")
 
 @Entity
 data class TwStock(
@@ -29,9 +70,6 @@ data class TwStock(
     @ColumnInfo(name = "SelfEmployedRation") val SelfEmployedRation: Double?,
     @ColumnInfo(name = "ThreeBigRation") val ThreeBigRation: Double?
 )
-// {
-//    constructor(Name: String?,Price: Double?) : this(null,Name,Price)
-// }
 
 /**
  * key : 代號

@@ -37,9 +37,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         (activity?.application as App).createHomeComponent(requireContext())?.inject(this)
-
         homeViewModel = ViewModelProvider(this, homeViewModelFactory)[HomeViewModel::class.java]
         fragmentUtil = FragmentSwitchUtil.getInstance(parentFragmentManager)
     }

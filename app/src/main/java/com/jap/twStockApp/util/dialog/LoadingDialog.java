@@ -3,7 +3,6 @@ package com.jap.twStockApp.util.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
@@ -18,9 +17,10 @@ public class LoadingDialog extends Dialog {
     TextView tv;
     CircleProgressView circleProgressView;
     String s;
-    public LoadingDialog(@NonNull Context context,String s) {
+
+    public LoadingDialog(@NonNull Context context, String s) {
         super(context);
-        this.s = s ;
+        this.s = s;
         init();
     }
 
@@ -29,15 +29,10 @@ public class LoadingDialog extends Dialog {
         super.onCreate(savedInstanceState);
     }
 
-    private void init(){
-        //去掉默认的title
+    private void init() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //去掉白色边角 我的小米手机在xml里设置 android:background="@android:color/transparent"居然不生效
-        //所以在代码里设置，不知道是不是小米手机的原因
         getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-//        getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
         setContentView(R.layout.loadingfragment);
-        Log.i("LHD", "LoadingDialog init");
         this.tv = (TextView) findViewById(R.id.tv);
         this.circleProgressView = (CircleProgressView) findViewById(R.id.progressBar1);
         tv.setText(s);
@@ -46,13 +41,12 @@ public class LoadingDialog extends Dialog {
     }
 
 
-
     @Override
     public void setContentView(@NonNull View view) {
         super.setContentView(view);
     }
 
-    public <T extends Number>void setProgressBar(T s){
+    public <T extends Number> void setProgressBar(T s) {
         this.circleProgressView.setProgress(s.intValue());
     }
 

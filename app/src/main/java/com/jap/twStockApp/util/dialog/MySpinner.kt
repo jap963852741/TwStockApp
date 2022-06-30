@@ -23,7 +23,9 @@ import androidx.appcompat.widget.ThemeUtils
 import androidx.appcompat.widget.TintTypedArray
 
 class MySpinner : AppCompatSpinner {
-    private var mPopup: SpinnerPopup? = null
+
+    private var indexChangeListener: ((Int) -> Unit)? = null
+    private var popup: SpinnerPopup? = null
     private val TAG = "MySpinner"
     private val mPopupContext: Context
     private var MODE_THEME = -1
@@ -31,7 +33,7 @@ class MySpinner : AppCompatSpinner {
     private val MODE_DIALOG = 0
     private var mPopupSet = false
     private var mTempAdapter: SpinnerAdapter? = null
-    private var next_mode: Int = 0
+    private var nextMode: Int = 0
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.spinnerStyle)
@@ -49,10 +51,7 @@ class MySpinner : AppCompatSpinner {
 
         ThemeUtils.checkAppCompatTheme(this, getContext())
 
-        val a = TintTypedArray.obtainStyledAttributes(
-            context, attrs,
-            R.styleable.Spinner, defStyleAttr, 0
-        )
+        val a = TintTypedArray.obtainStyledAttributes(context, attrs, R.styleable.Spinner, defStyleAttr, 0)
 
         mPopupContext = if (popupTheme != null) {
             ContextThemeWrapper(context, popupTheme)
@@ -73,7 +72,7 @@ class MySpinner : AppCompatSpinner {
                     defStyleAttr, 0
                 )
                 if (aa.hasValue(0)) {
-                    next_mode = aa.getInt(0, MODE_DIALOG)
+                    nextMode = aa.getInt(0, MODE_DIALOG)
                 }
             } catch (e: Exception) {
                 Log.i(TAG, "Could not read android:spinnerMode", e)
@@ -81,15 +80,14 @@ class MySpinner : AppCompatSpinner {
                 aa?.recycle()
             }
         }
-        when (next_mode) {
+        when (nextMode) {
             MODE_DIALOG -> {
-                mPopup = this.DialogPopup()
-                (mPopup as DialogPopup).setPromptText(a.getString(R.styleable.Spinner_android_prompt))
+                popup = this.DialogPopup()
+                (popup as DialogPopup).setPromptText(a.getString(R.styleable.Spinner_android_prompt))
             }
         }
 
-        val entries =
-            a.getTextArray(R.styleable.Spinner_android_entries)
+        val entries = a.getTextArray(R.styleable.Spinner_android_entries)
         if (entries != null) {
             val adapter = ArrayAdapter(
                 context, android.R.layout.simple_spinner_item, entries
@@ -115,6 +113,10 @@ class MySpinner : AppCompatSpinner {
 //        (mPopup as DialogPopup).setPromptText(a.getString(R.styleable.Spinner_android_prompt))
     }
 
+    fun setIndexChangeListener(block: (Int) -> Unit) {
+        indexChangeListener = block
+    }
+
     override fun setAdapter(adapter: SpinnerAdapter?) {
         // The super constructor may call setAdapter before we're prepared.
         // Postpone doing anything until we've finished construction.
@@ -125,14 +127,8 @@ class MySpinner : AppCompatSpinner {
             mTempAdapter = adapter
             return
         }
-
         super.setAdapter(adapter)
-
-        if (mPopup != null) {
-            val popupContext =
-                mPopupContext ?: context
-            mPopup!!.setAdapter(this.DropDownAdapter(adapter, popupContext.theme))
-        }
+        popup?.setAdapter(this.DropDownAdapter(adapter, mPopupContext.theme))
     }
 
     interface SpinnerPopup {
@@ -170,22 +166,20 @@ class MySpinner : AppCompatSpinner {
     }
 
     inner class DialogPopup : SpinnerPopup, DialogInterface.OnClickListener {
-        var mPopup: AlertDialog? = null
-        private var mListAdapter: ListAdapter? = null
+        var popup: AlertDialog? = null
+        private var listAdapter: ListAdapter? = null
         override var hintText: CharSequence? = null
 
         override fun dismiss() {
-            if (mPopup != null) {
-                mPopup!!.dismiss()
-                mPopup = null
-            }
+            popup?.dismiss()
+            popup = null
         }
 
         override val isShowing: Boolean
-            get() = if (mPopup != null) mPopup!!.isShowing else false
+            get() = popup?.isShowing == true
 
         override fun setAdapter(adapter: ListAdapter?) {
-            mListAdapter = adapter
+            listAdapter = adapter
         }
 
         override fun setPromptText(hintText: CharSequence?) {
@@ -193,87 +187,58 @@ class MySpinner : AppCompatSpinner {
         }
 
         override fun show(textDirection: Int, textAlignment: Int) {
-
-            if (mListAdapter == null) {
-                return
-            }
+            if (listAdapter == null) return
             val builder = AlertDialog.Builder(mPopupContext)
-
-            if (hintText != null) {
-                builder.setTitle(hintText)
-            }
-
-            mPopup = builder.setSingleChoiceItems(
-                mListAdapter,
-                selectedItemPosition, this
-            ).create()
-
-            // 改寫 原 spinner alertdialog 可關閉
-            mPopup!!.setCancelable(false)
-            mPopup!!.setCanceledOnTouchOutside(false)
-
-            mPopup!!.show()
+            if (hintText != null) builder.setTitle(hintText)
+            popup = builder.setSingleChoiceItems(listAdapter, selectedItemPosition, this).create()
+            popup?.setCancelable(false)
+            popup?.setCanceledOnTouchOutside(false)
+            popup?.show()
         }
 
         override fun onClick(dialog: DialogInterface, which: Int) {
             setSelection(which)
-            if (onItemClickListener != null) {
-                performItemClick(null, which, mListAdapter!!.getItemId(which))
-            }
+            indexChangeListener?.invoke(which)
+            if (onItemClickListener != null) listAdapter?.getItemId(which)?.let { performItemClick(null, which, it) }
             dismiss()
         }
+
         override fun setBackgroundDrawable(bg: Drawable?) {
-            Log.e(
-                TAG,
-                "Cannot set popup background for MODE_DIALOG, ignoring"
-            )
+            Log.e(TAG, "Cannot set popup background for MODE_DIALOG, ignoring")
         }
+
         override val background: Drawable? = null
         override var verticalOffset: Int
             get() = 0
             set(px) {
-                Log.e(
-                    TAG,
-                    "Cannot set vertical offset for MODE_DIALOG, ignoring"
-                )
+                Log.e(TAG, "Cannot set vertical offset for MODE_DIALOG, ignoring")
             }
         override var horizontalOffset: Int
             get() = 0
             set(px) {
-                Log.e(
-                    TAG,
-                    "Cannot set horizontal offset for MODE_DIALOG, ignoring"
-                )
+                Log.e(TAG, "Cannot set horizontal offset for MODE_DIALOG, ignoring")
             }
         override var horizontalOriginalOffset: Int
             get() = 0
             set(px) {
-                Log.e(
-                    TAG,
-                    "Cannot set horizontal (original) offset for MODE_DIALOG, ignoring"
-                )
+                Log.e(TAG, "Cannot set horizontal (original) offset for MODE_DIALOG, ignoring")
             }
     }
 
     override fun performClick(): Boolean {
-        if (mPopup != null) {
-            // If we have a popup, show it if needed, or just consume the click...
-            if (!mPopup!!.isShowing) {
-                this.showPopup()
-            }
+        if (popup?.isShowing == false) {
+            this.showPopup()
             return true
         }
-        // Else let the platform handle the click
         return super.performClick()
     }
 
-    private fun showPopup() {
-        mPopup!!.show(-1, -1)
-    }
+    private fun showPopup() = popup?.show(-1, -1)
+
 
     /**
      * <p>Wrapper
-     class for an Adapter. Transforms the embedded Adapter instance
+    class for an Adapter. Transforms the embedded Adapter instance
      * into a ListAdapter.</p>
      */
     inner class DropDownAdapter : ListAdapter, SpinnerAdapter {
@@ -289,40 +254,31 @@ class MySpinner : AppCompatSpinner {
          * @param dropDownTheme the theme against which to inflate drop-down
          * views, may be {@null} to use default theme
          */
-        constructor(
-            adapter: SpinnerAdapter?,
-            dropDownTheme: Theme?
-        ) {
+        constructor(adapter: SpinnerAdapter?, dropDownTheme: Theme?) {
             mAdapter = adapter
             if (adapter is ListAdapter) {
                 mListAdapter = adapter
             }
             if (dropDownTheme != null) {
                 if (adapter is ThemedSpinnerAdapter) {
-                    val themedAdapter = adapter
-                    if (themedAdapter.dropDownViewTheme != dropDownTheme) {
-                        themedAdapter.dropDownViewTheme = dropDownTheme
+                    if (adapter.dropDownViewTheme != dropDownTheme) {
+                        adapter.dropDownViewTheme = dropDownTheme
                     }
                 } else if (adapter is androidx.appcompat.widget.ThemedSpinnerAdapter) {
-                    val themedAdapter = adapter
-                    if (themedAdapter.dropDownViewTheme == null) {
-                        themedAdapter.dropDownViewTheme = dropDownTheme
+                    if (adapter.dropDownViewTheme == null) {
+                        adapter.dropDownViewTheme = dropDownTheme
                     }
                 }
             }
         }
 
-        override fun getCount(): Int {
-            return if (mAdapter == null) 0 else mAdapter!!.count
-        }
+        override fun getCount(): Int = mAdapter?.count ?: 0
 
-        override fun getItem(position: Int): Any? {
-            return if (mAdapter == null) null else mAdapter!!.getItem(position)
-        }
 
-        override fun getItemId(position: Int): Long {
-            return if (mAdapter == null) -1 else mAdapter!!.getItemId(position)
-        }
+        override fun getItem(position: Int): Any? = mAdapter?.getItem(position)
+
+        override fun getItemId(position: Int): Long = mAdapter?.getItemId(position) ?: -1
+
 
         override fun getView(
             position: Int,
@@ -336,38 +292,27 @@ class MySpinner : AppCompatSpinner {
             position: Int,
             convertView: View?,
             parent: ViewGroup?
-        ): View? {
-            return if (mAdapter == null) null else mAdapter!!.getDropDownView(
-                position,
-                convertView,
-                parent
-            )
-        }
+        ): View? = mAdapter?.getDropDownView(
+            position,
+            convertView,
+            parent
+        )
 
-        override fun hasStableIds(): Boolean {
-            return mAdapter != null && mAdapter!!.hasStableIds()
-        }
+        override fun hasStableIds(): Boolean = mAdapter?.hasStableIds() == true
 
         override fun registerDataSetObserver(observer: DataSetObserver?) {
-            if (mAdapter != null) {
-                mAdapter!!.registerDataSetObserver(observer)
-            }
+            mAdapter?.registerDataSetObserver(observer)
         }
 
         override fun unregisterDataSetObserver(observer: DataSetObserver?) {
-            if (mAdapter != null) {
-                mAdapter!!.unregisterDataSetObserver(observer)
-            }
+            mAdapter?.unregisterDataSetObserver(observer)
         }
 
         /**
          * If the wrapped SpinnerAdapter is also a ListAdapter, delegate this call.
          * Otherwise, return true.
          */
-        override fun areAllItemsEnabled(): Boolean {
-            val adapter = mListAdapter
-            return adapter?.areAllItemsEnabled() ?: true
-        }
+        override fun areAllItemsEnabled(): Boolean = mListAdapter?.areAllItemsEnabled() ?: true
 
         /**
          * If the wrapped SpinnerAdapter is also a ListAdapter, delegate this call.
@@ -386,8 +331,6 @@ class MySpinner : AppCompatSpinner {
             return 1
         }
 
-        override fun isEmpty(): Boolean {
-            return count == 0
-        }
+        override fun isEmpty(): Boolean = count == 0
     }
 }

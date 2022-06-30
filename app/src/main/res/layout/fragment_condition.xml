@@ -1,98 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
- <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.condition.ConditionFragment"
-        android:id="@+id/condition_fragment"
-        app:layout_constraintBottom_toTopOf="@id/nav_view"
-        android:background="@color/colorWhite"
-        android:clickable="false"
-        >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/condition_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:clickable="false"
+    app:layout_constraintBottom_toTopOf="@id/nav_view"
+    tools:context=".ui.condition.ConditionFragment">
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar_dashboard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorWhite"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/toolbarstyletest"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="16dp"
         app:titleTextColor="@color/colorWhite"
-        >
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp">
         <TextView
-            android:autoSizeTextType="uniform"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:autoSizeTextType="uniform"
+            android:fontFamily="@font/ozcaramel"
             android:text="@string/app_name"
-            android:textSize="20sp"
             android:textColor="@color/colorBlack"
-            android:fontFamily="@font/ozcaramel"/>
+            android:textSize="20sp" />
     </androidx.appcompat.widget.Toolbar>
 
-    <LinearLayout
-        android:id="@+id/conditionLL"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_condition"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_below="@id/toolBar_dashboard"
-        android:orientation="vertical">
+        android:textSize="80sp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
+        tools:listitem="@layout/item_condition"
+        tools:itemCount="1"/>
 
-        <include
-            layout="@layout/item_condition"
-            android:id="@+id/condition_1"/>
-        <include
-            layout="@layout/item_condition"
-            android:id="@+id/condition_2"/>
-        <include
-            layout="@layout/item_condition"
-            android:id="@+id/condition_3"/>
-        <include
-            layout="@layout/item_condition"
-            android:id="@+id/condition_4"/>
-        <include
-            layout="@layout/item_condition"
-            android:id="@+id/condition_5"/>
-
-    </LinearLayout>
-
-    <LinearLayout
+    <Button
+        android:id="@+id/add_filter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/search_text"
-        android:layout_below="@+id/conditionLL"
-        android:orientation="horizontal">
-        <Button android:id="@+id/condition_search"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/colorPrimary"
-            android:text="@string/search"/>
-    </LinearLayout>
+        android:layout_below="@id/recycler_condition"
+        android:background="#00000000"
+        android:text="+"
+        android:textSize="30sp" />
 
-    <LinearLayout
+    <Button
+        android:id="@+id/condition_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/search_text"
-        android:orientation="vertical">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/re_view_dashboard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textSize="80sp"
-            android:clipToPadding="false"
-            android:clipChildren="false"
-            app:layout_constraintTop_toBottomOf="@id/toolBar_dashboard"
-            app:layout_constraintEnd_toEndOf="@+id/nav_view"
-            app:layout_constraintStart_toStartOf="parent"
-            />
-    </LinearLayout>
+        android:layout_below="@+id/add_filter"
+        android:text="@string/search"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/colorPrimary" />
 
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/re_view_dashboard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_below="@id/condition_search"
+        android:textSize="80sp"
+        tools:listitem="@layout/item_detail"
+        tools:itemCount="5"/>
 </RelativeLayout>

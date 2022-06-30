@@ -3,22 +3,21 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     >
 
     <com.jap.twStockApp.util.dialog.MySpinner
-        android:id="@+id/conditionName"
+        android:id="@+id/condition_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2.5"
         android:padding="0dp"
         android:textSize="20sp"
         android:spinnerMode="dialog"
-
     />
 
     <com.jap.twStockApp.util.dialog.MySpinner
-        android:id="@+id/conditionSymbol"
+        android:id="@+id/condition_symbol"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -28,7 +27,7 @@
         />
 
     <EditText
-        android:id="@+id/text_dashboard"
+        android:id="@+id/condition_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"

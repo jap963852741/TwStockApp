@@ -52,20 +52,14 @@ class ConditionViewModel(app: Application, private val favoritesRespository: Fav
 
     private fun filterAConditionInTwStock(filterModel: FilterModel): ArrayList<TwStock> {
         val twStocks: ArrayList<TwStock> = arrayListOf()
-        if (filterModel.operator == BiggerOrSmaller.Bigger) {
-            for (twStock in twstocks) {
-                val twStockValue = twStock.getParamsByName(filterModel.conditionType.displayName)
-                if (twStockValue != null && twStockValue.toInt() > filterModel.value.toInt()) {
-                    twStocks.add(twStock)
-                }
-            }
-        } else if (filterModel.operator == BiggerOrSmaller.Smaller) {
-            for (twStock in twstocks) {
-                val twStockValue = twStock.getParamsByName(filterModel.conditionType.displayName)
-                if (twStockValue != null && twStockValue.toInt() < filterModel.value.toInt()) {
-                    twStocks.add(twStock)
-                }
-            }
+        val operator: ((Number) -> Boolean) = if (filterModel.operator == BiggerOrSmaller.Bigger) {
+            { it.toInt() > filterModel.value.toInt() }
+        } else {
+            { it.toInt() < filterModel.value.toInt() }
+        }
+        for (twStock in twstocks) {
+            val twStockValue = twStock.getParamsByName(filterModel.conditionType.displayName) ?: continue
+            if (operator.invoke(twStockValue)) twStocks.add(twStock)
         }
         return twStocks
     }

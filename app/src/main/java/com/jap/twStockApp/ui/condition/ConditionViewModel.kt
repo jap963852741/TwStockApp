@@ -30,10 +30,6 @@ class ConditionViewModel(
 
     private lateinit var twstocks: List<TwStock>
 
-    companion object {
-        lateinit var favorites: Set<Favorite>
-    }
-
     fun getFilteredList() {
         get_favorite()
         GetAllStockRespository().loadInfo(
@@ -120,7 +116,7 @@ class ConditionViewModel(
         if (twstocks.isEmpty()) _text.postValue(arrayListOf())
         for (twStock in twstocks) {
             if (twStock.Name == null) continue
-            tempArray.add(StockNoNameFav(twStock.StockNo, twStock.Name, favorites.contains(Favorite(twStock.StockNo, twStock.Name))))
+            tempArray.add(StockNoNameFav(twStock.StockNo, twStock.Name, favorite.value?.toSet()?.contains(Favorite(twStock.StockNo, twStock.Name)) == true))
         }
         _text.postValue(tempArray)
     }

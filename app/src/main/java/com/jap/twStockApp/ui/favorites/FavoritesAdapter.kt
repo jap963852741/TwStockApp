@@ -1,65 +1,65 @@
 package com.jap.twStockApp.ui.favorites
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.github.zagum.switchicon.SwitchIconView
 import com.jap.twStockApp.Repository.roomdb.Favorite
 import com.jap.twStockApp.databinding.ItemFavoritesBinding
+import com.jap.twStockApp.extensions.toArrayList
 import com.jap.twStockApp.ui.MainActivity
+import com.jap.twStockApp.ui.model.StockNoNameFav
 import com.jap.twStockApp.util.FavoriteUtil
+import com.jap.twStockApp.util.SingleStockUtil.init
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class FavoritesAdapter(
-    private val dataList: ArrayList<Favorite>,
-    private val favoriteUtil: FavoriteUtil
-) :
+class FavoritesAdapter : RecyclerView.Adapter<VH>() {
+    var dataList: List<Favorite?> = emptyList()
 
-    RecyclerView.Adapter<VH>() {
+    private val _favoriteButtonEvent: MutableLiveData<Favorite> = MutableLiveData()
+    val favoriteButtonEvent: LiveData<Favorite> = _favoriteButtonEvent
 
-    private lateinit var binding: ItemFavoritesBinding
-    var setHomeSearchText: ((String) -> Unit)? = null
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-        binding = ItemFavoritesBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return VH(binding)
+    private val _stockNoEvent: MutableLiveData<String> = MutableLiveData()
+    val stockNoEvent: LiveData<String> = _stockNoEvent
+
+    fun removeFavorite(favorite: Favorite) = dataList.forEachIndexed { index, element ->
+        if (element != favorite) return@forEachIndexed
+        (dataList as MutableList<Favorite?>).removeAt(index)
+        notifyItemRemoved(index)
+        return
     }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH =
+        VH(ItemFavoritesBinding.inflate(LayoutInflater.from(parent.context), parent, false), { _favoriteButtonEvent.postValue(it) }, { _stockNoEvent.postValue(it) })
 
     @SuppressLint("ResourceType", "SetTextI18n")
     override fun onBindViewHolder(holder: VH, position: Int) {
         val favorite = dataList[position]
-        val stockNo = favorite.StockNo
-        val name = favorite.Name!!
-
-        holder.itemFavorite.text = "${favorite.StockNo}  ${favorite.Name}"
-        holder.favorite_button.setIconEnabled(true)
-
-        holder.favorite_button.setOnClickListener {
-
-            if (holder.favorite_button.isIconEnabled) {
-                favoriteUtil.remove_favorite(stockNo, name)
-                holder.favorite_button.setIconEnabled(false)
-            } else {
-                favoriteUtil.add_favorite(stockNo, name)
-                holder.favorite_button.setIconEnabled(true)
-            }
-        }
-
-        holder.itemView.setOnClickListener {
-            MainActivity.navigation.selectedItemId = MainActivity.navigation.menu.getItem(0).itemId
-            setHomeSearchText?.invoke(stockNo)
-        }
+        holder.data = favorite
+        holder.itemFavorite.text = "${favorite?.StockNo}  ${favorite?.Name}"
+        holder.favoriteButton.setIconEnabled(true)
     }
 
-    override fun getItemCount(): Int {
-        return dataList.size
-    }
+    override fun getItemCount(): Int = dataList.size
 }
 
-class VH(binding: ItemFavoritesBinding) :
-    RecyclerView.ViewHolder(binding.root) {
+class VH(
+    binding: ItemFavoritesBinding,
+    private var favoriteButtonEvent: ((Favorite?) -> Unit),
+    private var stockNoEvent: ((String?) -> Unit)
+) : RecyclerView.ViewHolder(binding.root) {
+    var data: Favorite? = null
     var itemFavorite: TextView = binding.itemFavorites
-    var favorite_button: SwitchIconView = binding.favoriteButton2
+    var favoriteButton: SwitchIconView = binding.favoriteButton
+
+    init {
+        binding.favoriteButton.setOnClickListener { data?.let { favoriteButtonEvent.invoke(it) } }
+        binding.itemFavorites.setOnClickListener { data?.let { stockNoEvent.invoke(it.StockNo) } }
+    }
 }

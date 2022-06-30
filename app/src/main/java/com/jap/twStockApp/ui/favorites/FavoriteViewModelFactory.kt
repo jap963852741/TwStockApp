@@ -16,7 +16,8 @@ class FavoriteViewModelFactory(val application: Application) : ViewModelProvider
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(FavoritesViewModel::class.java)) {
             return FavoritesViewModel(
-                favoritesRespository = FavoritesRespository(
+                app = application,
+                favoritesRepository = FavoritesRespository(
                     favoriteDataSource = FavoriteDataSource()
                 )
             ) as T

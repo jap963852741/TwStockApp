@@ -9,7 +9,7 @@
     >
 
     <com.github.zagum.switchicon.SwitchIconView
-        android:id="@+id/favorite_button_2"
+        android:id="@+id/favorite_button"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"

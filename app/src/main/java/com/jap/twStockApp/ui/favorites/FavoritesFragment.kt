@@ -4,12 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jap.twStockApp.databinding.FragmentFavoritesBinding
+import com.jap.twStockApp.extensions.observe
 import com.jap.twStockApp.ui.base.BaseFragment
+import com.jap.twStockApp.ui.condition.ConditionAdapter
 import com.jap.twStockApp.util.FavoriteUtil
+import com.jap.twStockApp.util.FragmentSwitchUtil
 
 class FavoritesFragment : BaseFragment() {
 
@@ -21,27 +25,44 @@ class FavoritesFragment : BaseFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentFavoritesBinding.inflate(inflater, container, false)
-        favoritesViewModel = ViewModelProvider(
-            this,
-            FavoriteViewModelFactory(application = requireActivity().application)
-        )[FavoritesViewModel::class.java]
+        favoritesViewModel = ViewModelProvider(this, FavoriteViewModelFactory(application = requireActivity().application))[FavoritesViewModel::class.java]
 
+        initAdapter()
         favoritesViewModel.favorite.observe(viewLifecycleOwner) {
-            favoritesAdapter = FavoritesAdapter(it, FavoriteUtil(activity?.application))
-            favoritesAdapter.setHomeSearchText =
-                baseViewModel?.let { it::setHomeFragmentSearchText }
-            binding.reViewFavorites.adapter = favoritesAdapter
-            binding.reViewFavorites.layoutManager = LinearLayoutManager(
-                context,
-                RecyclerView.VERTICAL,
-                false
-            )
+            favoritesAdapter.dataList = it
+            favoritesAdapter.notifyDataSetChanged()
         }
 
-        favoritesViewModel.get_favorite()
-
+        getFavoriteData()
         return binding.root
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        if (!hidden) getFavoriteData()
+        super.onHiddenChanged(hidden)
+    }
+
+    private fun getFavoriteData() = favoritesViewModel.getFavorite()
+
+    private fun initAdapter() {
+        favoritesAdapter = FavoritesAdapter()
+        observe(favoritesAdapter.favoriteButtonEvent) { favorite ->
+            favoritesViewModel.removeFavorite(favorite) { success ->
+                if (success) favoritesAdapter.removeFavorite(favorite)
+                else Toast.makeText(context, "cancel favorite Fail", Toast.LENGTH_SHORT).show()
+            }
+        }
+        observe(favoritesAdapter.stockNoEvent) { stockNo ->
+            FragmentSwitchUtil.getInstance(parentFragmentManager)?.selectedTab(FragmentSwitchUtil.TAB_HOME)
+            baseViewModel?.setHomeFragmentSearchText(stockNo)
+        }
+        binding.reViewFavorites.adapter = favoritesAdapter
+        binding.reViewFavorites.layoutManager = LinearLayoutManager(
+            context,
+            RecyclerView.VERTICAL,
+            false
+        )
     }
 }

@@ -1,7 +1,6 @@
 package com.jap.twStockApp.ui.condition
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -13,10 +12,10 @@ import com.github.zagum.switchicon.SwitchIconView
 import com.jap.twStockApp.Repository.roomdb.Favorite
 import com.jap.twStockApp.databinding.ItemDetailBinding
 import com.jap.twStockApp.ui.model.StockNoNameFav
-import java.util.*
 
-class ConditionAdapter(var list: List<StockNoNameFav?>) : RecyclerView.Adapter<VH>() {
-//    private val diffCallback: DiffCallback = DiffCallback()
+class ConditionAdapter : RecyclerView.Adapter<VH>() {
+    private val diffCallback: DiffCallback = DiffCallback()
+    var list: List<StockNoNameFav?> = emptyList()
 
     private val _favoriteButtonEvent: MutableLiveData<StockNoNameFav> = MutableLiveData()
     val favoriteButtonEvent: LiveData<StockNoNameFav> = _favoriteButtonEvent
@@ -26,8 +25,9 @@ class ConditionAdapter(var list: List<StockNoNameFav?>) : RecyclerView.Adapter<V
 
     private fun favoriteButtonEvent(stockNoNameFav: StockNoNameFav?) {
         if (stockNoNameFav?.stockNo.isNullOrEmpty() || stockNoNameFav?.stockName.isNullOrEmpty()) return
-        stockNoNameFav?.stockFavorite = (stockNoNameFav?.stockFavorite == false)
-        _favoriteButtonEvent.postValue(stockNoNameFav)
+        val fav = stockNoNameFav?.copy()
+        fav?.stockFavorite = (fav?.stockFavorite == false)
+        _favoriteButtonEvent.postValue(fav)
     }
 
     private fun rootEvent(stockNoNameFav: StockNoNameFav?) = stockNoNameFav?.stockNo?.let { stockNo -> _rootEvent.postValue(stockNo) }
@@ -68,12 +68,12 @@ class ConditionAdapter(var list: List<StockNoNameFav?>) : RecyclerView.Adapter<V
 
     override fun getItemCount(): Int = list.size
 
-//    fun submitList(newList: List<StockNoNameFav?>) {
-//        diffCallback.setList(newList)
-//        val result = DiffUtil.calculateDiff(diffCallback)
-//        result.dispatchUpdatesTo(this)
-//        list = newList
-//    }
+    fun submitList(newList: List<StockNoNameFav?>) {
+        diffCallback.setList(newList)
+        val result = DiffUtil.calculateDiff(diffCallback)
+        result.dispatchUpdatesTo(this)
+        list = newList
+    }
 }
 
 class VH(
@@ -81,7 +81,6 @@ class VH(
     private var favoriteButtonEvent: ((StockNoNameFav?) -> Unit),
     private var rootEvent: ((StockNoNameFav?) -> Unit)
 ) : RecyclerView.ViewHolder(binding.root) {
-
     var data: StockNoNameFav? = null
     var tvDashboard: TextView = binding.tvDashboard
     var favoriteButton: SwitchIconView = binding.favoriteButton
@@ -92,26 +91,16 @@ class VH(
     }
 }
 
-//class DiffCallback : DiffUtil.Callback() {
-//
-//    var oldList: List<StockNoNameFav?> = emptyList()
-//    var newList: List<StockNoNameFav?> = emptyList()
-//
-//    fun setList(list: List<StockNoNameFav?>) {
-//        oldList = newList
-//        newList = list
-//    }
-//
-//    override fun getOldListSize(): Int = oldList.size
-//    override fun getNewListSize(): Int = newList.size
-//    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean = oldList[oldItemPosition]?.stockNo == newList[newItemPosition]?.stockNo
-//    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-//        Log.e("franktest", "getChangePayload ${oldList[oldItemPosition]} ${newList[newItemPosition]} ${oldList[oldItemPosition] == newList[newItemPosition]}")
-//        return oldList[oldItemPosition]?.equals(newList[newItemPosition]) == true
-//    }
-//
-//    override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
-////        Log.e("franktest", "getChangePayload ${oldList[oldItemPosition]} ${newList[newItemPosition]} ${oldList[oldItemPosition] == newList[newItemPosition]}")
-//        return super.getChangePayload(oldItemPosition, newItemPosition)
-//    }
-//}
+class DiffCallback : DiffUtil.Callback() {
+    var oldList: List<StockNoNameFav?> = emptyList()
+    var newList: List<StockNoNameFav?> = emptyList()
+    fun setList(list: List<StockNoNameFav?>) {
+        oldList = ArrayList(newList)
+        newList = ArrayList(list)
+    }
+
+    override fun getOldListSize(): Int = oldList.size
+    override fun getNewListSize(): Int = newList.size
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean = oldList[oldItemPosition]?.stockNo == newList[newItemPosition]?.stockNo
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean = oldList[oldItemPosition]?.equals(newList[newItemPosition]) == true
+}

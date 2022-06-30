@@ -30,16 +30,13 @@ class FavoriteUtil(applicationContext: Context?) {
         }
     }
 
-    fun remove_favorite(StockNo: String, Name: String) {
-        Thread {
-            db?.FavoriteDao()?.delete(Favorite(StockNo, Name))
-        }.start()
+    suspend fun removeFavorite(favorite: Favorite): Boolean = withContext(Dispatchers.IO) {
+        try {
+            db?.FavoriteDao()?.delete(favorite)
+            true
+        }catch (e : Exception) {
+            Log.e(this.javaClass.name, e.toString())
+            false
+        }
     }
-
-    fun add_favorite(StockNo: String, Name: String) {
-        Thread {
-            db?.FavoriteDao()?.insertAll(Favorite(StockNo, Name))
-        }.start()
-    }
-
 }

@@ -9,14 +9,9 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.jap.twStockApp.Repository.roomdb.Favorite
 import com.jap.twStockApp.databinding.FragmentConditionBinding
 import com.jap.twStockApp.di.App
 import com.jap.twStockApp.ui.base.BaseFragment
-import com.jap.twStockApp.ui.condition.ConditionViewModel.Companion.favorites
-import com.jap.twStockApp.ui.model.StockNoNameFav
 import com.jap.twStockApp.util.FragmentSwitchUtil
 import com.jap.twStockApp.util.dialog.LoadingDialog
 import javax.inject.Inject
@@ -26,6 +21,7 @@ class ConditionFragment : BaseFragment(), View.OnClickListener {
     private lateinit var dashboardBinding: FragmentConditionBinding
     private var conditionViewModel: ConditionViewModel? = null
     private var conditionAdapter: ConditionAdapter? = null
+
     @Inject
     lateinit var loadingDialog: LoadingDialog
 
@@ -41,9 +37,7 @@ class ConditionFragment : BaseFragment(), View.OnClickListener {
         savedInstanceState: Bundle?
     ): View {
         dashboardBinding = FragmentConditionBinding.inflate(inflater, container, false)
-        conditionViewModel = ViewModelProvider(
-            this, ConditionViewModelFactory(application = requireActivity().application)
-        )[ConditionViewModel::class.java]
+        conditionViewModel = ViewModelProvider(this, ConditionViewModelFactory(application = requireActivity().application))[ConditionViewModel::class.java]
 
         val condition = arrayOf(
             "現價",
@@ -80,8 +74,7 @@ class ConditionFragment : BaseFragment(), View.OnClickListener {
         dashboardBinding.condition5.conditionName.adapter = conditionList
 
         val symbol = arrayOf(">", "<")
-        val symbolList: ArrayAdapter<String> =
-            ArrayAdapter(container!!.context, android.R.layout.simple_spinner_dropdown_item, symbol)
+        val symbolList: ArrayAdapter<String> = ArrayAdapter(container.context, android.R.layout.simple_spinner_dropdown_item, symbol)
         dashboardBinding.condition1.conditionSymbol.adapter = symbolList
         dashboardBinding.condition2.conditionSymbol.adapter = symbolList
         dashboardBinding.condition3.conditionSymbol.adapter = symbolList
@@ -89,51 +82,37 @@ class ConditionFragment : BaseFragment(), View.OnClickListener {
         dashboardBinding.condition5.conditionSymbol.adapter = symbolList
 
         dashboardBinding.conditionSearch.setOnClickListener(this)
-
-        conditionViewModel?.text?.observe(viewLifecycleOwner) {
-            conditionAdapter = ConditionAdapter(it)
-            dashboardBinding.reViewDashboard.adapter = conditionAdapter
-            dashboardBinding.reViewDashboard.layoutManager = MyLinearLayoutManager(context)
-
-            conditionAdapter?.rootEvent?.observe(viewLifecycleOwner) { stockNo ->
-                FragmentSwitchUtil.getInstance(parentFragmentManager)?.selectedTab(FragmentSwitchUtil.TAB_HOME)
-                baseViewModel?.setHomeFragmentSearchText(stockNo)
-            }
-
-            conditionAdapter?.favoriteButtonEvent?.observe(viewLifecycleOwner) { stockNoNameFav ->
-                if (stockNoNameFav.stockFavorite) {
-                    favorites = favorites.plus(Favorite(stockNoNameFav.stockNo, stockNoNameFav.stockName))
-                    conditionViewModel?.addFavorite(stockNoNameFav) { success ->
-                        if (success) conditionAdapter?.updateStatus(stockNoNameFav)
-                        else Toast.makeText(context, "add favorite Fail", Toast.LENGTH_SHORT).show()
-                    }
-                } else {
-                    favorites = favorites.minus(Favorite(stockNoNameFav.stockNo, stockNoNameFav.stockName))
-                    conditionViewModel?.removeFavorite(stockNoNameFav) { success ->
-                        if (success) conditionAdapter?.updateStatus(stockNoNameFav)
-                        else Toast.makeText(context, "cancel favorite Fail", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        }
-
-        conditionViewModel?.favorite?.observe(viewLifecycleOwner) {
-            favorites = it.toSet()
-            dashboardBinding.reViewDashboard.adapter = conditionAdapter
-            dashboardBinding.reViewDashboard.layoutManager = MyLinearLayoutManager(context)
-            conditionAdapter?.setNewFavoriteList(it.toSet())
-        }
-        conditionViewModel?.filter?.observe(viewLifecycleOwner) {
-            beginFilter()
-        }
+        initConditionAdapter()
+        conditionViewModel?.text?.observe(viewLifecycleOwner) { conditionAdapter?.submitList(it) }
+        conditionViewModel?.favorite?.observe(viewLifecycleOwner) { conditionAdapter?.setNewFavoriteList(it.toSet()) }
+        conditionViewModel?.filter?.observe(viewLifecycleOwner) { beginFilter() }
         conditionViewModel?.get_favorite()
 
         return dashboardBinding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        conditionViewModel?.get_favorite()
+    private fun initConditionAdapter() {
+        conditionAdapter = ConditionAdapter()
+        dashboardBinding.reViewDashboard.adapter = conditionAdapter
+        dashboardBinding.reViewDashboard.layoutManager = MyLinearLayoutManager(context)
+        conditionAdapter?.rootEvent?.observe(viewLifecycleOwner) { stockNo ->
+            FragmentSwitchUtil.getInstance(parentFragmentManager)?.selectedTab(FragmentSwitchUtil.TAB_HOME)
+            baseViewModel?.setHomeFragmentSearchText(stockNo)
+        }
+
+        conditionAdapter?.favoriteButtonEvent?.observe(viewLifecycleOwner) { stockNoNameFav ->
+            if (stockNoNameFav.stockFavorite) {
+                conditionViewModel?.addFavorite(stockNoNameFav) { success ->
+                    if (success) conditionAdapter?.updateStatus(stockNoNameFav)
+                    else Toast.makeText(context, "add favorite Fail", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                conditionViewModel?.removeFavorite(stockNoNameFav) { success ->
+                    if (success) conditionAdapter?.updateStatus(stockNoNameFav)
+                    else Toast.makeText(context, "cancel favorite Fail", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     override fun onClick(v: View?) {
@@ -188,7 +167,6 @@ class ConditionFragment : BaseFragment(), View.OnClickListener {
                 dashboardBinding.condition5.textDashboard.text.toString().toDouble()
             )
         }
-
         conditionViewModel?.updateText()
     }
 }

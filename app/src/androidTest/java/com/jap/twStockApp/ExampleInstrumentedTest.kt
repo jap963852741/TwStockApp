@@ -1,6 +1,5 @@
 package com.jap.twStockApp
 
-import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.jap.twStockApp.Repository.roomdb.AppDatabase
@@ -17,10 +16,16 @@ import org.junit.runner.RunWith
 class ExampleInstrumentedTest {
     @Test
     fun useAppContext() {
-        // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         assertEquals("com.jap.twstockapp", appContext.packageName)
-        val temp_arraylist = AppDatabase.getInstance(appContext).TwStockDao().getAllStockNo()
-        Log.e("StockNoArrayRepository", temp_arraylist.toString())
+//        val tempArraylist = AppDatabase.getInstance(appContext)?.TwStockDao()?.getAllStockNo()
+    }
+
+    @Test
+    fun haveStock() {
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        assertEquals("com.jap.twstockapp", appContext.packageName)
+        val tempArraylist = AppDatabase.getInstance(appContext)?.TwStockDao()?.getAllStockNo()
+        assert(tempArraylist != null)
     }
 }

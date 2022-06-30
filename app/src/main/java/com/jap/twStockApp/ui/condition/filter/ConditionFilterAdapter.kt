@@ -16,9 +16,6 @@ import com.jap.twStockApp.databinding.ItemConditionBinding
 class ConditionFilterAdapter : RecyclerView.Adapter<VH>() {
     var list: List<FilterModel>? = listOf()
 
-    private val _conditionTextEvent: MutableLiveData<String> = MutableLiveData()
-    val conditionTextEvent: LiveData<String> = _conditionTextEvent
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH =
         VH(ItemConditionBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 

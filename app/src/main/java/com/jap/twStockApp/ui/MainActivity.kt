@@ -30,28 +30,22 @@ class MainActivity : AppCompatActivity() {
         setContentView(viewbinding.root)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR // Statusbar 轉為深色
         navigation = viewbinding.navView
-        navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         fragmentUtil = FragmentSwitchUtil.getInstance(supportFragmentManager)
-        baseViewModel = ViewModelProvider(this, BaseFragmentViewModelFactory())[BaseViewModel::class.java]
-    }
-
-    private val onNavigationItemSelectedListener: BottomNavigationView.OnNavigationItemSelectedListener = object : BottomNavigationView.OnNavigationItemSelectedListener {
-        override fun onNavigationItemSelected(item: MenuItem): Boolean {
-            when (item.itemId) {
+        navigation.setOnItemSelectedListener {
+            when (it.itemId) {
                 R.id.navigation_home -> {
                     fragmentUtil?.selectedTab(FragmentSwitchUtil.TAB_HOME)
-                    return true
                 }
                 R.id.navigation_dashboard -> {
                     fragmentUtil?.selectedTab(FragmentSwitchUtil.TAB_DASHBOARD)
-                    return true
                 }
                 R.id.navigation_favorites -> {
                     fragmentUtil?.selectedTab(FragmentSwitchUtil.TAB_NOTIFICATIONS)
-                    return true
                 }
             }
-            return false
+            false
         }
+        baseViewModel = ViewModelProvider(this, BaseFragmentViewModelFactory())[BaseViewModel::class.java]
     }
+
 }

@@ -21,7 +21,7 @@ class MainActivityTest {
     val activityRule = ActivityScenarioRule(MainActivity::class.java)
 
     @Test
-    fun testFragmentSwitch() {
+    fun testFragmentSwitch() {  // 33s
         val randomList = listOf(::checkHomeFragment, ::checkConditionFragment, ::checkFavoriteFragment)
         for (i in 1 .. 100) {
             randomList[Random.nextInt(3)].invoke()

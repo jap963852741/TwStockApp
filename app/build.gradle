@@ -39,8 +39,18 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+//            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            //混淆开关
+            minifyEnabled true
+            // 是否zip对齐
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources false
+            // 是否打开debuggable开关
+            debuggable false
+            // 是否打开jniDebuggable开关
+            jniDebuggable false
         }
     }
     compileOptions {

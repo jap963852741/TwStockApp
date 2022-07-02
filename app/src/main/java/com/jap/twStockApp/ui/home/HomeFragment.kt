@@ -99,8 +99,9 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
     private fun toast(s: String) = Toast.makeText(context, s, Toast.LENGTH_LONG).show()
 
     override fun onClick(v: View?) {
-        val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(v?.windowToken, 0)
+//        val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//        imm.hideSoftInputFromWindow(v?.windowToken, 0)
+        closeKeyBoard(v)
         homeViewModel?.updateText(homeViewBinding?.autoCompleteText?.text.toString())
     }
 

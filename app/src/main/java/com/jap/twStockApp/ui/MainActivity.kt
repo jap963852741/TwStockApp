@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
             false
         }
         baseViewModel = ViewModelProvider(this, BaseFragmentViewModelFactory())[BaseViewModel::class.java]
+        fragmentUtil?.selectedTab(FragmentSwitchUtil.TAB_HOME)
     }
 
 }

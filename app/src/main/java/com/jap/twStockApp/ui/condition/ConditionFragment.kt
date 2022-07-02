@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
+import com.jap.twStockApp.BuildConfig
 import com.jap.twStockApp.databinding.FragmentConditionBinding
 import com.jap.twStockApp.di.App
 import com.jap.twStockApp.ui.base.BaseFragment
@@ -45,7 +46,8 @@ class ConditionFragment : BaseFragment(), View.OnClickListener {
 
         dashboardBinding.conditionSearch.setOnClickListener(this)
         initConditionAdapter()
-        dashboardBinding.addFilter.setOnClickListener {
+        dashboardBinding.addFilter.setOnClickListener { addView ->
+            if (!BuildConfig.DEBUG) conditionFilterAdapter?.list?.let { if (it.size >= 2) addView.visibility = View.GONE}
             conditionFilterAdapter?.list = conditionFilterAdapter?.list?.plus(FilterModel(ConditionType.Price, BiggerOrSmaller.Bigger, 0.0))
             val size = conditionFilterAdapter?.list?.size ?: return@setOnClickListener
             conditionFilterAdapter?.notifyItemChanged(size - 1)
@@ -90,6 +92,7 @@ class ConditionFragment : BaseFragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         conditionViewModel?.getFilteredList()
+        closeKeyBoard(v)
     }
 
     override fun onHiddenChanged(hidden: Boolean) {

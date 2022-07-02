@@ -36,7 +36,11 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    lintOptions {
 
+        checkReleaseBuilds false
+
+    }
     buildTypes {
         release {
 //            minifyEnabled false
@@ -102,6 +106,7 @@ dependencies {
     implementation 'com.liulishuo.magicprogresswidget:library:1.1.1'
 
     // Dagger android
+    implementation 'com.github.pengrad:jdk9-deps:1.0'
     implementation "com.google.dagger:dagger-android-support:2.14.1"
     androidTestImplementation project(path: ':app')
     kapt 'com.google.dagger:dagger-compiler:2.14.1'

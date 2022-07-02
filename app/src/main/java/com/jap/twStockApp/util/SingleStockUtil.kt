@@ -1,22 +1,19 @@
 package com.jap.twStockApp.util
 
 import android.annotation.SuppressLint
-import android.app.Application
-import android.app.Instrumentation
 import android.content.Context
-import com.jap.twstockinformation.StockUtil
+import com.jap.twstockinformation.StockUtilV2
 
 object SingleStockUtil {
     // It will not OOM if context is a applicationContext
     @SuppressLint("StaticFieldLeak")
-    private var instance: StockUtil? = null
+    private var instance: StockUtilV2? = null
 
     fun init(context: Context) {
-//        if (context !is Application) throw InitException()
-        instance = StockUtil(context)
+        instance = StockUtilV2()
     }
 
-    fun getInstance(): StockUtil {
+    fun getInstance(): StockUtilV2 {
         return instance ?: throw InitException()
     }
 

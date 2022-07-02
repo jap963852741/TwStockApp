@@ -10,6 +10,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.jap.twStockApp.databinding.ActivityStartBinding
 import com.jap.twStockApp.ui.base.BaseFragmentViewModelFactory
 import com.jap.twStockApp.util.FragmentSwitchUtil
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 import java.util.*
 
 class StartActivity : AppCompatActivity() {

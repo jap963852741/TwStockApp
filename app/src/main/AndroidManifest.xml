@@ -9,6 +9,7 @@
     <application
         android:name="com.jap.twStockApp.di.App"
         android:allowBackup="true"
+        tools:replace="android:icon"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -27,9 +28,9 @@
             android:name="com.jap.twStockApp.ui.MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan|adjustResize"/>
-        <activity
-            android:name="com.jap.twstockinformation.MainActivity"
-            android:exported="false"
-            tools:node="merge" />
+<!--        <activity-->
+<!--            android:name="com.jap.twstockinformation.MainActivity"-->
+<!--            android:exported="false"-->
+<!--            tools:node="merge" />-->
     </application>
 </manifest>

@@ -28,13 +28,17 @@ class StartActivity : AppCompatActivity() {
         setContentView(binding.root)
         baseViewModel = ViewModelProvider(this, BaseFragmentViewModelFactory())[BaseViewModel::class.java]
 
+        var trigger = false
         baseViewModel?.loadingBarPercentLiveData?.observe(this) { loadingBarPercent ->
+            if (trigger) return@observe
             if (loadingBarPercent >= 1f) {
+                trigger = true
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
+            } else {
+                binding.loadingBar.setSmoothPercent(loadingBarPercent.toFloat())
+                binding.tvLoadingBar.text = String.format(Locale.getDefault(), "%.0f", loadingBarPercent * 100) + " %"
             }
-            binding.loadingBar.setSmoothPercent(loadingBarPercent.toFloat())
-            binding.tvLoadingBar.text = String.format(Locale.getDefault(), "%.0f", loadingBarPercent * 100) + " %"
         }
         baseViewModel?.updateAllData()
     }

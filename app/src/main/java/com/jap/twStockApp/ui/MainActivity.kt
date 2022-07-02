@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
                     fragmentUtil?.selectedTab(FragmentSwitchUtil.TAB_NOTIFICATIONS)
                 }
             }
-            false
+            true
         }
         baseViewModel = ViewModelProvider(this, BaseFragmentViewModelFactory())[BaseViewModel::class.java]
         fragmentUtil?.selectedTab(FragmentSwitchUtil.TAB_HOME)

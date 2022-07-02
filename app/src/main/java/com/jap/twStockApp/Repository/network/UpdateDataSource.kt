@@ -13,7 +13,7 @@ class UpdateDataSource {
     private var countSecond = 0
 
     suspend fun updateDB(loadingPercent: (Int) -> Unit) = withContext(Dispatchers.IO) {
-        val countJob = CoroutineScope(currentCoroutineContext()).launch { beginToCount(loadingPercent).cancellable().collect() }
+        val countJob = CoroutineScope(currentCoroutineContext()).launch(Dispatchers.IO) { beginToCount(loadingPercent).cancellable().collect() }
 
         val totalInformation: HashMap<String, HashMap<String, String>> = SingleStockUtil.getInstance().Get_HashMap_Num_MapTotalInformation()
         countJob.cancel()

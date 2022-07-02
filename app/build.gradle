@@ -88,6 +88,9 @@ dependencies {
     implementation 'com.white:progressview:1.0.1'
     implementation "com.github.skydoves:powerspinner:1.1.7"
 
+    implementation 'cn.dreamtobe.percentsmoothhandler:library:0.1.1'
+    implementation 'com.liulishuo.magicprogresswidget:library:1.1.1'
+
     // Dagger android
     implementation "com.google.dagger:dagger-android-support:2.14.1"
     androidTestImplementation project(path: ':app')

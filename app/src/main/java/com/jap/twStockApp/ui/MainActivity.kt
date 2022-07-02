@@ -2,7 +2,6 @@ package com.jap.twStockApp.ui
 
 import android.os.Build
 import android.os.Bundle
-import android.view.MenuItem
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity

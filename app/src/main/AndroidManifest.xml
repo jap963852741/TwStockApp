@@ -15,18 +15,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.jap.twStockApp.ui.MainActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustPan|adjustResize">
-
+            android:name="com.jap.twStockApp.ui.StartActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!--android 12 every activity need to add exported-->
-        <!--help sdk to add-->
+        <activity
+            android:name="com.jap.twStockApp.ui.MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustResize"/>
         <activity
             android:name="com.jap.twstockinformation.MainActivity"
             android:exported="false"

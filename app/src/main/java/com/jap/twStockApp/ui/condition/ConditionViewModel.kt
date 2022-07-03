@@ -73,7 +73,7 @@ class ConditionViewModel(app: Application, private val favoritesRespository: Fav
         _text.postValue(tempArray)
     }
 
-    fun getFavorite() = viewModelScope.launch { _favorite.value = favoritesRespository.getAllFavorite() }
+    fun getFavorite() = viewModelScope.launch { favoritesRespository.getAllFavorite()?.let { _favorite.value = it }}
 
     fun addFavorite(stockNoNameFav: StockNoNameFav, successListener: ((Boolean) -> Unit)) = viewModelScope.launch {
         val result = FavoriteUtil(getApplication<Application>().applicationContext).addFavorite(stockNoNameFav.stockNo, stockNoNameFav.stockName)
@@ -84,5 +84,6 @@ class ConditionViewModel(app: Application, private val favoritesRespository: Fav
         val result = FavoriteUtil(getApplication<Application>().applicationContext).removeFavorite(stockNoNameFav.stockNo, stockNoNameFav.stockName)
         successListener.invoke(result)
     }
+
 }
 

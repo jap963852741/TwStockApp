@@ -17,6 +17,7 @@ import com.jap.twStockApp.ui.condition.filter.ConditionFilterAdapter
 import com.jap.twStockApp.ui.condition.filter.ConditionType
 import com.jap.twStockApp.ui.condition.filter.FilterModel
 import com.jap.twStockApp.util.FragmentSwitchUtil
+import com.jap.twStockApp.util.ToastUtil
 import com.jap.twStockApp.util.dialog.LoadingDialog
 import javax.inject.Inject
 
@@ -26,6 +27,7 @@ class ConditionFragment : BaseFragment(), View.OnClickListener {
     private var conditionViewModel: ConditionViewModel? = null
     private var conditionAdapter: ConditionAdapter? = null
     private var conditionFilterAdapter: ConditionFilterAdapter? = null
+    private var favoriteSize: Int = 0
 
     @Inject
     lateinit var loadingDialog: LoadingDialog
@@ -53,7 +55,10 @@ class ConditionFragment : BaseFragment(), View.OnClickListener {
             conditionFilterAdapter?.notifyItemChanged(size - 1)
         }
         conditionViewModel?.text?.observe(viewLifecycleOwner) { conditionAdapter?.submitList(it) }
-        conditionViewModel?.favorite?.observe(viewLifecycleOwner) { conditionAdapter?.setNewFavoriteList(it.toSet()) }
+        conditionViewModel?.favorite?.observe(viewLifecycleOwner) {
+            favoriteSize = it.size
+            conditionAdapter?.setNewFavoriteList(it.toSet())
+        }
         conditionViewModel?.filter?.observe(viewLifecycleOwner) { beginFilter() }
         conditionViewModel?.getFavorite()
 
@@ -76,15 +81,26 @@ class ConditionFragment : BaseFragment(), View.OnClickListener {
         }
 
         conditionAdapter?.favoriteButtonEvent?.observe(viewLifecycleOwner) { stockNoNameFav ->
+            if (favoriteSize >= 5) {
+                ToastUtil.shortToast("目前只開放收藏 5 個")
+                return@observe
+            }
+
             if (stockNoNameFav.stockFavorite) {
                 conditionViewModel?.addFavorite(stockNoNameFav) { success ->
-                    if (success) conditionAdapter?.updateStatus(stockNoNameFav)
-                    else Toast.makeText(context, "add favorite Fail", Toast.LENGTH_SHORT).show()
+                    if (success) {
+                        conditionAdapter?.updateStatus(stockNoNameFav)
+                        favoriteSize++
+                    }
+                    else ToastUtil.shortToast("add favorite Fail")
                 }
             } else {
                 conditionViewModel?.removeFavorite(stockNoNameFav) { success ->
-                    if (success) conditionAdapter?.updateStatus(stockNoNameFav)
-                    else Toast.makeText(context, "cancel favorite Fail", Toast.LENGTH_SHORT).show()
+                    if (success)  {
+                        conditionAdapter?.updateStatus(stockNoNameFav)
+                        favoriteSize--
+                    }
+                    else ToastUtil.shortToast("cancel favorite Fail")
                 }
             }
         }

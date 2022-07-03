@@ -18,6 +18,7 @@ import com.jap.twStockApp.databinding.FragmentHomeBinding
 import com.jap.twStockApp.di.App
 import com.jap.twStockApp.ui.base.BaseFragment
 import com.jap.twStockApp.util.FragmentSwitchUtil
+import com.jap.twStockApp.util.ToastUtil
 import com.jap.twStockApp.util.dialog.LoadingDialog
 import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
@@ -85,8 +86,8 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
             }
         }
         homeViewModel?.updateResult?.observe(viewLifecycleOwner) {
-            if (it.success != null) toast(resources.getString(it.success))
-            else if (it.error != null) toast(resources.getString(it.error))
+            if (it.success != null) ToastUtil.shortToast(resources.getString(it.success))
+            else if (it.error != null) ToastUtil.shortToast(resources.getString(it.error))
         }
         homeViewModel?.loadingDialog?.observe(viewLifecycleOwner) {
             if (it) {
@@ -95,8 +96,6 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
             } else loadingDialog.dismiss()
         }
     }
-
-    private fun toast(s: String) = Toast.makeText(context, s, Toast.LENGTH_LONG).show()
 
     override fun onClick(v: View?) {
 //        val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

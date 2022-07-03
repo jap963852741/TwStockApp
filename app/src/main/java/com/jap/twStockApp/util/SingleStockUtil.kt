@@ -9,7 +9,7 @@ object SingleStockUtil {
     @SuppressLint("StaticFieldLeak")
     private var instance: StockUtilV2? = null
 
-    fun init(context: Context) {
+    fun init() {
         instance = StockUtilV2()
     }
 

@@ -9,6 +9,7 @@ import com.jap.twStockApp.di.home.HomeComponent
 import com.jap.twStockApp.di.home.HomeModule
 import com.jap.twStockApp.di.modules.AppModule
 import com.jap.twStockApp.util.SingleStockUtil
+import com.jap.twStockApp.util.ToastUtil
 
 class App : Application() {
 
@@ -21,7 +22,8 @@ class App : Application() {
         super.onCreate()
         // init roomDB
         AppDatabase.appDataBaseInit(applicationContext)
-        SingleStockUtil.init(applicationContext)
+        ToastUtil.init(applicationContext)
+        SingleStockUtil.init()
         initDependencies()
     }
 

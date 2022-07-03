@@ -10,6 +10,16 @@ import kotlinx.coroutines.withContext
 class FavoriteUtil(applicationContext: Context?) {
     val db = AppDatabase.getInstance(applicationContext)
 
+    suspend fun getFavoriteSize(): Int? = withContext(Dispatchers.IO) {
+        try {
+            val list = db?.FavoriteDao()?.getAll()
+            list?.size
+        }catch (e : Exception) {
+            Log.e(this.javaClass.name, e.toString())
+            0
+        }
+    }
+
     suspend fun addFavorite(StockNo: String, Name: String): Boolean = withContext(Dispatchers.IO) {
         try {
             db?.FavoriteDao()?.insertAll(Favorite(StockNo, Name))

@@ -81,12 +81,11 @@ class ConditionFragment : BaseFragment(), View.OnClickListener {
         }
 
         conditionAdapter?.favoriteButtonEvent?.observe(viewLifecycleOwner) { stockNoNameFav ->
-            if (favoriteSize >= 5) {
-                ToastUtil.shortToast("目前只開放收藏 5 個")
-                return@observe
-            }
-
             if (stockNoNameFav.stockFavorite) {
+                if (favoriteSize >= 5) {
+                    ToastUtil.shortToast("目前只開放收藏 5 個")
+                    return@observe
+                }
                 conditionViewModel?.addFavorite(stockNoNameFav) { success ->
                     if (success) {
                         conditionAdapter?.updateStatus(stockNoNameFav)

@@ -27,21 +27,9 @@ class MainActivity : AppCompatActivity() {
         viewbinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewbinding.root)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR // Statusbar 轉為深色
-        navigation = viewbinding.navView
-        navigation.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.navigation_home -> {
-                    FragmentSwitchUtil.getInstance(supportFragmentManager)?.selectedTab(FragmentSwitchUtil.TAB_HOME)
-                }
-                R.id.navigation_dashboard -> {
-                    FragmentSwitchUtil.getInstance(supportFragmentManager)?.selectedTab(FragmentSwitchUtil.TAB_DASHBOARD)
-                }
-                R.id.navigation_favorites -> {
-                    FragmentSwitchUtil.getInstance(supportFragmentManager)?.selectedTab(FragmentSwitchUtil.TAB_NOTIFICATIONS)
-                }
-            }
-            true
-        }
+        viewbinding.myBottomBar.navigationHomeEvent = { FragmentSwitchUtil.getInstance(supportFragmentManager)?.selectedTab(FragmentSwitchUtil.TAB_HOME) }
+        viewbinding.myBottomBar.navigationDashboardEvent = { FragmentSwitchUtil.getInstance(supportFragmentManager)?.selectedTab(FragmentSwitchUtil.TAB_DASHBOARD) }
+        viewbinding.myBottomBar.navigationFavoritesEvent = { FragmentSwitchUtil.getInstance(supportFragmentManager)?.selectedTab(FragmentSwitchUtil.TAB_NOTIFICATIONS) }
         baseViewModel = ViewModelProvider(this, BaseFragmentViewModelFactory())[BaseViewModel::class.java]
         FragmentSwitchUtil.getInstance(supportFragmentManager)?.selectedTab(FragmentSwitchUtil.TAB_HOME)
     }

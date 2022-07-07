@@ -9,10 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.jap.twStockApp.databinding.ActivityStartBinding
 import com.jap.twStockApp.ui.base.BaseFragmentViewModelFactory
-import com.jap.twStockApp.util.FragmentSwitchUtil
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.withContext
 import java.util.*
 
 class StartActivity : AppCompatActivity() {
@@ -28,6 +24,10 @@ class StartActivity : AppCompatActivity() {
         setContentView(binding.root)
         baseViewModel = ViewModelProvider(this, BaseFragmentViewModelFactory())[BaseViewModel::class.java]
 
+//        if (BuildConfig.DEBUG) {
+//            startActivity(Intent(this, MainActivity::class.java))
+//            finish()
+//        }
         var trigger = false
         baseViewModel?.loadingBarPercentLiveData?.observe(this) { loadingBarPercent ->
             if (trigger) return@observe

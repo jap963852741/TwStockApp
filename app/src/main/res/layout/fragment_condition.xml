@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:clickable="false"
-    app:layout_constraintBottom_toTopOf="@id/nav_view"
     tools:context=".ui.condition.ConditionFragment">
 
     <androidx.appcompat.widget.Toolbar

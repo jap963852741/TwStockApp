@@ -28,8 +28,10 @@ class FragmentSwitchUtil private constructor(fragmentManager: FragmentManager) {
 
         fun getInstance(fragmentManager: FragmentManager): FragmentSwitchUtil? {
             if (INSTANCE != null) return INSTANCE
-            synchronized(FragmentSwitchUtil::class) { INSTANCE = FragmentSwitchUtil(fragmentManager) }
-            return INSTANCE
+            synchronized(FragmentSwitchUtil::class) {
+                INSTANCE = FragmentSwitchUtil(fragmentManager)
+                return INSTANCE
+            }
         }
     }
 

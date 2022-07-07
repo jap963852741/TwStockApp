@@ -15,7 +15,6 @@ import com.jap.twStockApp.util.FragmentSwitchUtil
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewbinding: ActivityMainBinding
-    private var fragmentUtil: FragmentSwitchUtil? = null
     var baseViewModel: BaseViewModel? = null
 
     companion object {
@@ -29,23 +28,22 @@ class MainActivity : AppCompatActivity() {
         setContentView(viewbinding.root)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR // Statusbar 轉為深色
         navigation = viewbinding.navView
-        fragmentUtil = FragmentSwitchUtil.getInstance(supportFragmentManager)
         navigation.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.navigation_home -> {
-                    fragmentUtil?.selectedTab(FragmentSwitchUtil.TAB_HOME)
+                    FragmentSwitchUtil.getInstance(supportFragmentManager)?.selectedTab(FragmentSwitchUtil.TAB_HOME)
                 }
                 R.id.navigation_dashboard -> {
-                    fragmentUtil?.selectedTab(FragmentSwitchUtil.TAB_DASHBOARD)
+                    FragmentSwitchUtil.getInstance(supportFragmentManager)?.selectedTab(FragmentSwitchUtil.TAB_DASHBOARD)
                 }
                 R.id.navigation_favorites -> {
-                    fragmentUtil?.selectedTab(FragmentSwitchUtil.TAB_NOTIFICATIONS)
+                    FragmentSwitchUtil.getInstance(supportFragmentManager)?.selectedTab(FragmentSwitchUtil.TAB_NOTIFICATIONS)
                 }
             }
             true
         }
         baseViewModel = ViewModelProvider(this, BaseFragmentViewModelFactory())[BaseViewModel::class.java]
-        fragmentUtil?.selectedTab(FragmentSwitchUtil.TAB_HOME)
+        FragmentSwitchUtil.getInstance(supportFragmentManager)?.selectedTab(FragmentSwitchUtil.TAB_HOME)
     }
 
 }

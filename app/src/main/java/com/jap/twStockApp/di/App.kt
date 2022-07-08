@@ -8,6 +8,7 @@ import com.jap.twStockApp.di.condition.ConditionModule
 import com.jap.twStockApp.di.home.HomeComponent
 import com.jap.twStockApp.di.home.HomeModule
 import com.jap.twStockApp.di.modules.AppModule
+import com.jap.twStockApp.util.SharedPreference
 import com.jap.twStockApp.util.SingleStockUtil
 import com.jap.twStockApp.util.ToastUtil
 
@@ -23,6 +24,7 @@ class App : Application() {
         // init roomDB
         AppDatabase.appDataBaseInit(applicationContext)
         ToastUtil.init(applicationContext)
+        SharedPreference.init(applicationContext)
         SingleStockUtil.init()
         initDependencies()
     }

@@ -1,15 +1,9 @@
 package com.jap.twStockApp.ui.home
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +14,6 @@ import com.jap.twStockApp.ui.base.BaseFragment
 import com.jap.twStockApp.util.FragmentSwitchUtil
 import com.jap.twStockApp.util.ToastUtil
 import com.jap.twStockApp.util.dialog.LoadingDialog
-import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
 
 class HomeFragment : BaseFragment(), View.OnClickListener {
@@ -78,10 +71,10 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
                 homeViewModel?.updateText(it)
             }
         }
-        homeViewModel?.stockInformation?.observe(viewLifecycleOwner) {
-            if (it.isNullOrEmpty()) return@observe
+        homeViewModel?.stockInformation?.observe(viewLifecycleOwner) { stockInformation ->
+            if (stockInformation.isNullOrEmpty()) return@observe
             homeViewBinding?.reView?.apply {
-                adapter = view?.let { view -> HomeAdapter(it, view) }
+                adapter = view?.let { HomeAdapter(stockInformation) }
                 layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             }
         }
@@ -98,8 +91,6 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-//        val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//        imm.hideSoftInputFromWindow(v?.windowToken, 0)
         closeKeyBoard(v)
         homeViewModel?.updateText(homeViewBinding?.autoCompleteText?.text.toString())
     }

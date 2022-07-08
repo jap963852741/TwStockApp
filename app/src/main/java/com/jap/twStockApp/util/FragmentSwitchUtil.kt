@@ -3,6 +3,8 @@ package com.jap.twStockApp.util
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.jap.twStockApp.R
 import com.jap.twStockApp.ui.condition.ConditionFragment
 import com.jap.twStockApp.ui.favorites.FavoritesFragment
@@ -16,7 +18,8 @@ class FragmentSwitchUtil private constructor(fragmentManager: FragmentManager) {
         this[TAB_DASHBOARD] = Stack<Fragment>()
         this[TAB_NOTIFICATIONS] = Stack<Fragment>()
     }
-    private var currentTab: String? = null
+    private var _currentTab: MutableLiveData<String?> = MutableLiveData()
+    var currentTab: LiveData<String?> = _currentTab
     private var manager: FragmentManager = fragmentManager
 
     companion object {
@@ -36,7 +39,7 @@ class FragmentSwitchUtil private constructor(fragmentManager: FragmentManager) {
     }
 
     fun selectedTab(tabId: String) {
-        currentTab = tabId
+        _currentTab.value = tabId
         if (stacks[tabId]?.size == 0) {
             when (tabId) {
                 TAB_HOME -> {

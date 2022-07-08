@@ -28,7 +28,18 @@ class MyBottomBar(context: Context, attributeSet: AttributeSet) : LinearLayoutCo
 
     init {
         initDrawable()
+        initClickListener()
+        initChooseTag()
+        chooseHome()
+    }
 
+    private fun initChooseTag() {
+        viewBinding.imageHome.tag = false
+        viewBinding.imageDashboard.tag = false
+        viewBinding.imageFavorite.tag = false
+    }
+
+    private fun initClickListener() {
         viewBinding.navigationHome.setOnClickListener {
             chooseHome()
             navigationHomeEvent?.invoke()
@@ -57,19 +68,22 @@ class MyBottomBar(context: Context, attributeSet: AttributeSet) : LinearLayoutCo
         }
     }
 
-    private fun chooseHome() {
+    fun chooseHome() {
+        if (isHomeSelect()) return
         setHomeImageView(true)
         setDashBoardImageView(false)
         setFavoritesImageView(false)
     }
 
-    private fun chooseDashboard() {
+    fun chooseDashboard() {
+        if (isDashBoardSelect()) return
         setHomeImageView(false)
         setDashBoardImageView(true)
         setFavoritesImageView(false)
     }
 
-    private fun chooseFavorite() {
+    fun chooseFavorite() {
+        if (isFavoriteSelect()) return
         setHomeImageView(false)
         setDashBoardImageView(false)
         setFavoritesImageView(true)
@@ -77,17 +91,26 @@ class MyBottomBar(context: Context, attributeSet: AttributeSet) : LinearLayoutCo
 
 
     private fun setHomeImageView(select: Boolean) {
+        viewBinding.imageHome.tag = select
         if (select) viewBinding.imageHome.setImageDrawable(homeSelect)
         else viewBinding.imageHome.setImageDrawable(homeUnSelect)
     }
 
+    private fun isHomeSelect(): Boolean = viewBinding.imageHome.tag as Boolean
+
     private fun setDashBoardImageView(select: Boolean) {
+        viewBinding.imageDashboard.tag = select
         if (select) viewBinding.imageDashboard.setImageDrawable(dashboardSelect)
         else viewBinding.imageDashboard.setImageDrawable(dashboardUnSelect)
     }
 
+    private fun isDashBoardSelect(): Boolean = viewBinding.imageDashboard.tag as Boolean
+
     private fun setFavoritesImageView(select: Boolean) {
+        viewBinding.imageFavorite.tag = select
         if (select) viewBinding.imageFavorite.setImageDrawable(favoritesSelect)
         else viewBinding.imageFavorite.setImageDrawable(favoritesUnSelect)
     }
+
+    private fun isFavoriteSelect(): Boolean = viewBinding.imageFavorite.tag as Boolean
 }

@@ -11,8 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jap.twStockApp.databinding.FragmentFavoritesBinding
 import com.jap.twStockApp.extensions.observe
 import com.jap.twStockApp.ui.base.BaseFragment
-import com.jap.twStockApp.ui.condition.ConditionAdapter
-import com.jap.twStockApp.util.FavoriteUtil
 import com.jap.twStockApp.util.FragmentSwitchUtil
 
 class FavoritesFragment : BaseFragment() {

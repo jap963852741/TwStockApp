@@ -6,10 +6,8 @@ import com.jap.twStockApp.util.FragmentSwitchUtil
 
 class StartFragment : BaseFragment() {
 
-    private var fragmentUtil :FragmentSwitchUtil? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        fragmentUtil = FragmentSwitchUtil.getInstance(parentFragmentManager)
-        fragmentUtil?.selectedTab(FragmentSwitchUtil.TAB_HOME)
+        FragmentSwitchUtil.getInstance(parentFragmentManager)?.selectedTab(FragmentSwitchUtil.TAB_HOME)
     }
 }

@@ -18,8 +18,6 @@ import javax.inject.Inject
 
 class HomeFragment : BaseFragment(), View.OnClickListener {
 
-    val TAG = "HomeFragment"
-
     @Inject
     lateinit var homeViewModelFactory: HomeViewModelFactory
 

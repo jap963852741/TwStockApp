@@ -6,8 +6,6 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.jap.twStockApp.R
 import com.jap.twStockApp.databinding.ActivityMainBinding
 import com.jap.twStockApp.ui.base.BaseFragmentViewModelFactory
 import com.jap.twStockApp.util.FragmentSwitchUtil
@@ -36,9 +34,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
         baseViewModel = ViewModelProvider(this, BaseFragmentViewModelFactory())[BaseViewModel::class.java]
         FragmentSwitchUtil.getInstance(supportFragmentManager)?.selectedTab(FragmentSwitchUtil.TAB_HOME)
+    }
+
+    override fun onBackPressed() {
+        if (FragmentSwitchUtil.getInstance(supportFragmentManager)?.currentTab?.value == FragmentSwitchUtil.TAB_HOME) super.onBackPressed()
     }
 
 }

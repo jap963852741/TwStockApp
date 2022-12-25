@@ -6,7 +6,13 @@
     android:gravity="center"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:layout_marginBottom="15dp"
+        android:textSize="17sp"
+        />
     <com.liulishuo.magicprogresswidget.MagicProgressBar
         android:id="@+id/loading_bar"
         android:layout_width="300dp"

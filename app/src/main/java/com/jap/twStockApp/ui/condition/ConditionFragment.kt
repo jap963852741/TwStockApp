@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import com.jap.twStockApp.BuildConfig
@@ -76,14 +75,14 @@ class ConditionFragment : BaseFragment(), View.OnClickListener {
         dashboardBinding.reViewDashboard.adapter = conditionAdapter
         dashboardBinding.reViewDashboard.layoutManager = MyLinearLayoutManager(context)
         conditionAdapter?.rootEvent?.observe(viewLifecycleOwner) { stockNo ->
-            FragmentSwitchUtil.getInstance(parentFragmentManager)?.selectedTab(FragmentSwitchUtil.TAB_HOME)
+            activity?.let { FragmentSwitchUtil.getInstance(it)?.selectedTab(FragmentSwitchUtil.TAB_HOME) }
             baseViewModel?.setHomeFragmentSearchText(stockNo)
         }
 
         conditionAdapter?.favoriteButtonEvent?.observe(viewLifecycleOwner) { stockNoNameFav ->
             if (stockNoNameFav.stockFavorite) {
-                if (favoriteSize >= 5) {
-                    ToastUtil.shortToast("目前只開放收藏 5 個")
+                if (favoriteSize >= 30) {
+                    ToastUtil.shortToast("目前只開放收藏 30 個")
                     return@observe
                 }
                 conditionViewModel?.addFavorite(stockNoNameFav) { success ->

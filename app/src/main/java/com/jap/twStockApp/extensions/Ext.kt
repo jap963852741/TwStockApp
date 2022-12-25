@@ -5,6 +5,6 @@ import androidx.lifecycle.LiveData
 
 fun <T> List<T>?.toArrayList() = ArrayList(this ?: listOf())
 
-fun <T> Fragment.observe(liveData: LiveData<T>, block: (T) -> Unit) {
-    liveData.observe(viewLifecycleOwner) { block(it) }
+fun <T> Fragment.observe(liveData: LiveData<T>?, block: (T) -> Unit) {
+    liveData?.observe(viewLifecycleOwner) { block(it) }
 }

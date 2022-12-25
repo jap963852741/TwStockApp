@@ -10,6 +10,8 @@
         <entry key="app/src/main/res/drawable-mdpi/ic_favorite_black.xml" value="0.2165" />
         <entry key="app/src/main/res/drawable-mdpi/ic_favorite_green_24dp.xml" value="0.2165" />
         <entry key="app/src/main/res/drawable-mdpi/ic_home_green_24dp.xml" value="0.2165" />
+        <entry key="app/src/main/res/drawable/bg_circle_fffff_r24.xml" value="0.222" />
+        <entry key="app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.222" />
         <entry key="app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.2165" />
         <entry key="app/src/main/res/drawable/ic_dashboard_green_24dp.xml" value="0.2165" />
         <entry key="app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.2165" />

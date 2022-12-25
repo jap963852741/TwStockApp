@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.jap.twStockApp.Repository.StockInformationRepository
 import com.jap.twStockApp.Repository.StockNoArrayRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -30,9 +31,10 @@ class HomeViewModel(
 
     private fun getAllStockList() = viewModelScope.launch { _stockNoArrayList.postValue(StockNoArrayRepository().newLoadInfo(getApplication<Application>().applicationContext)) }
     fun updateText(stockNo: String) = viewModelScope.launch { _stockInformation.postValue(stockInformationRepository.getStockData(getApplication<Application>().applicationContext, stockNo)) }
-    fun newUpdateStockDb(loadingPercent: (Int) -> Unit) = viewModelScope.launch {
+    fun newUpdateStockDb(loadingPercent: (Int) -> Unit, finishCallBack: (() -> Unit)? = null) = viewModelScope.launch(Dispatchers.IO) {
         _loadingDialog.postValue(true)
         stockInformationRepository.updateDB(loadingPercent)
         _loadingDialog.postValue(false)
+        finishCallBack?.invoke()
     }
 }

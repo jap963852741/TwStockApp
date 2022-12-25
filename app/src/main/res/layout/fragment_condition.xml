@@ -56,11 +56,15 @@
     <Button
         android:id="@+id/condition_search"
         android:layout_width="match_parent"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/add_filter"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/bg_circle_6c6c6c_r24"
         android:text="@string/search"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/colorPrimary" />
+        android:textColor="@color/colorLightGreen" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/re_view_dashboard"

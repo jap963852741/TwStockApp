@@ -8,6 +8,7 @@ import com.jap.twStockApp.di.condition.ConditionModule
 import com.jap.twStockApp.di.home.HomeComponent
 import com.jap.twStockApp.di.home.HomeModule
 import com.jap.twStockApp.di.modules.AppModule
+import com.jap.twStockApp.util.FragmentSwitchUtil
 import com.jap.twStockApp.util.SharedPreference
 import com.jap.twStockApp.util.SingleStockUtil
 import com.jap.twStockApp.util.ToastUtil
@@ -17,7 +18,6 @@ class App : Application() {
     private lateinit var mainComponent: MainComponent
     private var homeComponent: HomeComponent? = null
     private var conditionComponent: ConditionComponent? = null
-//    private var baseComponent: BaseComponent? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -48,12 +48,4 @@ class App : Application() {
         return conditionComponent!!
     }
 
-//    fun createBaseFragmentComponent(): BaseComponent? {
-//        baseComponent = mainComponent.plus(BaseModule())
-//        return baseComponent
-//    }
-
-    fun releaseConditionComponent() {
-        conditionComponent = null
-    }
 }

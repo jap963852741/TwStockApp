@@ -26,9 +26,15 @@ class StartActivity : AppCompatActivity() {
         setContentView(binding.root)
         baseViewModel = ViewModelProvider(this, BaseFragmentViewModelFactory())[BaseViewModel::class.java]
 
-        if (BuildConfig.DEBUG) goMainActivityAndFinish()
+        if (BuildConfig.DEBUG) {
+            goMainActivityAndFinish()
+            return
+        }
         val intervalTime = System.currentTimeMillis() - (SharedPreference.sharedPreferences?.getLong(APP_OPEN_TIMESTAMP, 0) ?: 0)
-        if (intervalTime < oneMinuteMillis * 10) goMainActivityAndFinish()
+        if (intervalTime < oneMinuteMillis * 10) {
+            goMainActivityAndFinish()
+            return
+        }
         else SharedPreference.sharedPreferences?.saveLong(APP_OPEN_TIMESTAMP, System.currentTimeMillis())
 
         var trigger = false

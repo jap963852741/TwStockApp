@@ -1,96 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/homefragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.HomeFragment"
-    android:id="@+id/homefragment"
     android:background="@color/colorWhite"
     android:clickable="true"
     android:focusable="true"
-    >
+    tools:context=".ui.home.HomeFragment">
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar_home"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorWhite"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/toolbarstyletest"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="16dp"
         app:titleTextColor="@color/colorWhite"
-        >
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp">
+
         <TextView
             android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:fontFamily="@font/ozcaramel"
             android:text="@string/app_name"
-            android:textSize="20sp"
             android:textColor="@color/colorBlack"
-            android:fontFamily="@font/ozcaramel"/>
+            android:textSize="20sp" />
 
     </androidx.appcompat.widget.Toolbar>
 
-    <LinearLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_home"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/search_text_home"
-        android:layout_below="@+id/toolBar_home"
-        android:orientation="horizontal">
-        <com.jap.twStockApp.util.dialog.MyAutoCompleteTextView
-            android:id="@+id/auto_complete_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:dropDownAnchor="@+id/search_text_home"
-            android:dropDownWidth="120sp"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"
-            android:completionThreshold="1"
-            android:textSize="20sp"
-            android:hint="@string/type_number"
-            />
-<!--        <MultiAutoCompleteTextView-->
-<!--            android:id="@+id/auto_complete_text"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="2"-->
-<!--            android:dropDownAnchor="@+id/search_text_home"-->
-<!--            android:dropDownWidth="120sp"-->
-<!--            android:layout_marginRight="5dp"-->
-<!--            android:layout_marginLeft="5dp"-->
-<!--            android:completionThreshold="1"-->
-<!--            android:textSize="20sp"-->
-<!--            android:hint="@string/type_number"-->
-<!--            />-->
-        <Button android:id="@+id/search"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/colorPrimary"
-            android:text="@string/search"/>
-    </LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolBar_home">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/search_text_home"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/toolBar_home"
-        app:layout_constraintStart_toStartOf="parent"
-        >
+        android:layout_below="@+id/toolBar_home"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/search_text_home"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.jap.twStockApp.util.dialog.MyAutoCompleteTextView
+                android:id="@+id/auto_complete_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="2"
+                android:completionThreshold="1"
+                android:dropDownAnchor="@+id/search_text_home"
+                android:dropDownWidth="120sp"
+                android:hint="@string/type_number"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_circle_6c6c6c_r24"
+                android:text="@string/search"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/colorLightGreen" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/search_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="40dp"
+                android:background="@drawable/ic_baseline_search_24" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="點此開始搜尋"
+                android:textColor="#646464"
+                android:textSize="16sp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/re_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
-            />
+            tools:itemCount="10"
+            tools:listitem="@layout/item_home" />
     </LinearLayout>
+
 
 </RelativeLayout>

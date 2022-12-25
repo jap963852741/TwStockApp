@@ -82,7 +82,7 @@ class VH(
         ConditionType.ThreeBigRatio.displayName
     )
 
-    val conditionTypeArray: Array<ConditionType> = arrayOf(
+    private val conditionTypeArray: Array<ConditionType> = arrayOf(
         ConditionType.Price,
         ConditionType.UpAndDown,
         ConditionType.UpAndDownPercent,
@@ -111,7 +111,7 @@ class VH(
         BiggerOrSmaller.Smaller.displayName
     )
 
-    val biggerOrSmallerArray: Array<BiggerOrSmaller> = arrayOf(
+    private val biggerOrSmallerArray: Array<BiggerOrSmaller> = arrayOf(
         BiggerOrSmaller.Bigger,
         BiggerOrSmaller.Smaller
     )

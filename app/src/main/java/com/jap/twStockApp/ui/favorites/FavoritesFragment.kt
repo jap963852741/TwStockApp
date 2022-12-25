@@ -26,13 +26,8 @@ class FavoritesFragment : BaseFragment() {
     ): View {
         binding = FragmentFavoritesBinding.inflate(inflater, container, false)
         favoritesViewModel = ViewModelProvider(this, FavoriteViewModelFactory(application = requireActivity().application))[FavoritesViewModel::class.java]
-
         initAdapter()
-        favoritesViewModel.favorite.observe(viewLifecycleOwner) {
-            favoritesAdapter.dataList = it
-            favoritesAdapter.notifyDataSetChanged()
-        }
-
+        favoritesViewModel.favorite.observe(viewLifecycleOwner) { favoritesAdapter.submitList(it) }
         getFavoriteData()
         return binding.root
     }
@@ -53,14 +48,10 @@ class FavoritesFragment : BaseFragment() {
             }
         }
         observe(favoritesAdapter.stockNoEvent) { stockNo ->
-            FragmentSwitchUtil.getInstance(parentFragmentManager)?.selectedTab(FragmentSwitchUtil.TAB_HOME)
+            activity?.let { FragmentSwitchUtil.getInstance(it)?.selectedTab(FragmentSwitchUtil.TAB_HOME) }
             baseViewModel?.setHomeFragmentSearchText(stockNo)
         }
         binding.reViewFavorites.adapter = favoritesAdapter
-        binding.reViewFavorites.layoutManager = LinearLayoutManager(
-            context,
-            RecyclerView.VERTICAL,
-            false
-        )
+        binding.reViewFavorites.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
     }
 }

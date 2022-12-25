@@ -4,14 +4,15 @@ import android.os.Bundle
 import android.view.*
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jap.twStockApp.R
 import com.jap.twStockApp.databinding.FragmentHomeBinding
 import com.jap.twStockApp.di.App
+import com.jap.twStockApp.extensions.observe
 import com.jap.twStockApp.ui.base.BaseFragment
-import com.jap.twStockApp.util.FragmentSwitchUtil
 import com.jap.twStockApp.util.ToastUtil
 import com.jap.twStockApp.util.dialog.LoadingDialog
 import javax.inject.Inject
@@ -24,14 +25,12 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
     @Inject
     lateinit var loadingDialog: LoadingDialog
     private var homeViewBinding: FragmentHomeBinding? = null
-    private var fragmentUtil: FragmentSwitchUtil? = null
     private var homeViewModel: HomeViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity?.application as App).createHomeComponent(requireContext())?.inject(this)
         homeViewModel = ViewModelProvider(this, homeViewModelFactory)[HomeViewModel::class.java]
-        fragmentUtil = FragmentSwitchUtil.getInstance(parentFragmentManager)
     }
 
     override fun onCreateView(
@@ -42,6 +41,11 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
         homeViewBinding = FragmentHomeBinding.inflate(inflater, container, false)
         homeViewBinding?.toolBarHome?.overflowIcon = resources.getDrawable(R.drawable.ic_refresh_black) // 把三個小點換掉
         (activity as AppCompatActivity?)!!.setSupportActionBar(homeViewBinding?.toolBarHome)
+        homeViewBinding?.swipeHome?.setOnRefreshListener {
+            homeViewModel?.newUpdateStockDb({ loadingDialog.setProgressBar(it) }, {
+                homeViewBinding?.swipeHome?.isRefreshing = false
+            })
+        }
         setHasOptionsMenu(true)
         return homeViewBinding?.root
     }
@@ -62,7 +66,9 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
             onClick(v)
             event != null && event.keyCode == KeyEvent.KEYCODE_ENTER
         }
-
+        homeViewBinding?.searchTextHome?.setOnClickListener{
+            onClick(it)
+        }
         baseViewModel?.homeFragmentSearchText?.observe(viewLifecycleOwner) {
             it?.let {
                 homeViewBinding?.autoCompleteText?.setText(it)
@@ -89,6 +95,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
+        homeViewBinding?.searchHint?.isVisible = false
         closeKeyBoard(v)
         homeViewModel?.updateText(homeViewBinding?.autoCompleteText?.text.toString())
     }
@@ -100,7 +107,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.updateDB -> homeViewModel?.newUpdateStockDb { loadingDialog.setProgressBar(it) }
+            R.id.updateDB -> homeViewModel?.newUpdateStockDb({ loadingDialog.setProgressBar(it) })
         }
         return super.onOptionsItemSelected(item)
     }

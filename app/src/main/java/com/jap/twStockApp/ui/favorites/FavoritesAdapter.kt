@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.github.zagum.switchicon.SwitchIconView
 import com.jap.twStockApp.Repository.roomdb.Favorite
@@ -19,19 +20,17 @@ import com.jap.twStockApp.util.SingleStockUtil.init
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class FavoritesAdapter : RecyclerView.Adapter<VH>() {
-    var dataList: List<Favorite?> = emptyList()
-
+class FavoritesAdapter : ListAdapter<Favorite, VH>(FavoritesDiffUtil()) {
     private val _favoriteButtonEvent: MutableLiveData<Favorite> = MutableLiveData()
     val favoriteButtonEvent: LiveData<Favorite> = _favoriteButtonEvent
-
     private val _stockNoEvent: MutableLiveData<String> = MutableLiveData()
     val stockNoEvent: LiveData<String> = _stockNoEvent
 
-    fun removeFavorite(favorite: Favorite) = dataList.forEachIndexed { index, element ->
+    fun removeFavorite(favorite: Favorite) = currentList.forEachIndexed { index, element ->
         if (element != favorite) return@forEachIndexed
-        (dataList as MutableList<Favorite?>).removeAt(index)
-        notifyItemRemoved(index)
+        val newList = currentList.toMutableList()
+        newList.removeAt(index)
+        submitList(newList)
         return
     }
 
@@ -40,20 +39,16 @@ class FavoritesAdapter : RecyclerView.Adapter<VH>() {
 
     @SuppressLint("ResourceType", "SetTextI18n")
     override fun onBindViewHolder(holder: VH, position: Int) {
-        val favorite = dataList[position]
+        val favorite = currentList[position]
         holder.data = favorite
         holder.itemFavorite.text = "${favorite?.StockNo}  ${favorite?.Name}"
         holder.favoriteButton.setIconEnabled(true)
     }
 
-    override fun getItemCount(): Int = dataList.size
+    override fun getItemCount(): Int = currentList.size
 }
 
-class VH(
-    binding: ItemFavoritesBinding,
-    private var favoriteButtonEvent: ((Favorite?) -> Unit),
-    private var stockNoEvent: ((String?) -> Unit)
-) : RecyclerView.ViewHolder(binding.root) {
+class VH(binding: ItemFavoritesBinding, private var favoriteButtonEvent: ((Favorite?) -> Unit), private var stockNoEvent: ((String?) -> Unit)) : RecyclerView.ViewHolder(binding.root) {
     var data: Favorite? = null
     var itemFavorite: TextView = binding.itemFavorites
     var favoriteButton: SwitchIconView = binding.favoriteButton

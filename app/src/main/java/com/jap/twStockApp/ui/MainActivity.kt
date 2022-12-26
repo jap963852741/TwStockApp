@@ -6,17 +6,14 @@ import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
-import androidx.databinding.adapters.TextViewBindingAdapter.setText
 import androidx.lifecycle.ViewModelProvider
 import com.jap.twStockApp.databinding.ActivityMainBinding
 import com.jap.twStockApp.ui.base.BaseFragmentViewModelFactory
 import com.jap.twStockApp.util.FragmentSwitchUtil
-import com.jap.twStockApp.util.ToastUtil
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var viewbinding: ActivityMainBinding
+    private val viewBinding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     var baseViewModel: BaseViewModel? = null
     private val leaveToast by lazy { Toast(this) }
     private var leaveToastShowing = false
@@ -37,24 +34,29 @@ class MainActivity : AppCompatActivity() {
                 super.onToastHidden()
             }
         })
-        viewbinding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(viewbinding.root)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR // Statusbar 轉為深色
-        viewbinding.myBottomBar.navigationHomeEvent = { FragmentSwitchUtil.getInstance(this)?.selectedTab(FragmentSwitchUtil.TAB_HOME) }
-        viewbinding.myBottomBar.navigationDashboardEvent = { FragmentSwitchUtil.getInstance(this)?.selectedTab(FragmentSwitchUtil.TAB_DASHBOARD) }
-        viewbinding.myBottomBar.navigationFavoritesEvent = { FragmentSwitchUtil.getInstance(this)?.selectedTab(FragmentSwitchUtil.TAB_NOTIFICATIONS) }
+        viewBinding.myBottomBar.navigationHomeEvent = { FragmentSwitchUtil.getInstance(this)?.selectedTab(FragmentSwitchUtil.TAB_HOME) }
+        viewBinding.myBottomBar.navigationDashboardEvent = { FragmentSwitchUtil.getInstance(this)?.selectedTab(FragmentSwitchUtil.TAB_DASHBOARD) }
+        viewBinding.myBottomBar.navigationFavoritesEvent = { FragmentSwitchUtil.getInstance(this)?.selectedTab(FragmentSwitchUtil.TAB_NOTIFICATIONS) }
+        setContentView(viewBinding.root)
 
         FragmentSwitchUtil.getInstance(this)?.currentTab?.observe(this) {
             if (it == null) return@observe
             when (it) {
-                FragmentSwitchUtil.TAB_HOME -> viewbinding.myBottomBar.chooseHome()
-                FragmentSwitchUtil.TAB_DASHBOARD -> viewbinding.myBottomBar.chooseDashboard()
-                FragmentSwitchUtil.TAB_NOTIFICATIONS -> viewbinding.myBottomBar.chooseFavorite()
+                FragmentSwitchUtil.TAB_HOME -> viewBinding.myBottomBar.chooseHome()
+                FragmentSwitchUtil.TAB_DASHBOARD -> viewBinding.myBottomBar.chooseDashboard()
+                FragmentSwitchUtil.TAB_NOTIFICATIONS -> viewBinding.myBottomBar.chooseFavorite()
             }
         }
 
         baseViewModel = ViewModelProvider(this, BaseFragmentViewModelFactory())[BaseViewModel::class.java]
-        FragmentSwitchUtil.getInstance(this)?.selectedTab(FragmentSwitchUtil.TAB_HOME)
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        FragmentSwitchUtil.getInstance(this)?.initTab()
     }
 
     override fun onBackPressed() {

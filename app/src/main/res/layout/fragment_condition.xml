@@ -32,47 +32,56 @@
             android:textSize="20sp" />
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_condition"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/search_component"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:layout_below="@id/toolBar_dashboard"
-        android:textSize="80sp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:orientation="vertical"
-        tools:listitem="@layout/item_condition"
-        tools:itemCount="1"/>
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/add_filter"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/recycler_condition"
-        android:background="#00000000"
-        android:text="+"
-        android:textSize="30sp" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_condition"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:textSize="80sp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:itemCount="1"
+            tools:listitem="@layout/item_condition" />
 
-    <Button
-        android:id="@+id/condition_search"
-        android:layout_width="match_parent"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/add_filter"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/bg_circle_6c6c6c_r24"
-        android:text="@string/search"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/colorLightGreen" />
+        <Button
+            android:id="@+id/add_filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/recycler_condition"
+            android:background="#00000000"
+            android:text="+"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/condition_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/add_filter"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:background="@drawable/bg_circle_6c6c6c_r24"
+            android:text="@string/search"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorLightGreen" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/re_view_dashboard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/search_component"
         android:layout_gravity="center"
-        android:layout_below="@id/condition_search"
         android:textSize="80sp"
-        tools:listitem="@layout/item_detail"
-        tools:itemCount="5"/>
+        tools:itemCount="5"
+        tools:listitem="@layout/item_detail" />
 </RelativeLayout>

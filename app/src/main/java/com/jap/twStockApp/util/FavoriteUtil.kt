@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class FavoriteUtil(applicationContext: Context?) {
-    val db = AppDatabase.getInstance(applicationContext)
+    val db = AppDatabase.getInstance()
 
     suspend fun getFavoriteSize(): Int? = withContext(Dispatchers.IO) {
         try {

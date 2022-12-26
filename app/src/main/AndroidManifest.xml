@@ -28,6 +28,13 @@
             android:name="com.jap.twStockApp.ui.MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan|adjustResize"/>
+
+        <uses-library android:name="android.test.runner"
+            android:required="false" />
+        <uses-library android:name="android.test.base"
+            android:required="false" />
+        <uses-library android:name="android.test.mock"
+            android:required="false" />
 <!--        <activity-->
 <!--            android:name="com.jap.twstockinformation.MainActivity"-->
 <!--            android:exported="false"-->

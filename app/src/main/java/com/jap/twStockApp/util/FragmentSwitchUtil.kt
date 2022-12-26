@@ -1,6 +1,7 @@
 package com.jap.twStockApp.util
 
 import android.app.Activity
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -53,7 +54,7 @@ class FragmentSwitchUtil private constructor(private val context: FragmentActivi
     fun selectedTab(tabId: String) {
         if (stacks[tabId]?.size == 0) {
             when (tabId) {
-                TAB_HOME -> initHomeTab()
+                TAB_HOME -> switchContent(getNowFragment(), HomeFragment(), tabId, true)
                 TAB_DASHBOARD -> switchContent(getNowFragment(), ConditionFragment(), tabId, true)
                 TAB_NOTIFICATIONS -> switchContent(getNowFragment(), FavoritesFragment(), tabId, true)
             }
@@ -74,13 +75,10 @@ class FragmentSwitchUtil private constructor(private val context: FragmentActivi
         return (stacks[currentTab.value]?.size ?: 0) + 1
     }
 
-    private fun initHomeTab() {
-        val frag = HomeFragment()
-        val transaction = manager?.beginTransaction()
-        transaction?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+    fun initTab() {
+        val frag = getNowFragmentFromManager() ?: return
+        _currentTab.value = TAB_HOME
         stacks[TAB_HOME]?.push(frag)
-        transaction?.replace(R.id.nav_host_fragment, frag)
-        transaction?.commit()
     }
 
     private fun switchContent(from: Fragment?, to: Fragment, tag: String, init: Boolean) {
@@ -88,12 +86,17 @@ class FragmentSwitchUtil private constructor(private val context: FragmentActivi
         if (init) stacks[tag]?.push(to)
         val transaction = manager?.beginTransaction()
         transaction?.hide(from)
-        if (!to.isAdded) transaction?.add(R.id.nav_host_fragment, to)
-        transaction?.show(to)?.commit()
+        if (!to.isAdded) transaction?.add(R.id.nav_host_fragment, to)?.commit()
+        else transaction?.show(to)?.commit()
     }
 
     private fun getNowFragment(): Fragment? {
         if (currentTab.value == null || stacks[currentTab.value]?.size == 0) return null
         return stacks[currentTab.value]?.lastElement()
+    }
+
+    private fun getNowFragmentFromManager(): Fragment? {
+        val fragments: List<Fragment> = manager?.fragments ?: return null
+        return fragments[fragments.size - 1]
     }
 }

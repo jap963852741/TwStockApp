@@ -37,7 +37,7 @@ class FavoriteUtilTest {
             addTest()
             removeTest()
         }
-        assertFalse(AppDatabase.getInstance(appContext)?.FavoriteDao()?.getAll()?.contains(Favorite("8099", "大世科")) == true)
+        assertFalse(AppDatabase.getInstance()?.FavoriteDao()?.getAll()?.contains(Favorite("8099", "大世科")) == true)
         Log.i(TAG + this.javaClass.fields, (System.currentTimeMillis() - beginTime).toString())
     }
 
@@ -48,9 +48,9 @@ class FavoriteUtilTest {
             result = favoriteUtil?.addFavorite("8099", "大世科") == true
         }
         assertTrue(result)
-        assertFalse(AppDatabase.getInstance(appContext)?.FavoriteDao()?.getAll()?.contains(Favorite("8099", "1234")) == true)
-        assertFalse(AppDatabase.getInstance(appContext)?.FavoriteDao()?.getAll()?.contains(Favorite("1234", "大世科")) == true)
-        assertTrue(AppDatabase.getInstance(appContext)?.FavoriteDao()?.getAll()?.contains(Favorite("8099", "大世科")) == true)
+        assertFalse(AppDatabase.getInstance()?.FavoriteDao()?.getAll()?.contains(Favorite("8099", "1234")) == true)
+        assertFalse(AppDatabase.getInstance()?.FavoriteDao()?.getAll()?.contains(Favorite("1234", "大世科")) == true)
+        assertTrue(AppDatabase.getInstance()?.FavoriteDao()?.getAll()?.contains(Favorite("8099", "大世科")) == true)
     }
 
     private fun removeTest() {
@@ -60,7 +60,7 @@ class FavoriteUtilTest {
             result = favoriteUtil?.removeFavorite("8099", "大世科") == true
         }
         assertTrue(result)
-        assertFalse(AppDatabase.getInstance(appContext)?.FavoriteDao()?.getAll()?.contains(Favorite("8099", "大世科")) == true)
+        assertFalse(AppDatabase.getInstance()?.FavoriteDao()?.getAll()?.contains(Favorite("8099", "大世科")) == true)
     }
 
 }

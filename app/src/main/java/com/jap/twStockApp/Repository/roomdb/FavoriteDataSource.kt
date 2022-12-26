@@ -9,7 +9,7 @@ class FavoriteDataSource {
     fun getAllFavorite(): Observable<List<Favorite>> {
 
         val observable = Observable.create<List<Favorite>> {
-            val favorites = AppDatabase.getInstance(null)?.FavoriteDao()?.getAll() ?: return@create
+            val favorites = AppDatabase.getInstance()?.FavoriteDao()?.getAll() ?: return@create
             it.onNext(favorites)
             it.onComplete()
         }
@@ -18,6 +18,6 @@ class FavoriteDataSource {
     }
 
     suspend fun getNewAllFavorite(): List<Favorite>? = withContext(Dispatchers.IO){
-        AppDatabase.getInstance(null)?.FavoriteDao()?.getAll()
+        AppDatabase.getInstance()?.FavoriteDao()?.getAll()
     }
 }

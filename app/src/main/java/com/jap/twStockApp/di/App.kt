@@ -1,23 +1,18 @@
 package com.jap.twStockApp.di
 
 import android.app.Application
-import android.content.Context
 import com.jap.twStockApp.Repository.roomdb.AppDatabase
-import com.jap.twStockApp.di.condition.ConditionComponent
-import com.jap.twStockApp.di.condition.ConditionModule
-import com.jap.twStockApp.di.home.HomeComponent
-import com.jap.twStockApp.di.home.HomeModule
-import com.jap.twStockApp.di.modules.AppModule
-import com.jap.twStockApp.util.FragmentSwitchUtil
+import com.jap.twStockApp.di.module.applicationModule
+import com.jap.twStockApp.di.module.homeModule
 import com.jap.twStockApp.util.SharedPreference
 import com.jap.twStockApp.util.SingleStockUtil
 import com.jap.twStockApp.util.ToastUtil
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 
 class App : Application() {
 
-    private lateinit var mainComponent: MainComponent
-    private var homeComponent: HomeComponent? = null
-    private var conditionComponent: ConditionComponent? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -26,26 +21,17 @@ class App : Application() {
         ToastUtil.init(applicationContext)
         SharedPreference.init(applicationContext)
         SingleStockUtil.init()
-        initDependencies()
-    }
 
-    private fun initDependencies() {
-        mainComponent = DaggerMainComponent.builder()
-            .appModule(AppModule(applicationContext, this))
-            .build()
+        startKoin {
+            // Log Koin into Android logger
+            androidLogger()
+            // Reference Android context
+            androidContext(this@App)
+            // Load modules
+            modules(
+                applicationModule,
+                homeModule
+            )
+        }
     }
-
-    fun createHomeComponent(fragmentContext: Context): HomeComponent? {
-        homeComponent = mainComponent.plus(HomeModule(fragmentContext))
-        return homeComponent
-    }
-    fun releaseHomeComponent() {
-        homeComponent = null
-    }
-
-    fun createConditionComponent(fragmentContext: Context): ConditionComponent {
-        conditionComponent = mainComponent.plus(ConditionModule(fragmentContext))
-        return conditionComponent!!
-    }
-
 }

@@ -8,7 +8,7 @@ import java.util.concurrent.Executors
 class GetAllStockRespository {
     fun loadInfo(applicationContext: Context, task: AllTwStockTaskFinish) {
         Executors.newSingleThreadExecutor().submit {
-            val all = AppDatabase.getInstance(applicationContext)?.TwStockDao()?.getAll() ?: return@submit
+            val all = AppDatabase.getInstance()?.TwStockDao()?.getAll() ?: return@submit
             task.onFinish(all)
         }
     }

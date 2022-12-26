@@ -5,33 +5,20 @@ import android.view.*
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jap.twStockApp.R
 import com.jap.twStockApp.databinding.FragmentHomeBinding
-import com.jap.twStockApp.di.App
-import com.jap.twStockApp.extensions.observe
 import com.jap.twStockApp.ui.base.BaseFragment
 import com.jap.twStockApp.util.ToastUtil
 import com.jap.twStockApp.util.dialog.LoadingDialog
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
 class HomeFragment : BaseFragment(), View.OnClickListener {
 
-    @Inject
-    lateinit var homeViewModelFactory: HomeViewModelFactory
-
-    @Inject
-    lateinit var loadingDialog: LoadingDialog
+    private var loadingDialog: LoadingDialog? = null
     private var homeViewBinding: FragmentHomeBinding? = null
-    private var homeViewModel: HomeViewModel? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity?.application as App).createHomeComponent(requireContext())?.inject(this)
-        homeViewModel = ViewModelProvider(this, homeViewModelFactory)[HomeViewModel::class.java]
-    }
+    private val homeViewModel: IHomeViewModel by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,11 +29,15 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
         homeViewBinding?.toolBarHome?.overflowIcon = resources.getDrawable(R.drawable.ic_refresh_black) // 把三個小點換掉
         (activity as AppCompatActivity?)!!.setSupportActionBar(homeViewBinding?.toolBarHome)
         homeViewBinding?.swipeHome?.setOnRefreshListener {
-            homeViewModel?.newUpdateStockDb({ loadingDialog.setProgressBar(it) }, {
+            homeViewModel.newUpdateStockDb({ loadingDialog?.setProgressBar(it) }, {
                 homeViewBinding?.swipeHome?.isRefreshing = false
             })
         }
         setHasOptionsMenu(true)
+        loadingDialog = context?.let { LoadingDialog(it, "正在更新...") }.apply {
+            this?.setCanceledOnTouchOutside(false)
+            this?.setCancelable(false)
+        }
         return homeViewBinding?.root
     }
 
@@ -57,7 +48,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
     }
 
     private fun initObserve() {
-        homeViewModel?.stockNoArrayList?.observe(viewLifecycleOwner) { list ->
+        homeViewModel.stockNoArrayList.observe(viewLifecycleOwner) { list ->
             if (list.isNullOrEmpty()) return@observe
             val adapter = view?.context?.let { context -> ArrayAdapter(context, android.R.layout.simple_list_item_1, list) }
             homeViewBinding?.autoCompleteText?.setAdapter(adapter)
@@ -72,32 +63,35 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
         baseViewModel?.homeFragmentSearchText?.observe(viewLifecycleOwner) {
             it?.let {
                 homeViewBinding?.autoCompleteText?.setText(it)
-                homeViewModel?.updateText(it)
+                homeViewModel.updateText(it)
             }
         }
-        homeViewModel?.stockInformation?.observe(viewLifecycleOwner) { stockInformation ->
-            if (stockInformation.isNullOrEmpty()) return@observe
+        homeViewModel.stockInformation.observe(viewLifecycleOwner) { stockInformation ->
+            if (stockInformation.isNullOrEmpty()) {
+                ToastUtil.shortToast("請輸入正確格式")
+                return@observe
+            }
             homeViewBinding?.reView?.apply {
                 adapter = view?.let { HomeAdapter(stockInformation) }
                 layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             }
         }
-        homeViewModel?.updateResult?.observe(viewLifecycleOwner) {
+        homeViewModel.updateResult.observe(viewLifecycleOwner) {
             if (it.success != null) ToastUtil.shortToast(resources.getString(it.success))
             else if (it.error != null) ToastUtil.shortToast(resources.getString(it.error))
         }
-        homeViewModel?.loadingDialog?.observe(viewLifecycleOwner) {
+        homeViewModel.loadingDialog.observe(viewLifecycleOwner) {
             if (it) {
-                loadingDialog.setProgressBar(0)
-                loadingDialog.show()
-            } else loadingDialog.dismiss()
+                loadingDialog?.setProgressBar(0)
+                loadingDialog?.show()
+            } else loadingDialog?.dismiss()
         }
     }
 
     override fun onClick(v: View?) {
         homeViewBinding?.searchHint?.isVisible = false
         closeKeyBoard(v)
-        homeViewModel?.updateText(homeViewBinding?.autoCompleteText?.text.toString())
+        homeViewModel.updateText(homeViewBinding?.autoCompleteText?.text.toString())
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -107,13 +101,8 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.updateDB -> homeViewModel?.newUpdateStockDb({ loadingDialog.setProgressBar(it) })
+            R.id.updateDB -> homeViewModel.newUpdateStockDb({ loadingDialog?.setProgressBar(it) })
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        (activity?.application as App).releaseHomeComponent()
     }
 }

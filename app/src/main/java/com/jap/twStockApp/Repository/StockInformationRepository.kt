@@ -1,20 +1,15 @@
 package com.jap.twStockApp.Repository
 
-import android.content.Context
 import com.jap.twStockApp.Repository.network.UpdateDataSource
 import com.jap.twStockApp.Repository.roomdb.AppDatabase
 import com.jap.twStockApp.Repository.roomdb.TwStock
-import com.jap.twStockApp.ui.home.UpdateResult
-import com.jap.twStockApp.util.dialog.LoadingDialog
-import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.util.concurrent.Executors
 
 class StockInformationRepository(val updatedataSource: UpdateDataSource) {
 
-    suspend fun getStockData(applicationContext: Context, StockNo: String): ArrayList<String>? = withContext(Dispatchers.IO) {
-        val stockData = AppDatabase.getInstance(applicationContext)?.TwStockDao()?.getStockNoInformation(StockNo)
+    suspend fun getStockData(StockNo: String): ArrayList<String>? = withContext(Dispatchers.IO) {
+        val stockData = AppDatabase.getInstance()?.TwStockDao()?.getStockNoInformation(StockNo)
         if (stockData == null) null
         else getStringArray(stockData)
     }

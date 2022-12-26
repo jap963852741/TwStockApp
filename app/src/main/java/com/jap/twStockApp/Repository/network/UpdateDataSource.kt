@@ -18,7 +18,7 @@ class UpdateDataSource {
         val totalInformation: HashMap<String, HashMap<String, String>> = SingleStockUtil.getInstance().Get_HashMap_Num_MapTotalInformation()
         countJob.cancel()
 
-        val db = AppDatabase.getInstance(null)
+        val db = AppDatabase.getInstance()
 
         try {
             var totoalFinish = 0.0f

@@ -11,7 +11,7 @@ object ToastUtil {
     private var showing: Boolean = false
 
     fun init(context: Context) {
-        instance = Toast(context)
+        instance = Toast.makeText(context, "", Toast.LENGTH_SHORT)
     }
 
     fun getInstance(): Toast? {

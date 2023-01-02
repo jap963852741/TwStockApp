@@ -21,7 +21,8 @@ class HomeViewModelTest : IHomeViewModel, ViewModel() {
 
     override fun updateText(stockNo: String) {
         viewModelScope.launch {
-            _stockInformation.postValue(arrayListOf("2330"))
+            if (stockNo == "2330") _stockInformation.postValue(arrayListOf("2330"))
+            if (stockNo == "") _stockInformation.postValue(arrayListOf())
         }
     }
 

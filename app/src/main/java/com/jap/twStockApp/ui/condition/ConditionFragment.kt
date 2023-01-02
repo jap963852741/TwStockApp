@@ -54,7 +54,10 @@ class ConditionFragment : BaseFragment(), View.OnClickListener {
             val size = conditionFilterAdapter?.list?.size ?: return@setOnClickListener
             conditionFilterAdapter?.notifyItemChanged(size - 1)
         }
-        conditionViewModel?.text?.observe(viewLifecycleOwner) { conditionAdapter?.submitList(it) }
+        conditionViewModel?.text?.observe(viewLifecycleOwner) {
+            if (it.size == 0) ToastUtil.shortToast("無符合條件項")
+            conditionAdapter?.submitList(it)
+        }
         conditionViewModel?.favorite?.observe(viewLifecycleOwner) {
             favoriteSize = it.size
             conditionAdapter?.setNewFavoriteList(it.toSet())

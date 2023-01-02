@@ -8,8 +8,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.jap.twStockApp.R
 import com.jap.twStockApp.databinding.ItemHomeBinding
+import com.jap.twStockApp.ui.base.RecyclerViewItem
 
-class HomeAdapter(private val dataList: ArrayList<String>) : RecyclerView.Adapter<VH>() {
+class HomeAdapter(private val dataList: ArrayList<String>) : RecyclerView.Adapter<VH>(), RecyclerViewItem {
     private lateinit var binding: ItemHomeBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
@@ -37,6 +38,8 @@ class HomeAdapter(private val dataList: ArrayList<String>) : RecyclerView.Adapte
     }
 
     override fun getItemCount(): Int = dataList.size
+    override fun getSize(): Int = dataList.size
+    override fun getItem(position: Int): Any = dataList[position]
 }
 
 class VH(binding: ItemHomeBinding) : RecyclerView.ViewHolder(binding.root) {

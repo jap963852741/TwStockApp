@@ -68,7 +68,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener {
         }
         homeViewModel.stockInformation.observe(viewLifecycleOwner) { stockInformation ->
             if (stockInformation.isNullOrEmpty()) {
-                ToastUtil.shortToast("請輸入正確格式")
+                ToastUtil.shortToast(getString(R.string.please_input_correct_style))
                 return@observe
             }
             homeViewBinding?.reView?.apply {

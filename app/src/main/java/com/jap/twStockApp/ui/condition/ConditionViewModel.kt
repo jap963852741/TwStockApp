@@ -65,7 +65,7 @@ class ConditionViewModel(app: Application, private val favoritesRespository: Fav
 
     fun updateText() {
         val tempArray: ArrayList<StockNoNameFav?> = arrayListOf()
-        if (twstocks.isEmpty()) _text.postValue(arrayListOf())
+//        if (twstocks.isEmpty()) _text.postValue(arrayListOf())
         for (twStock in twstocks) {
             if (twStock.Name == null) continue
             tempArray.add(StockNoNameFav(twStock.StockNo, twStock.Name, favorite.value?.toSet()?.contains(Favorite(twStock.StockNo, twStock.Name)) == true))

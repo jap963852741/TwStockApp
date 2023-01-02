@@ -76,9 +76,11 @@ class FragmentSwitchUtil private constructor(private val context: FragmentActivi
     }
 
     fun initTab() {
-        val frag = getNowFragmentFromManager() ?: return
+        val frag = getNowFragmentFromManager() ?: HomeFragment()
         _currentTab.value = TAB_HOME
         stacks[TAB_HOME]?.push(frag)
+        val transaction = manager?.beginTransaction()
+        transaction?.add(R.id.nav_host_fragment, frag)?.commit()
     }
 
     private fun switchContent(from: Fragment?, to: Fragment, tag: String, init: Boolean) {
@@ -97,6 +99,7 @@ class FragmentSwitchUtil private constructor(private val context: FragmentActivi
 
     private fun getNowFragmentFromManager(): Fragment? {
         val fragments: List<Fragment> = manager?.fragments ?: return null
+        if (fragments.isEmpty()) return null
         return fragments[fragments.size - 1]
     }
 }

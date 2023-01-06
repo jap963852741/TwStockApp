@@ -1,7 +1,6 @@
 package com.jap.twStockApp.util
 
 import android.annotation.SuppressLint
-import android.content.Context
 import com.jap.twstockinformation.StockUtilV2
 
 object SingleStockUtil {

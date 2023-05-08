@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.diffplug.spotless'
 
@@ -24,13 +23,13 @@ spotless {
 }
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.jap.twstockapp"
         minSdkVersion 25
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode 9
         versionName "1.0.4"
 
@@ -63,9 +62,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
-    }
-    dataBinding{
-        enabled true
     }
     viewBinding{
         enabled true

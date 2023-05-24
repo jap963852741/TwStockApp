@@ -15,14 +15,18 @@ import com.jap.twStockApp.ui.condition.filter.BiggerOrSmaller
 import com.jap.twStockApp.ui.condition.filter.FilterModel
 import com.jap.twStockApp.ui.model.StockNoNameFav
 import com.jap.twStockApp.util.FavoriteUtil
+import com.jap.twStockApp.util.SingleLiveData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class ConditionViewModel(app: Application, private val favoritesRespository: FavoritesRespository) : AndroidViewModel(app) {
-    private val _text = MutableLiveData<ArrayList<StockNoNameFav?>>(arrayListOf())
+    private val _text = MutableStateFlow<ArrayList<StockNoNameFav?>>(arrayListOf())
     private val _favorite = MutableLiveData<List<Favorite>>(arrayListOf())
-    private val _filter = MutableLiveData<Unit>()
+    private val _filter = SingleLiveData<Unit?>()
 
-    val text: LiveData<ArrayList<StockNoNameFav?>> = _text
+    val text: Flow<ArrayList<StockNoNameFav?>> = _text
     val favorite: LiveData<List<Favorite>> = _favorite
     val filter: LiveData<Unit?> = _filter
 
@@ -64,16 +68,18 @@ class ConditionViewModel(app: Application, private val favoritesRespository: Fav
 
 
     fun updateText() {
-        val tempArray: ArrayList<StockNoNameFav?> = arrayListOf()
-//        if (twstocks.isEmpty()) _text.postValue(arrayListOf())
-        for (twStock in twstocks) {
-            if (twStock.Name == null) continue
-            tempArray.add(StockNoNameFav(twStock.StockNo, twStock.Name, favorite.value?.toSet()?.contains(Favorite(twStock.StockNo, twStock.Name)) == true))
+        viewModelScope.launch(Dispatchers.IO) {
+            val tempArray: ArrayList<StockNoNameFav?> = arrayListOf()
+            for (twStock in twstocks) {
+                if (twStock.Name == null) continue
+                tempArray.add(StockNoNameFav(twStock.StockNo, twStock.Name, favorite.value?.toSet()?.contains(Favorite(twStock.StockNo, twStock.Name)) == true))
+            }
+            _text.emit(tempArray)
         }
-        _text.postValue(tempArray)
     }
 
-    fun getFavorite() = viewModelScope.launch { favoritesRespository.getAllFavorite()?.let { _favorite.value = it }}
+
+    fun getFavorite() = viewModelScope.launch { favoritesRespository.getAllFavorite()?.let { _favorite.value = it } }
 
     fun addFavorite(stockNoNameFav: StockNoNameFav, successListener: ((Boolean) -> Unit)) = viewModelScope.launch {
         val result = FavoriteUtil(getApplication<Application>().applicationContext).addFavorite(stockNoNameFav.stockNo, stockNoNameFav.stockName)

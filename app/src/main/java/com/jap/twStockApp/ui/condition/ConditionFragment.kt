@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.graphics.Point
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.Display
 import android.view.LayoutInflater
 import android.view.MotionEvent.*
@@ -13,6 +12,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.jap.twStockApp.BuildConfig
 import com.jap.twStockApp.databinding.FragmentConditionBinding
 import com.jap.twStockApp.ui.base.BaseFragment
@@ -23,6 +23,7 @@ import com.jap.twStockApp.ui.condition.filter.FilterModel
 import com.jap.twStockApp.util.FragmentSwitchUtil
 import com.jap.twStockApp.util.ToastUtil
 import com.jap.twStockApp.util.dialog.LoadingDialog
+import kotlinx.coroutines.launch
 
 
 class ConditionFragment : BaseFragment(), View.OnClickListener {
@@ -54,9 +55,12 @@ class ConditionFragment : BaseFragment(), View.OnClickListener {
             val size = conditionFilterAdapter?.list?.size ?: return@setOnClickListener
             conditionFilterAdapter?.notifyItemChanged(size - 1)
         }
-        conditionViewModel?.text?.observe(viewLifecycleOwner) {
-            if (it.size == 0) ToastUtil.shortToast("無符合條件項")
-            conditionAdapter?.submitList(it)
+
+        lifecycleScope.launch {
+            conditionViewModel?.text?.collect {
+                if (it.size == 0) ToastUtil.shortToast("無符合條件項")
+                conditionAdapter?.submitList(it)
+            }
         }
         conditionViewModel?.favorite?.observe(viewLifecycleOwner) {
             favoriteSize = it.size

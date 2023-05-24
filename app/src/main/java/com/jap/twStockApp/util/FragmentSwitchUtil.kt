@@ -76,6 +76,7 @@ class FragmentSwitchUtil private constructor(private val context: FragmentActivi
     }
 
     fun initTab() {
+        if (getNowFragmentFromManager() != null) return
         val frag = getNowFragmentFromManager() ?: HomeFragment()
         _currentTab.value = TAB_HOME
         stacks[TAB_HOME]?.push(frag)

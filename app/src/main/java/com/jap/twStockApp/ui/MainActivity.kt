@@ -18,14 +18,11 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
 
     private val viewBinding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    var baseViewModel: BaseViewModel? = null
-    private var leaveToast: Toast? = null
+    private val leaveToast: Toast by lazy { Toast.makeText(this, "click again you will leave app", Toast.LENGTH_SHORT) }
     private var leaveToastShowing = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FragmentSwitchUtil.init()
-        leaveToast = Toast.makeText(this, "click again you will leave app", Toast.LENGTH_SHORT)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR // Statusbar 轉為深色
         viewBinding.myBottomBar.navigationHomeEvent = { FragmentSwitchUtil.getInstance(this)?.selectedTab(FragmentSwitchUtil.TAB_HOME) }
         viewBinding.myBottomBar.navigationDashboardEvent = { FragmentSwitchUtil.getInstance(this)?.selectedTab(FragmentSwitchUtil.TAB_DASHBOARD) }
@@ -40,14 +37,10 @@ class MainActivity : AppCompatActivity() {
                 FragmentSwitchUtil.TAB_NOTIFICATIONS -> viewBinding.myBottomBar.chooseFavorite()
             }
         }
-
-        baseViewModel = ViewModelProvider(this, BaseFragmentViewModelFactory())[BaseViewModel::class.java]
-
     }
 
     override fun onResume() {
         super.onResume()
-
         FragmentSwitchUtil.getInstance(this)?.initTab()
     }
 
@@ -56,21 +49,15 @@ class MainActivity : AppCompatActivity() {
             if (leaveToastShowing) finish()
             else {
                 leaveToastTimeClick()
-                leaveToast?.show()
+                leaveToast.show()
             }
         }
     }
 
     private fun leaveToastTimeClick(): Job = lifecycleScope.launch(Dispatchers.IO) {
-        val toast = leaveToast ?: return@launch
-        val times = if (toast.duration == Toast.LENGTH_SHORT) 2000L else 3500L
+        val times = if (leaveToast.duration == Toast.LENGTH_SHORT) 2000L else 3500L
         leaveToastShowing = true
         delay(times)
         leaveToastShowing = false
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
 }

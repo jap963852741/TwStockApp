@@ -2,7 +2,6 @@ package com.jap.twStockApp.Repository
 
 import com.jap.twStockApp.Repository.roomdb.Favorite
 import com.jap.twStockApp.Repository.roomdb.FavoriteDataSource
-import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

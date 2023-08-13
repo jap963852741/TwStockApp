@@ -25,9 +25,7 @@ class FragmentSwitchUtil private constructor(private val context: FragmentActivi
     var currentTab: LiveData<String?> = _currentTab
     private val manager: FragmentManager?
         get() {
-            if (context.supportFragmentManager.isDestroyed) {
-                return null
-            }
+            if (context.supportFragmentManager.isDestroyed) return null
             return context.supportFragmentManager
         }
 

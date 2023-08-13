@@ -12,15 +12,13 @@ import kotlinx.coroutines.flow.flow
 class UpdateDataSource {
     private var countSecond = 0
 
-    suspend fun updateDB(loadingPercent: (Int) -> Unit) = withContext(Dispatchers.IO) {
+    suspend fun updateDB(loadingPercent: (Int) -> Unit, errorCallBack: (() -> Unit)? = null) = withContext(Dispatchers.IO) {
         val countJob = CoroutineScope(currentCoroutineContext()).launch(Dispatchers.IO) { beginToCount(loadingPercent).cancellable().collect() }
-
-        val totalInformation: HashMap<String, HashMap<String, String>> = SingleStockUtil.getInstance().Get_HashMap_Num_MapTotalInformation()
-        countJob.cancel()
-
-        val db = AppDatabase.getInstance()
-
         try {
+            val totalInformation: HashMap<String, HashMap<String, String>> = SingleStockUtil.getInstance().Get_HashMap_Num_MapTotalInformation()
+            countJob.cancel()
+
+            val db = AppDatabase.getInstance()
             var totoalFinish = 0.0f
             for ((key_number, value_map) in totalInformation) {
                 totoalFinish += 1
@@ -65,6 +63,7 @@ class UpdateDataSource {
 
             }
         } catch (e: Exception) {
+            errorCallBack?.invoke()
         }
         countSecond = 0
     }

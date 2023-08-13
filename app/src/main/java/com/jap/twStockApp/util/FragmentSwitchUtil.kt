@@ -50,19 +50,15 @@ class FragmentSwitchUtil private constructor(private val context: FragmentActivi
     }
 
     fun selectedTab(tabId: String) {
-        if (stacks[tabId]?.size == 0) {
-            when (tabId) {
-                TAB_HOME -> switchContent(getNowFragment(), HomeFragment(), tabId, true)
-                TAB_DASHBOARD -> switchContent(getNowFragment(), ConditionFragment(), tabId, true)
-                TAB_NOTIFICATIONS -> switchContent(getNowFragment(), FavoritesFragment(), tabId, true)
-            }
-        } else {
-            stacks[tabId]?.lastElement()?.let { switchContent(getNowFragment(), it, tabId, false) }
+        when (tabId) {
+            TAB_HOME -> switchContent(getNowFragment(), HomeFragment(), tabId, stacks[tabId]?.size == 0)
+            TAB_DASHBOARD -> switchContent(getNowFragment(), ConditionFragment(), tabId, stacks[tabId]?.size == 0)
+            TAB_NOTIFICATIONS -> switchContent(getNowFragment(), FavoritesFragment(), tabId, stacks[tabId]?.size == 0)
         }
         _currentTab.value = tabId
     }
 
-    fun backNowTabAndGetStackSize(): Int{
+    fun backNowTabAndGetStackSize(): Int {
         if (currentTab.value == null) return 1
         if (stacks[currentTab.value] == null || stacks[currentTab.value]?.size == 1) return 1
         val frag = stacks[currentTab.value]?.last() ?: return 1
